@@ -1,17 +1,19 @@
-
 const BASE_URL = "https://saavn.dev/api";
 
 export const fetchSongs = async (query: string) => {
   try {
-    const response = await fetch(`${BASE_URL}/search/songs?query=${encodeURIComponent(query)}`);
+    const response = await fetch(
+      `${BASE_URL}/search/songs?query=${encodeURIComponent(query)}`
+    );
     if (!response.ok) {
-      throw new Error('Failed to fetch songs');
+      throw new Error("Failed to fetch songs");
     }
     const data = await response.json();
     // The API returns data in a nested structure
+    console.log(data.data.results, "this is the response");
     return data.data.results || [];
   } catch (error) {
-    console.error('Error fetching songs:', error);
+    console.error("Error fetching songs:", error);
     return [];
   }
 };
@@ -30,12 +32,13 @@ export const fetchSongDetails = async (id: string) => {
   try {
     const response = await fetch(`${BASE_URL}/songs?id=${id}`);
     if (!response.ok) {
-      throw new Error('Failed to fetch song details');
+      throw new Error("Failed to fetch song details");
     }
     const data = await response.json();
+    console.log(data.data[0], "this is the player api");
     return data.data[0] || null;
   } catch (error) {
-    console.error('Error fetching song details:', error);
+    console.error("Error fetching song details:", error);
     return null;
   }
 };

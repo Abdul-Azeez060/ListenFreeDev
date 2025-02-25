@@ -1,16 +1,16 @@
-
 export interface Song {
   id: string;
   name: string;
   url: string;
   duration: string;
-  image: string;
+  image: object;
   primaryArtists: string[];
   album: {
     id: string;
     name: string;
     url: string;
   };
+  downloadUrl?: object;
 }
 
 export interface Playlist {
