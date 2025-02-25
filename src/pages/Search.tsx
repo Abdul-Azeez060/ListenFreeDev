@@ -11,13 +11,11 @@ const Search = () => {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
   
-  const { data: searchResults, isLoading } = useQuery({
+  const { data: songs = [], isLoading } = useQuery({
     queryKey: ['search', query],
     queryFn: () => fetchSongs(query),
     enabled: query.length > 0,
   });
-
-  const songs = searchResults?.data ? Array.isArray(searchResults.data) ? searchResults.data : [] : [];
 
   return (
     <div className="container min-h-screen bg-primary px-4 py-6 space-y-6">
