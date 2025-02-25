@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Search as SearchIcon } from "lucide-react";
+import { Search as SearchIcon, PlusCircleIcon } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { fetchSongs } from "@/lib/api";
 import { Song } from "@/types/music";
+import { useSongs } from "@/context/songsContext";
 
 const Search = () => {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
+  const { addSong } = useSongs();
 
   const { data: songs = [], isLoading } = useQuery({
     queryKey: ["search", query],
@@ -57,25 +59,36 @@ const Search = () => {
               : songs.map((song: Song) => (
                   <motion.div
                     key={song.id}
-                    onClick={() =>
-                      navigate(`/player/${song.id}`, { state: { song } })
-                    }
-                    className="flex items-center space-x-4 p-2 hover:bg-secondary rounded-lg cursor-pointer"
+                    className="flex items-center justify-between space-x-4 p-2 hover:bg-secondary rounded-lg cursor-pointer"
                     whileHover={{ scale: 1.01 }}>
-                    <img
-                      src={song.image[2].url}
-                      alt={song.name}
-                      className="w-12 h-12 rounded-md object-cover"
-                    />
+                    <div
+                      className="flex items-center "
+                      onClick={() => {
+                        addSong(song);
+                        navigate(`/player/${song.id}`);
+                      }}>
+                      <img
+                        src={song.image[2].url}
+                        alt={song.name}
+                        className="w-12 mr-3 h-12 rounded-md object-cover"
+                      />
+                      <div>
+                        <h3 className="font-medium text-primary-foreground">
+                          {song.name}
+                        </h3>
+                        <p className="text-sm text-muted">
+                          {Array.isArray(song.primaryArtists)
+                            ? song.primaryArtists.join(", ")
+                            : song.primaryArtists}
+                        </p>
+                      </div>
+                    </div>
                     <div>
-                      <h3 className="font-medium text-primary-foreground">
-                        {song.name}
-                      </h3>
-                      <p className="text-sm text-muted">
-                        {Array.isArray(song.primaryArtists)
-                          ? song.primaryArtists.join(", ")
-                          : song.primaryArtists}
-                      </p>
+                      <PlusCircleIcon
+                        onClick={() => {
+                          addSong(song);
+                        }}
+                      />
                     </div>
                   </motion.div>
                 ))}

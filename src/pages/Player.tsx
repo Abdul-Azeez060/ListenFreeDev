@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 import {
   Play,
   Pause,
@@ -13,46 +12,41 @@ import {
   Repeat,
   Shuffle,
 } from "lucide-react";
-import { fetchSongDetails } from "@/lib/api";
 import { Slider } from "@/components/ui/slider";
-import { useLocation } from "react-router-dom";
-import { Song } from "@/types/music";
+import { useSongs } from "@/context/songsContext";
 
 const Player = () => {
   const { songId } = useParams();
   const navigate = useNavigate();
+  const { songs, setCurrentSongId } = useSongs(); // Retrieve all songs from context
+
   const [isPlaying, setIsPlaying] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [volume, setVolume] = useState(1);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
-  const [song, setCurrentSong] = useState<Song>();
-  const location = useLocation();
-  const currentSong = location.state?.song;
-  useEffect(() => {
-    if (currentSong) {
-      setCurrentSong(currentSong);
-    }
-  }, [currentSong]);
-  // const { data: song } = useQuery({
-  //   queryKey: ["song", songId],
-  //   queryFn: () => fetchSongDetails(songId!),
-  //   enabled: !!songId,
-  // });
 
-  useEffect(() => {
-    if (isPlaying && audioRef.current && song?.downloadUrl?.[4]?.url) {
-      audioRef.current
-        .play()
-        .catch((err) => console.error("Playback error:", err));
-    }
-  }, [isPlaying, song]);
+  // Find the index of the current song
+  const currentSongIndex = songs.findIndex((song) => song.id === songId);
+  const currentSong = songs[currentSongIndex];
+
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = volume;
     }
   }, [volume]);
+
+  useEffect(() => {
+    if (isPlaying && audioRef.current && currentSong?.downloadUrl?.[4]?.url) {
+      audioRef.current
+        .play()
+        .then(() => {
+          setCurrentSongId(currentSong.id);
+        })
+        .catch((err) => console.error("Playback error:", err));
+    }
+  }, [isPlaying, currentSong]);
 
   const togglePlay = () => {
     if (audioRef.current) {
@@ -86,6 +80,18 @@ const Player = () => {
     }
   };
 
+  const playNextSong = () => {
+    if (currentSongIndex < songs.length - 1) {
+      setCurrentSongId(songs[currentSongIndex + 1].id);
+    }
+  };
+
+  const playPreviousSong = () => {
+    if (currentSongIndex > 0) {
+      setCurrentSongId(songs[currentSongIndex - 1].id);
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-gradient-to-b from-accent/20 to-background backdrop-blur-lg">
       <div className="container h-full px-4 py-8 flex flex-col justify-between">
@@ -104,27 +110,29 @@ const Player = () => {
           <motion.div
             initial={{ scale: 0.9 }}
             animate={{ scale: 1 }}
-            className="w-64 h-64 md:w-80 md:h-80 rounded-lg overflow-hidden shadow-xl">
+            className="w-72 h-72 md:w-80 md:h-80 rounded-lg overflow-hidden shadow-xl">
             <img
-              src={song?.image[2].url || "/placeholder.svg"}
-              alt={song?.name}
+              src={currentSong?.image[2]?.url || "/placeholder.svg"}
+              alt={currentSong?.name}
               className="w-full h-full object-cover"
             />
           </motion.div>
 
           <div className="text-center space-y-2 max-w-md">
             <h1 className="text-2xl font-bold text-primary-foreground">
-              {song?.name}
+              {currentSong?.name}
             </h1>
-            <p className="text-muted">{song?.primaryArtists?.join(", ")}</p>
+            <p className="text-muted">
+              {currentSong?.primaryArtists?.join(", ")}
+            </p>
           </div>
 
           <div className="w-full max-w-md space-y-4">
             <audio
               ref={audioRef}
-              src={song?.downloadUrl?.[4]?.url}
+              src={currentSong?.downloadUrl?.[4]?.url}
               onTimeUpdate={handleTimeUpdate}
-              onEnded={() => setIsPlaying(false)}
+              onEnded={playNextSong}
             />
 
             <div className="space-y-2">
@@ -135,7 +143,6 @@ const Player = () => {
                 step={1}
                 className="w-full"
               />
-
               <div className="flex justify-between text-sm text-muted">
                 <span>{formatTime(currentTime)}</span>
                 <span>{formatTime(duration)}</span>
@@ -147,7 +154,10 @@ const Player = () => {
                 <Shuffle size={20} />
               </button>
 
-              <button className="p-2 text-muted hover:text-primary-foreground">
+              <button
+                className="p-2 text-muted hover:text-primary-foreground"
+                onClick={playPreviousSong}
+                disabled={currentSongIndex === 0}>
                 <SkipBack size={28} />
               </button>
 
@@ -157,7 +167,10 @@ const Player = () => {
                 {isPlaying ? <Pause size={32} /> : <Play size={32} />}
               </button>
 
-              <button className="p-2 text-muted hover:text-primary-foreground">
+              <button
+                className="p-2 text-muted hover:text-primary-foreground"
+                onClick={playNextSong}
+                disabled={currentSongIndex === songs.length - 1}>
                 <SkipForward size={28} />
               </button>
 

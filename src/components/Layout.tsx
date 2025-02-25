@@ -1,8 +1,8 @@
-
 import React from "react";
 import { motion } from "framer-motion";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Home, Search, Library, User } from "lucide-react";
+import MiniPlayer from "./MiniPlayer";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
@@ -17,16 +17,17 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className="min-h-screen bg-background">
-      <motion.main 
+      <motion.main
         className="pb-20"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 20 }}
-        transition={{ duration: 0.3 }}
-      >
+        transition={{ duration: 0.3 }}>
         {children}
       </motion.main>
-      
+      <div className="fixed bottom-12 w-full ">
+        <MiniPlayer />
+      </div>
       <nav className="fixed bottom-0 w-full bg-white/80 backdrop-blur-lg border-t border-gray-200">
         <div className="flex justify-around items-center py-3 px-4">
           {navItems.map((item) => {
@@ -39,8 +40,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                   location.pathname === item.path
                     ? "text-accent"
                     : "text-gray-500"
-                }`}
-              >
+                }`}>
                 <Icon size={24} />
                 <span className="text-xs">{item.label}</span>
               </button>
