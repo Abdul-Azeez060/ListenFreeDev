@@ -8,8 +8,8 @@ export const fetchSongs = async (query: string) => {
       throw new Error('Failed to fetch songs');
     }
     const data = await response.json();
-    // The API returns data in a nested structure, so we need to extract the results
-    return data.results || [];
+    // The API returns data in a nested structure
+    return data.data.results || [];
   } catch (error) {
     console.error('Error fetching songs:', error);
     return [];
@@ -27,6 +27,15 @@ export const fetchAlbums = async () => {
 };
 
 export const fetchSongDetails = async (id: string) => {
-  const response = await fetch(`${BASE_URL}/songs?id=${id}`);
-  return response.json();
+  try {
+    const response = await fetch(`${BASE_URL}/songs?id=${id}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch song details');
+    }
+    const data = await response.json();
+    return data.data[0] || null;
+  } catch (error) {
+    console.error('Error fetching song details:', error);
+    return null;
+  }
 };
