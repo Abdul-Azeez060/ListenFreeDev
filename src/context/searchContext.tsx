@@ -10,6 +10,8 @@ import { Song } from "@/types/music";
 interface SearchSongsProps {
   searchSongsResult: Song[];
   songQuery: string;
+  setSearchSongsResult: (songs: Song[]) => void;
+  setSongsQuery: (query: string) => void;
 }
 
 const SearchSongsContext = createContext<SearchSongsProps | undefined>(
@@ -27,7 +29,13 @@ export const SearchedSongsProvider = ({
   const [songQuery, setSongsQuery] = useState<string>();
 
   return (
-    <SearchSongsContext.Provider value={{ searchSongsResult, songQuery }}>
+    <SearchSongsContext.Provider
+      value={{
+        searchSongsResult,
+        setSearchSongsResult,
+        setSongsQuery,
+        songQuery,
+      }}>
       {children}
     </SearchSongsContext.Provider>
   );

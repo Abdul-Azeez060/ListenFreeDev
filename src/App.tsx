@@ -11,29 +11,33 @@ import Profile from "./pages/Profile";
 import Player from "./pages/Player";
 import NotFound from "./pages/NotFound";
 import { SongsProvider } from "./context/songsContext";
+import { SearchedSongsProvider } from "./context/searchContext";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <SongsProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/search" element={<Search />} />
-              <Route path="/library" element={<Library />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/player/:songId" element={<Player />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Layout>
-        </BrowserRouter>
-      </TooltipProvider>
-    </SongsProvider>
+    <BrowserRouter>
+      <SongsProvider>
+        <SearchedSongsProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+
+            <Layout>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/search" element={<Search />} />
+                <Route path="/library" element={<Library />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/player/:songId" element={<Player />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Layout>
+          </TooltipProvider>
+        </SearchedSongsProvider>
+      </SongsProvider>
+    </BrowserRouter>
   </QueryClientProvider>
 );
 

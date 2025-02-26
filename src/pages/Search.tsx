@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Search as SearchIcon, PlusCircleIcon } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -6,19 +6,28 @@ import { useNavigate } from "react-router-dom";
 import { fetchSongs } from "@/lib/api";
 import { Song } from "@/types/music";
 import { useSongs } from "@/context/songsContext";
+import { useSearchSongs } from "@/context/searchContext";
+import { toast } from "sonner";
 
 const Search = () => {
-  const [query, setQuery] = useState("");
   const navigate = useNavigate();
   const { addSong } = useSongs();
+  const { searchSongsResult, songQuery, setSongsQuery, setSearchSongsResult } =
+    useSearchSongs();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { data: songs = [], isLoading } = useQuery({
-    queryKey: ["search", query],
-    queryFn: () => fetchSongs(query),
-    enabled: query.length > 0,
-  });
+  useEffect(() => {
+    // call the fetchSongs function and pass the songQuery as an argument
+    const fetchSearchSongs = async () => {
+      setIsLoading(true);
+      const songs = await fetchSongs(songQuery);
+      setIsLoading(false);
+      setSearchSongsResult(songs);
+    };
+    fetchSearchSongs();
+  }, [songQuery]);
 
-  console.log(songs, "these are songs");
+  console.log("this is the songs");
 
   return (
     <div className="container min-h-screen bg-primary px-4 py-6 space-y-6">
@@ -28,12 +37,12 @@ const Search = () => {
           type="text"
           placeholder="Search songs, artists, or albums..."
           className="w-full pl-10 pr-4 py-3 rounded-full bg-secondary text-primary-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/50"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          value={songQuery}
+          onChange={(e) => setSongsQuery(e.target.value)}
         />
       </div>
 
-      {query && (
+      {songQuery && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -56,7 +65,7 @@ const Search = () => {
                       </div>
                     </div>
                   ))
-              : songs.map((song: Song) => (
+              : searchSongsResult.map((song: Song) => (
                   <motion.div
                     key={song.id}
                     className="flex items-center justify-between space-x-4 p-2 hover:bg-secondary rounded-lg cursor-pointer"
@@ -87,6 +96,7 @@ const Search = () => {
                       <PlusCircleIcon
                         onClick={() => {
                           addSong(song);
+                          toast("Song added to queue");
                         }}
                       />
                     </div>

@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import {
   Play,
   Pause,
@@ -11,6 +11,7 @@ import {
   X,
   Repeat,
   Shuffle,
+  ArrowLeft,
 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { useSongs } from "@/context/songsContext";
@@ -18,88 +19,48 @@ import { useSongs } from "@/context/songsContext";
 const Player = () => {
   const { songId } = useParams();
   const navigate = useNavigate();
-  const { songs, setCurrentSongId } = useSongs(); // Retrieve all songs from context
+  const {
+    songs,
+    setCurrentSongId,
+    volume,
+    setVolume,
+    duration,
+    isPlaying,
+    isFavorite,
+    setIsFavorite,
+    currentTime,
+    togglePlay,
+    playNextSong,
+    playPreviousSong,
+    seekTo,
+    currentSongId,
+  } = useSongs();
 
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [volume, setVolume] = useState(1);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const audioRef = useRef<HTMLAudioElement>(null);
-
-  // Find the index of the current song
+  // Find the current song
   const currentSongIndex = songs.findIndex((song) => song.id === songId);
   const currentSong = songs[currentSongIndex];
 
+  // Set current song if it's not already set
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = volume;
+    if (songId !== currentSongId) {
+      setCurrentSongId(songId);
     }
-  }, [volume]);
+  }, [songId, currentSongId, setCurrentSongId]);
 
-  useEffect(() => {
-    if (isPlaying && audioRef.current && currentSong?.downloadUrl?.[4]?.url) {
-      audioRef.current
-        .play()
-        .then(() => {
-          setCurrentSongId(currentSong.id);
-        })
-        .catch((err) => console.error("Playback error:", err));
-    }
-  }, [isPlaying, currentSong]);
-
-  const togglePlay = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
-
-  const handleTimeUpdate = () => {
-    if (audioRef.current) {
-      setCurrentTime(audioRef.current.currentTime);
-      setDuration(audioRef.current.duration);
-    }
-  };
-
-  const formatTime = (time: number) => {
+  const formatTime = (time) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
-  const handleSliderChange = (newPosition: number[]) => {
-    if (audioRef.current) {
-      const newTime = (newPosition[0] / 100) * duration;
-      audioRef.current.currentTime = newTime;
-      setCurrentTime(newTime);
-    }
-  };
-
-  const playNextSong = () => {
-    if (currentSongIndex < songs.length - 1) {
-      setCurrentSongId(songs[currentSongIndex + 1].id);
-    }
-  };
-
-  const playPreviousSong = () => {
-    if (currentSongIndex > 0) {
-      setCurrentSongId(songs[currentSongIndex - 1].id);
-    }
-  };
-
   return (
     <div className="fixed inset-0 bg-gradient-to-b from-accent/20 to-background backdrop-blur-lg">
       <div className="container h-full px-4 py-8 flex flex-col justify-between">
-        <div className="flex justify-end">
+        <div className="flex justify-start">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/search")}
             className="p-2 hover:bg-secondary rounded-full">
-            <X className="text-primary-foreground" />
+            <ArrowLeft size={24} />
           </button>
         </div>
 
@@ -119,7 +80,7 @@ const Player = () => {
           </motion.div>
 
           <div className="text-center space-y-2 max-w-md">
-            <h1 className="text-2xl font-bold text-primary-foreground">
+            <h1 className=" text-2xl font-bold text-primary-foreground">
               {currentSong?.name}
             </h1>
             <p className="text-muted">
@@ -128,17 +89,10 @@ const Player = () => {
           </div>
 
           <div className="w-full max-w-md space-y-4">
-            <audio
-              ref={audioRef}
-              src={currentSong?.downloadUrl?.[4]?.url}
-              onTimeUpdate={handleTimeUpdate}
-              onEnded={playNextSong}
-            />
-
             <div className="space-y-2">
               <Slider
                 value={[currentTime ? (currentTime / duration) * 100 : 0]}
-                onValueChange={handleSliderChange}
+                onValueChange={(newValue) => seekTo(newValue[0])}
                 max={100}
                 step={1}
                 className="w-full"

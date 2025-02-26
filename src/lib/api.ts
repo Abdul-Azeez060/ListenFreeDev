@@ -10,7 +10,8 @@ export const fetchSongs = async (query: string) => {
     }
     const data = await response.json();
     // The API returns data in a nested structure
-    console.log(data.data.results, "this is the response");
+    // console.log(data.data.results, "this is the response");
+
     return data.data.results || [];
   } catch (error) {
     console.error("Error fetching songs:", error);
@@ -35,7 +36,7 @@ export const fetchSongDetails = async (id: string) => {
       throw new Error("Failed to fetch song details");
     }
     const data = await response.json();
-    console.log(data.data[0], "this is the player api");
+    // console.log(data.data[0], "this is the player api");
     return data.data[0] || null;
   } catch (error) {
     console.error("Error fetching song details:", error);

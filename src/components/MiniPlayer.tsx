@@ -1,88 +1,40 @@
-import { useState, useRef, useEffect } from "react";
-import { motion } from "framer-motion";
-import { useParams, useNavigate } from "react-router-dom";
-import {
-  Play,
-  Pause,
-  SkipBack,
-  SkipForward,
-  Heart,
-  Volume2,
-  X,
-  Repeat,
-  Shuffle,
-} from "lucide-react";
-import { Slider } from "@/components/ui/slider";
+import { useNavigate } from "react-router-dom";
+import { Play, Pause, SkipBack, SkipForward, Heart, X } from "lucide-react";
 import { useSongs } from "@/context/songsContext";
+import { memo } from "react"; // Add memo to prevent unnecessary re-renders
 
-const MiniPlayer = () => {
+const MiniPlayer = memo(() => {
   const navigate = useNavigate();
-  const { songs, currentSongId } = useSongs();
-
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [volume, setVolume] = useState(1);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const audioRef = useRef(null);
+  const {
+    songs,
+    currentSongId,
+    isPlaying,
+    isFavorite,
+    setIsFavorite,
+    togglePlay,
+    playNextSong,
+    playPreviousSong,
+  } = useSongs();
 
   const currentSongIndex = songs.findIndex((song) => song.id === currentSongId);
   const currentSong = songs[currentSongIndex];
 
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = volume;
-    }
-  }, [volume]);
-
-  useEffect(() => {
-    if (isPlaying && audioRef.current && currentSong?.downloadUrl?.[4]?.url) {
-      audioRef.current
-        .play()
-        .catch((err) => console.error("Playback error:", err));
-    }
-  }, [isPlaying, currentSong]);
-
-  const togglePlay = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
-
-  const playNextSong = () => {
-    if (currentSongIndex < songs.length - 1) {
-      navigate(`/player/${songs[currentSongIndex + 1].id}`);
-    }
-  };
-
-  const playPreviousSong = () => {
-    if (currentSongIndex > 0) {
-      navigate(`/player/${songs[currentSongIndex - 1].id}`);
-    }
-  };
+  // If no song is playing, don't render the mini player
+  if (!currentSong) return null;
 
   return (
-    <div className=" w-full bg-gradient-to-b from-accent/20 to-background backdrop-blur-lg shadow-md z-50">
+    <div className="w-full bg-gradient-to-b from-accent/20 to-background backdrop-blur-lg shadow-md z-50">
       <div className="container px-4 py-4 flex items-center justify-between">
-        <button
-          onClick={() => navigate(-1)}
-          className="p-2 hover:bg-secondary rounded-full">
-          <X className="text-primary-foreground" />
-        </button>
-
-        <div className="flex items-center space-x-4">
+        <div
+          className="flex items-center space-x-4 cursor-pointer"
+          onClick={() => navigate(`/player/${currentSongId}`)}>
           <img
             src={currentSong?.image?.[2]?.url || "/placeholder.svg"}
             alt={currentSong?.name}
             className="w-16 h-16 rounded-lg object-cover"
           />
           <div className="flex flex-col text-center">
-            <h1 className="text-lg font-bold text-primary-foreground">
+            <h1 className="text-sm md:text-lg font-bold text-primary-foreground truncate w-[150px] md:w-auto">
               {currentSong?.name}
             </h1>
             <p className="text-muted text-sm">
@@ -108,12 +60,16 @@ const MiniPlayer = () => {
             <SkipForward size={24} />
           </button>
           <button className="p-2" onClick={() => setIsFavorite(!isFavorite)}>
-            <Heart className={isFavorite ? "text-red-500" : "text-muted"} />
+            <Heart
+              size={24}
+              fill={isFavorite ? "currentColor" : "none"}
+              className={isFavorite ? "text-red-500" : "text-muted"}
+            />
           </button>
         </div>
       </div>
     </div>
   );
-};
+});
 
 export default MiniPlayer;
