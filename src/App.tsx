@@ -15,30 +15,32 @@ import { SearchedSongsProvider } from "./context/searchContext";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <BrowserRouter>
-      <SongsProvider>
-        <SearchedSongsProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
+const App = () => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <SongsProvider>
+          <SearchedSongsProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
 
-            <Layout>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/search" element={<Search />} />
-                <Route path="/library" element={<Library />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/player/:songId" element={<Player />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Layout>
-          </TooltipProvider>
-        </SearchedSongsProvider>
-      </SongsProvider>
-    </BrowserRouter>
-  </QueryClientProvider>
-);
+              <Layout>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/search" element={<Search />} />
+                  <Route path="/library" element={<Library />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/player/:songId" element={<Player />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Layout>
+            </TooltipProvider>
+          </SearchedSongsProvider>
+        </SongsProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

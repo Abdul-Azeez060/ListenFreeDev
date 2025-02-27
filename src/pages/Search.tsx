@@ -12,6 +12,7 @@ import { toast } from "sonner";
 const Search = () => {
   const navigate = useNavigate();
   const { addSong } = useSongs();
+  let songQuerySearched = "";
   const { searchSongsResult, songQuery, setSongsQuery, setSearchSongsResult } =
     useSearchSongs();
   const [isLoading, setIsLoading] = useState(false);
@@ -24,7 +25,7 @@ const Search = () => {
       setIsLoading(false);
       setSearchSongsResult(songs);
     };
-    fetchSearchSongs();
+    if (songQuerySearched !== songQuery) fetchSearchSongs();
   }, [songQuery]);
 
   console.log("this is the songs");
@@ -38,7 +39,10 @@ const Search = () => {
           placeholder="Search songs, artists, or albums..."
           className="w-full pl-10 pr-4 py-3 rounded-full bg-secondary text-primary-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/50"
           value={songQuery}
-          onChange={(e) => setSongsQuery(e.target.value)}
+          onChange={(e) => {
+            songQuerySearched = e.target.value;
+            setSongsQuery(e.target.value);
+          }}
         />
       </div>
 
@@ -71,7 +75,7 @@ const Search = () => {
                     className="flex items-center justify-between space-x-4 p-2 hover:bg-secondary rounded-lg cursor-pointer"
                     whileHover={{ scale: 1.01 }}>
                     <div
-                      className="flex items-center "
+                      className="flex items-center w-[calc(100vw-5rem)]"
                       onClick={() => {
                         addSong(song);
                         navigate(`/player/${song.id}`);
