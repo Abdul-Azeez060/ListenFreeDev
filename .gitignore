@@ -11,7 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
-config.toml
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -22,3 +22,4 @@ config.toml
 *.njsproj
 *.sln
 *.sw?
+.env

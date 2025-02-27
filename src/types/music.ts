@@ -11,6 +11,14 @@ export interface Song {
     url: string;
   };
   downloadUrl?: object;
+  artists: {
+    primary: PrimaryArtist[];
+  };
+}
+
+export interface PrimaryArtist {
+  id: string;
+  name: string;
 }
 
 export interface Playlist {
