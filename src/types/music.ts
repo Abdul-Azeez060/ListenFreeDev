@@ -14,6 +14,7 @@ export interface Song {
   artists: {
     primary: PrimaryArtist[];
   };
+  isFavorite?: boolean;
 }
 
 export interface PrimaryArtist {

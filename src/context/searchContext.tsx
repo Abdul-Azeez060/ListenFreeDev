@@ -26,7 +26,7 @@ export const SearchedSongsProvider = ({
 }) => {
   const [searchSongsResult, setSearchSongsResult] = useState<Song[]>([]);
 
-  const [songQuery, setSongsQuery] = useState<string>();
+  const [songQuery, setSongsQuery] = useState<string>("a");
 
   return (
     <SearchSongsContext.Provider

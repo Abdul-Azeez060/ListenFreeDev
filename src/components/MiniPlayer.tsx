@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Play, Pause, SkipBack, SkipForward, Heart, X } from "lucide-react";
 import { useSongs } from "@/context/songsContext";
-import { memo } from "react"; // Add memo to prevent unnecessary re-renders
+import { memo, useEffect } from "react"; // Add memo to prevent unnecessary re-renders
 import { Song } from "@/types/music";
 const MiniPlayer = memo(() => {
   const navigate = useNavigate();
@@ -18,6 +18,16 @@ const MiniPlayer = memo(() => {
 
   const currentSongIndex = songs.findIndex((song) => song.id === currentSongId);
   const currentSong = songs[currentSongIndex];
+  useEffect(() => {
+    localStorage.getItem("favoriteSongs") &&
+      JSON.parse(localStorage.getItem("favoriteSongs")).forEach((song) => {
+        if (song.id == currentSongId) {
+          setIsFavorite(song.isFavorite);
+        } else {
+          setIsFavorite(false);
+        }
+      });
+  }, [currentSongId, setIsFavorite]);
 
   // If no song is playing, don't render the mini player
   if (!currentSong) return null;
@@ -63,7 +73,34 @@ const MiniPlayer = memo(() => {
               disabled={currentSongIndex === songs.length - 1}>
               <SkipForward size={24} />
             </button>
-            <button className="p-2" onClick={() => setIsFavorite(!isFavorite)}>
+            <button
+              className="p-2"
+              onClick={() => {
+                if (!isFavorite) {
+                  localStorage.getItem("favoriteSongs")
+                    ? localStorage.setItem(
+                        "favoriteSongs",
+                        JSON.stringify([
+                          ...JSON.parse(localStorage.getItem("favoriteSongs")),
+                          { ...currentSong, isFavorite: true },
+                        ])
+                      )
+                    : localStorage.setItem(
+                        "favoriteSongs",
+                        JSON.stringify([currentSong])
+                      );
+                  setIsFavorite(true);
+                } else {
+                  const newFavoriteSongs = JSON.parse(
+                    localStorage.getItem("favoriteSongs")
+                  ).filter((song) => song.id !== currentSong.id);
+                  localStorage.setItem(
+                    "favoriteSongs",
+                    JSON.stringify(newFavoriteSongs)
+                  );
+                  setIsFavorite(false);
+                }
+              }}>
               <Heart
                 size={24}
                 fill={isFavorite ? "currentColor" : "none"}
