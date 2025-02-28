@@ -93,8 +93,8 @@ export const SongsProvider = ({ children }) => {
   const playNextSong = () => {
     if (currentSongIndex < songs.length - 1) {
       // console.log(songs[currentSongIndex + 1], "this is the next song");
-      setCurrentSongId(songs[currentSongIndex + 1].id);
-      navigate(`/player/${songs[currentSongIndex + 1].id}`);
+      setCurrentSongId(songs[(currentSongIndex + 1) % songs.length].id);
+      navigate(`/player/${songs[(currentSongIndex + 1) % songs.length].id}`);
     }
   };
 

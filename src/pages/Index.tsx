@@ -31,9 +31,9 @@ const Index = () => {
   // const songs = recentSongs?.data ? Array.isArray(recentSongs.data) ? recentSongs.data : [] : [];
 
   return (
-    <div className="container px-4 py-6 space-y-8">
+    <div className="container px-4 py-6 space-y-8 bg-black">
       <motion.h1
-        className="text-4xl font-bold text-primary-foreground"
+        className="text-4xl font-bold text-white"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}>
@@ -42,9 +42,7 @@ const Index = () => {
 
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold text-primary-foreground">
-            Recent Plays
-          </h2>
+          <h2 className="text-2xl font-semibold text-white">Recent Plays</h2>
           <Clock className="text-muted" />
         </div>
         <div className="grid grid-cols-2 grid-rows-2 overflow-y-auto gap-4 md:grid-cols-4">
@@ -54,7 +52,16 @@ const Index = () => {
                 key={song?.id}
                 className="relative group cursor-pointer"
                 whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.2 }}>
+                transition={{ duration: 0.2 }}
+                onClick={() => {
+                  setCurrentSongId(song.id);
+                  recentSongs.unshift(
+                    recentSongs.splice(recentSongs.indexOf(song), 1)[0]
+                  );
+                  setRecentSongs(recentSongs);
+
+                  setSongs(recentSongs);
+                }}>
                 <div className="relative aspect-square rounded-lg overflow-hidden">
                   <img
                     src={song?.image[2].url}
@@ -65,7 +72,7 @@ const Index = () => {
                     <PlayCircle className="w-12 h-12 text-primary-foreground" />
                   </div>
                 </div>
-                <h3 className="mt-2 text-sm font-medium truncate text-primary-foreground">
+                <h3 className="mt-2 text-sm font-medium truncate text-white">
                   {song?.name}
                 </h3>
                 <p className="text-xs text-muted truncate">
@@ -90,9 +97,7 @@ const Index = () => {
 
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold text-primary-foreground">
-            Favorites
-          </h2>
+          <h2 className="text-2xl font-semibold text-white">Favorites</h2>
           <Heart className="text-accent" />
         </div>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -122,13 +127,15 @@ const Index = () => {
                     <PlayCircle className="w-12 h-12 text-primary-foreground" />
                   </div>
                 </div>
-                <h3 className="mt-2 text-sm font-medium truncate text-primary-foreground">
+                <h3 className="mt-2 text-sm font-medium truncate text-white">
                   {song?.name}
                 </h3>
-                <p className="text-xs text-muted truncate">
-                  {Array.isArray(song?.primaryArtists)
-                    ? song?.primaryArtists.join(", ")
-                    : song?.primaryArtists}
+                <p className="text-xs text-muted">
+                  {Array.isArray(song?.artists.primaryArtists)
+                    ? song?.artists.primaryArtists
+                        .map((artist) => artist.name)
+                        .join(", ")
+                    : song?.artists.primaryArtists}
                 </p>
               </motion.div>
             ))}

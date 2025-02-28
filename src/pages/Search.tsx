@@ -31,7 +31,7 @@ const Search = () => {
   console.log("this is the songs");
 
   return (
-    <div className="container min-h-screen bg-primary px-4 py-6 space-y-6">
+    <div className="container min-h-screen bg-black px-4 py-6 space-y-6">
       <div className="relative">
         <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted" />
         <input
@@ -51,7 +51,7 @@ const Search = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="space-y-4">
-          <h2 className="text-xl font-semibold text-primary-foreground">
+          <h2 className="text-xl font-semibold text-slate-300">
             Search Results
           </h2>
           <div className="grid gap-4">
@@ -72,7 +72,7 @@ const Search = () => {
               : searchSongsResult.map((song: Song) => (
                   <motion.div
                     key={song.id}
-                    className="flex items-center justify-between space-x-4 p-2 hover:bg-secondary rounded-lg cursor-pointer"
+                    className="flex items-center justify-between space-x-4 p-2 hover:text-black hover:bg-muted rounded-lg cursor-pointer"
                     whileHover={{ scale: 1.01 }}>
                     <div
                       className="flex items-center w-[calc(100vw-5rem)]"
@@ -86,7 +86,7 @@ const Search = () => {
                         className="w-12 mr-3 h-12 rounded-md object-cover"
                       />
                       <div>
-                        <h3 className="font-medium text-primary-foreground">
+                        <h3 className="font-medium  text-slate-300">
                           {song.name}
                         </h3>
                         <p className="text-sm text-muted">
@@ -102,6 +102,7 @@ const Search = () => {
                           addSong(song);
                           toast("Song added to queue");
                         }}
+                        className="text-white"
                       />
                     </div>
                   </motion.div>

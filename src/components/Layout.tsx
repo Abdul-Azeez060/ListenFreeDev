@@ -32,7 +32,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const isPlayerRoute = matchPath("/player/:songId", location.pathname);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background bg-black">
       <motion.main
         className="pb-20"
         initial={{ opacity: 0, y: 20 }}
@@ -45,7 +45,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         {!isPlayerRoute && <MiniPlayer />}
       </div>
       {!isPlayerRoute && (
-        <nav className="fixed bottom-0  w-full bg-white/80 backdrop-blur-lg border-t border-gray-200">
+        <nav className="fixed bottom-0  w-full bg-black backdrop-blur-lg border-t border-black">
           <div className="flex justify-around  items-center py-3  px-4">
             {navItems.map((item) => {
               const Icon = item.icon;

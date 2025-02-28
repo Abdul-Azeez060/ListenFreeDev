@@ -11,7 +11,7 @@ const useCustomBackNavigation = () => {
 
       // If the previous page is a `/player/:songId`, skip it
       if (location.pathname.startsWith("/player/")) {
-        navigate("/search", { replace: true }); // Redirect to search
+        null;
       } else {
         navigate(-1); // Otherwise, go back normally
       }
