@@ -12,7 +12,10 @@ interface SearchSongsProps {
   songQuery: string;
   setSearchSongsResult: (songs: Song[]) => void;
   setSongsQuery: (query: string) => void;
+  category: Category;
+  setCategory: (category: Category) => void;
 }
+type Category = "songs" | "albums" | "artists" | "playlists";
 
 const SearchSongsContext = createContext<SearchSongsProps | undefined>(
   undefined
@@ -28,6 +31,8 @@ export const SearchedSongsProvider = ({
 
   const [songQuery, setSongsQuery] = useState<string>("a");
 
+  const [category, setCategory] = useState<Category>("albums");
+
   return (
     <SearchSongsContext.Provider
       value={{
@@ -35,6 +40,8 @@ export const SearchedSongsProvider = ({
         setSearchSongsResult,
         setSongsQuery,
         songQuery,
+        category,
+        setCategory,
       }}>
       {children}
     </SearchSongsContext.Provider>
