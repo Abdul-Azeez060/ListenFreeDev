@@ -35,6 +35,7 @@ const Player = () => {
     playNextSong,
     playPreviousSong,
     seekTo,
+    togglePause,
     currentSongId,
   } = useSongs();
 
@@ -138,7 +139,7 @@ const Player = () => {
                 </button>
 
                 <button
-                  className="p-2  text-white hover:text-primary-foreground"
+                  className="p-2  text-white "
                   onClick={playPreviousSong}
                   disabled={currentSongIndex === 0}>
                   <SkipBack size={28} />
@@ -146,12 +147,12 @@ const Player = () => {
 
                 <button
                   className="p-4 rounded-full  text-white hover:bg-slate-400/90"
-                  onClick={togglePlay}>
+                  onClick={isPlaying ? togglePause : togglePlay}>
                   {isPlaying ? <Pause size={32} /> : <Play size={32} />}
                 </button>
 
                 <button
-                  className="p-2  text-white hover:text-primary-foreground"
+                  className="p-2  text-white "
                   onClick={playNextSong}
                   disabled={currentSongIndex === songs.length - 1}>
                   <SkipForward size={28} />

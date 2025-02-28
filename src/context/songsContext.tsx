@@ -22,6 +22,7 @@ interface SongsContextProps {
   playPreviousSong: () => void;
   seekTo: (percentage: number) => void;
   addSong: (song: Song) => void;
+  togglePause: () => void;
 }
 const SongsContext = createContext<SongsContextProps | undefined>(undefined);
 
@@ -48,18 +49,66 @@ export const SongsProvider = ({ children }) => {
     setSongs([...songs, song]);
     // console.log("Song added to playlist:", song);
   };
+
+  useEffect(() => {
+    if ("mediaSession" in navigator && currentSong !== undefined) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: currentSong?.name,
+        artist: currentSong?.artists.primary
+          .map((artist) => artist.name)
+          .join(", "),
+        album: currentSong?.album.name,
+        artwork: currentSong?.image?.[2]?.url
+          ? [
+              {
+                src: currentSong.image[2].url,
+                sizes: "150x150",
+                type: "image/jpeg",
+              },
+            ]
+          : [],
+      });
+
+      navigator.mediaSession.setActionHandler("play", togglePlay);
+      navigator.mediaSession.setActionHandler("pause", togglePause);
+      navigator.mediaSession.setActionHandler("seekbackward", seekTo);
+      navigator.mediaSession.setActionHandler("seekforward", seekTo);
+      navigator.mediaSession.setActionHandler(
+        "previoustrack",
+        playPreviousSong
+      );
+      navigator.mediaSession.setActionHandler("nexttrack", playNextSong);
+    }
+
+    // Cleanup media session on unmount
+    return () => {
+      if ("mediaSession" in navigator) {
+        navigator.mediaSession.metadata = null;
+        navigator.mediaSession.setActionHandler("play", null);
+        navigator.mediaSession.setActionHandler("pause", null);
+        navigator.mediaSession.setActionHandler("seekbackward", null);
+        navigator.mediaSession.setActionHandler("seekforward", null);
+        navigator.mediaSession.setActionHandler("previoustrack", null);
+        navigator.mediaSession.setActionHandler("nexttrack", null);
+      }
+    };
+  }, [currentSong, currentSongId]);
   // Handle play/pause
   const togglePlay = () => {
     if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current
-          .play()
-          .catch((err) => console.error("Playback error:", err));
-      }
+      audioRef.current
+        .play()
+        .catch((err) => console.error("Playback error:", err));
+      console.log("played successfull");
+      setIsPlaying(true);
+    }
+  };
 
-      setIsPlaying(!isPlaying);
+  const togglePause = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      console.log("paused successfull");
+      setIsPlaying(false);
     }
   };
 
@@ -129,6 +178,7 @@ export const SongsProvider = ({ children }) => {
         setIsFavorite,
         currentTime,
         togglePlay,
+        togglePause,
         playNextSong,
         playPreviousSong,
         seekTo,

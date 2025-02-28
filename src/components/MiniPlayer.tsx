@@ -13,7 +13,7 @@ const MiniPlayer = memo(() => {
     setIsFavorite,
     togglePlay,
     playNextSong,
-    playPreviousSong,
+    togglePause,
   } = useSongs();
 
   const currentSongIndex = songs.findIndex((song) => song.id === currentSongId);
@@ -64,8 +64,10 @@ const MiniPlayer = memo(() => {
           </div>
 
           <div className="flex items-center space-x-4">
-            <button className="p-2 text-white" onClick={togglePlay}>
-              {isPlaying ? <Pause size={24} /> : <Play size={24} />}
+            <button
+              className="p-2 text-white"
+              onClick={isPlaying ? togglePause : togglePlay}>
+              {isPlaying ? <Pause size={32} /> : <Play size={32} />}
             </button>
             <button
               className="p-2 text-white"
