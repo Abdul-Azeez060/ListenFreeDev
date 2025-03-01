@@ -20,6 +20,7 @@ export interface Song {
 export interface PrimaryArtist {
   id: string;
   name: string;
+  url: string;
 }
 
 export interface Playlist {
@@ -27,21 +28,30 @@ export interface Playlist {
   name: string;
   songs: Song[];
   createdAt: Date;
+  image: object;
+  language?: string;
+  songCount: number;
+  url?: string;
 }
 
 export interface Album {
   id: string;
   name: string;
   songs: Song[];
-  image: string;
-  primaryArtists: string[];
+  image: object;
+  artists: {
+    primary: PrimaryArtist[];
+  };
+  language?: string;
   year: string;
+  url?: string;
 }
 
 export interface Artist {
   id: string;
   name: string;
-  image: string;
+  image: object;
   songs: Song[];
   albums: Album[];
+  url: string;
 }

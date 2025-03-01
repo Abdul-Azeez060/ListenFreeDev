@@ -3,7 +3,9 @@ const BASE_URL = "https://saavn.dev/api";
 export const fetchSongs = async (query: string, category: string) => {
   try {
     const response = await fetch(
-      `${BASE_URL}/search/${category}?query=${encodeURIComponent(query)}`
+      `${BASE_URL}/search/${category}?limit=30&query=${encodeURIComponent(
+        query
+      )}`
     );
     if (!response.ok) {
       throw new Error("Failed to fetch songs");
@@ -20,13 +22,20 @@ export const fetchSongs = async (query: string, category: string) => {
   }
 };
 
-export const fetchArtists = async () => {
-  const response = await fetch(`${BASE_URL}/artists`);
+export const fetchArtists = async (id: string, link: string) => {
+  const response = await fetch(`${BASE_URL}/artists?id=${id}&link=${link}`);
   return response.json();
 };
 
-export const fetchAlbums = async () => {
-  const response = await fetch(`${BASE_URL}/albums`);
+export const fetchPlaylistSongs = async (id: string, link: string) => {
+  const response = await fetch(
+    `${BASE_URL}/playlists?id=${id}&link=${link}&limit=30`
+  );
+  return response.json();
+};
+
+export const fetchAlbumSongs = async (id: string, link: string) => {
+  const response = await fetch(`${BASE_URL}/albums?id=${id}&link=${link}`);
   return response.json();
 };
 

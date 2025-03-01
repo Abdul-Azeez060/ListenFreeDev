@@ -31,9 +31,9 @@ const Index = () => {
   // const songs = recentSongs?.data ? Array.isArray(recentSongs.data) ? recentSongs.data : [] : [];
 
   return (
-    <div className=" py-6 space-y-8 bg-black ">
+    <div className=" py-6 space-y-8 bg-black mb-10 ">
       <motion.h1
-        className="text-4xl font-bold text-white "
+        className="text-4xl font-bold text-white px-4"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}>
@@ -42,7 +42,9 @@ const Index = () => {
 
       <section className="space-y-4 w-screen">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold text-white">Recent Plays</h2>
+          <h2 className="text-2xl font-semibold text-white px-4">
+            Recent Plays
+          </h2>
           <Clock className="text-muted mr-2" />
         </div>
         <div className="overflow-x-auto scrollbar-hide ">
@@ -73,7 +75,7 @@ const Index = () => {
                       <PlayCircle className="w-12 h-12 text-primary-foreground" />
                     </div>
                   </div>
-                  <h3 className="mt-2 text-sm font-medium truncate w-24 text-white">
+                  <h3 className="mt-2 text-sm font-medium w-[9rem] md:w-[15rem] text-center truncate text-white">
                     {song?.name}
                   </h3>
                   <p className="text-xs text-muted truncate">
@@ -99,7 +101,7 @@ const Index = () => {
 
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold text-white">Favorites</h2>
+          <h2 className="text-2xl font-semibold text-white px-4">Favorites</h2>
           <Heart className="text-accent mr-2" />
         </div>
         <div className="overflow-x-auto scrollbar-hide ">
@@ -130,7 +132,7 @@ const Index = () => {
                       <PlayCircle className="w-12 h-12 text-primary-foreground" />
                     </div>
                   </div>
-                  <h3 className="mt-2 text-sm font-medium truncate w-24 text-white">
+                  <h3 className="mt-2 text-sm font-medium truncate w-[9rem] md:w-[15rem]   text-center text-white">
                     {song?.name}
                   </h3>
                   <p className="text-xs text-muted truncate">

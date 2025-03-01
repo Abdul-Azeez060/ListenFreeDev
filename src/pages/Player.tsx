@@ -40,13 +40,13 @@ const Player = () => {
   } = useSongs();
 
   // Find the current song
-  const currentSongIndex = songs.findIndex((song) => song.id === songId);
+  const currentSongIndex = songs.findIndex((song) => song.id === currentSongId);
   const currentSong = songs[currentSongIndex];
   useCustomBackNavigation();
   // Set current song if it's not already set
   useEffect(() => {
     if (songId !== currentSongId) {
-      setCurrentSongId(songId);
+      setCurrentSongId(currentSongId);
     }
 
     localStorage.getItem("favoriteSongs") &&

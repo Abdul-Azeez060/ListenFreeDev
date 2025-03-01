@@ -140,17 +140,16 @@ export const SongsProvider = ({ children }) => {
 
   // Play next/previous
   const playNextSong = () => {
-    if (currentSongIndex < songs.length - 1) {
-      // console.log(songs[currentSongIndex + 1], "this is the next song");
-      setCurrentSongId(songs[(currentSongIndex + 1) % songs.length].id);
-      navigate(`/player/${songs[(currentSongIndex + 1) % songs.length].id}`);
+    if (songs.length > 0) {
+      const nextIndex = (currentSongIndex + 1) % songs.length;
+      setCurrentSongId(songs[nextIndex].id);
     }
   };
 
   const playPreviousSong = () => {
     if (currentSongIndex > 0) {
       setCurrentSongId(songs[currentSongIndex - 1].id);
-      navigate(`/player/${songs[currentSongIndex - 1].id}`);
+      navigate(`player/${songs[currentSongIndex - 1].id}`);
     }
   };
 

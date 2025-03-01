@@ -8,12 +8,14 @@ import React, {
 import { Song } from "@/types/music";
 
 interface SearchSongsProps {
-  searchSongsResult: Song[];
+  searchSongsResult: any[];
   songQuery: string;
   setSearchSongsResult: (songs: Song[]) => void;
   setSongsQuery: (query: string) => void;
   category: Category;
   setCategory: (category: Category) => void;
+  url: string;
+  setUrl: (url: string) => void;
 }
 type Category = "songs" | "albums" | "artists" | "playlists";
 
@@ -27,15 +29,18 @@ export const SearchedSongsProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [searchSongsResult, setSearchSongsResult] = useState<Song[]>([]);
+  const [searchSongsResult, setSearchSongsResult] = useState([]);
 
-  const [songQuery, setSongsQuery] = useState<string>("a");
+  const [songQuery, setSongsQuery] = useState<string>("party");
 
-  const [category, setCategory] = useState<Category>("albums");
+  const [category, setCategory] = useState<Category>("playlists");
+  const [url, setUrl] = useState<string>("");
 
   return (
     <SearchSongsContext.Provider
       value={{
+        url,
+        setUrl,
         searchSongsResult,
         setSearchSongsResult,
         setSongsQuery,

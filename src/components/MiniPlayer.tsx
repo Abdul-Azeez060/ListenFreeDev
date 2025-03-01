@@ -51,7 +51,7 @@ const MiniPlayer = memo(() => {
               className="w-11 h-11 rounded-lg object-cover"
             />
             <div className="flex flex-col ">
-              <h1 className="text-sm font-extrabold text-white ">
+              <h1 className="text-sm font-extrabold text-white w-28 truncate ">
                 {currentSong?.name}
               </h1>
               <p className="text-white text-xs h-5 overflow-hidden">

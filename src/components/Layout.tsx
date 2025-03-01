@@ -32,9 +32,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const isPlayerRoute = matchPath("/player/:songId", location.pathname);
 
   return (
-    <div className="min-h-screen bg-background bg-black overflow-x-hidden scrollbar-hide">
+    <div className="h-screen bg-background bg-black overflow-hidden scrollbar-hide">
       <motion.main
-        className="pb-20"
+        className="pb-20   scrollbar-hide"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 20 }}

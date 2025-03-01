@@ -35,19 +35,20 @@ const Search = () => {
       setIsLoading(false);
       setSearchSongsResult(songs);
     };
-    if (songQuerySearched !== songQuery) fetchSearchSongs();
-  }, [songQuery]);
 
+    fetchSearchSongs();
+  }, [songQuery, category]);
+  const categories = ["songs", "albums", "playlists", "artists"];
   console.log("this is the songs");
 
   return (
-    <div className="container min-h-screen bg-black px-4 py-6 space-y-6">
-      <div className="relative">
-        <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted" />
+    <div className=" h-screen bg-black scrollbar-hide overflow-auto  py-6 space-y-6">
+      <div className="relative px-2">
+        <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted ml-2" />
         <input
           type="text"
           placeholder="Search songs, artists, or albums..."
-          className="w-full pl-10 pr-4 py-3 rounded-full bg-secondary text-primary-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/50"
+          className="w-full pl-10   pr-4 py-3 rounded-full bg-secondary text-primary-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/50"
           value={songQuery}
           onChange={(e) => {
             songQuerySearched = e.target.value;
@@ -56,12 +57,27 @@ const Search = () => {
         />
       </div>
 
+      <div className="flex items-center mx-auto">
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            className={`mx-1 p-2 rounded-2xl border ${
+              category === cat
+                ? "bg-white text-black border-white"
+                : "border-slate-200 text-white"
+            }`}
+            onClick={() => setCategory(cat as any)}>
+            {cat.charAt(0).toUpperCase() + cat.slice(1)}
+          </button>
+        ))}
+      </div>
+
       {songQuery && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="space-y-4">
-          <h2 className="text-xl font-semibold text-slate-300">
+          <h2 className="text-xl font-semibold text-slate-300 px-4">
             Search Results
           </h2>
           <div className="grid gap-4">
@@ -85,9 +101,9 @@ const Search = () => {
               <AlbumResult />
             ) : category === "artists" ? (
               <ArtistResult />
-            ) : (
+            ) : category === "playlists" ? (
               <PlaylistResult />
-            )}
+            ) : null}
           </div>
         </motion.div>
       )}
