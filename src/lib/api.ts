@@ -13,7 +13,7 @@ export const fetchSongs = async (query: string, category: string) => {
 
     const data = await response.json();
     // The API returns data in a nested structure
-    console.log(data, "this is the response");
+    // console.log(data, "this is the response");
 
     return data.data.results || [];
   } catch (error) {

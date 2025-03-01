@@ -51,7 +51,7 @@ const Player = () => {
 
     localStorage.getItem("favoriteSongs") &&
       JSON.parse(localStorage.getItem("favoriteSongs")).forEach((song) => {
-        if (song.id == songId) {
+        if (song.id == currentSongId) {
           setIsFavorite(song.isFavorite);
         } else {
           setIsFavorite(false);
@@ -60,7 +60,7 @@ const Player = () => {
 
     const recentSongs = JSON.parse(localStorage.getItem("recentSongs")) || [];
 
-    if (!recentSongs.some((song) => song.id === songId)) {
+    if (!recentSongs.some((song) => song?.id === songId)) {
       localStorage.setItem(
         "recentSongs",
         JSON.stringify([...recentSongs, currentSong])
