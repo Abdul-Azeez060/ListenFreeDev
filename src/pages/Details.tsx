@@ -80,8 +80,9 @@ function Details() {
               className="flex items-center w-[calc(100vw-5rem)]"
               onClick={() => {
                 console.log("clicked the song");
+                setCurrentSongId(song.id);
                 addSong(song);
-                navigate(`/player/${song.id}`);
+                console.log("addded the song to the state");
               }}>
               <img
                 src={song.image[2].url}

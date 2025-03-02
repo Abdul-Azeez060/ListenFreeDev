@@ -8,7 +8,7 @@ import { Song } from "@/types/music";
 import { useNavigate } from "react-router-dom";
 function SongsResult() {
   const { searchSongsResult } = useSearchSongs();
-  const { addSong } = useSongs();
+  const { addSong, setCurrentSongId } = useSongs();
   const navigate = useNavigate();
   return (
     <>
@@ -20,6 +20,7 @@ function SongsResult() {
           <div
             className="flex items-center w-[calc(100vw-5rem)]"
             onClick={() => {
+              setCurrentSongId(song.id);
               addSong(song);
               navigate(`/player/${song.id}`);
             }}>

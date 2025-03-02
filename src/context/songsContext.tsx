@@ -44,10 +44,13 @@ export const SongsProvider = ({ children }) => {
   const currentSongIndex = songs.findIndex((song) => song.id === currentSongId);
   const currentSong = songs[currentSongIndex] || null;
 
+  console.log(currentSongIndex, "this is the currentSongIndex");
+  console.log(currentSong, "this is the current song");
+
   // Add song to playlist
   const addSong = (song) => {
     setSongs([...songs, song]);
-    // console.log("Song added to playlist:", song);
+    console.log("Song added to the songs state", song);
   };
 
   useEffect(() => {
