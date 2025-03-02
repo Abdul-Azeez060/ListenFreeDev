@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "framer-motion";
 import { PlusCircleIcon } from "lucide-react";
 import { useSearchSongs } from "@/context/searchContext";
