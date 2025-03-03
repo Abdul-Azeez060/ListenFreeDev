@@ -34,7 +34,7 @@ function Details() {
     async function getSongs() {
       if (category === "albums") {
         const result = await fetchAlbumSongs(albumId, url);
-        console.log(result.data, "these are the songs in the album");
+        //console.log(result.data, "these are the songs in the album");
         setDetailSongs(result.data);
       } else if (category === "playlists") {
         const result = await fetchPlaylistSongs(playlistId, url);
