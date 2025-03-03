@@ -41,26 +41,25 @@ export const SongsProvider = ({ children }) => {
 
   // Get current song
 
-  const currentSongIndex = songs.findIndex((song) => song.id === currentSongId);
+  const currentSongIndex = songs?.findIndex(
+    (song) => song?.id === currentSongId
+  );
   const currentSong = songs[currentSongIndex] || null;
-
-  console.log(currentSongIndex, "this is the currentSongIndex");
-  console.log(currentSong, "this is the current song");
 
   // Add song to playlist
   const addSong = (song) => {
     setSongs([...songs, song]);
-    console.log("Song added to the songs state", song);
   };
 
   useEffect(() => {
     if ("mediaSession" in navigator && currentSong !== undefined) {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: currentSong?.name,
-        artist: currentSong?.artists.primary
-          .map((artist) => artist.name)
-          .join(", "),
-        album: currentSong?.album.name,
+        artist:
+          currentSong?.artists.primary
+            .map((artist) => artist.name)
+            .join(", ") || "ListenFree",
+        album: currentSong?.album?.name || "ListenFree",
         artwork: currentSong?.image?.[2]?.url
           ? [
               {
@@ -102,7 +101,7 @@ export const SongsProvider = ({ children }) => {
       audioRef.current
         .play()
         .catch((err) => console.error("Playback error:", err));
-      console.log("played successfull");
+      // console.log("played successfull");
       setIsPlaying(true);
     }
   };
@@ -110,7 +109,7 @@ export const SongsProvider = ({ children }) => {
   const togglePause = () => {
     if (audioRef.current) {
       audioRef.current.pause();
-      console.log("paused successfull");
+      // console.log("paused successfull");
       setIsPlaying(false);
     }
   };
@@ -118,13 +117,15 @@ export const SongsProvider = ({ children }) => {
   // Update audio source when song changes
   useEffect(() => {
     if (audioRef.current && currentSong?.downloadUrl?.[4]?.url) {
-      audioRef.current.src = currentSong.downloadUrl[4].url;
+      setTimeout(() => {
+        audioRef.current.src = currentSong.downloadUrl[4].url;
 
-      if (isPlaying) {
-        audioRef.current
-          .play()
-          .catch((err) => console.error("Playback error:", err));
-      }
+        if (isPlaying) {
+          audioRef.current
+            .play()
+            .catch((err) => console.error("Playback error:", err));
+        }
+      }, 200);
     }
   }, [currentSongId, currentSong]);
 

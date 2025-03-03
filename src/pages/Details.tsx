@@ -82,6 +82,7 @@ function Details() {
                 // console.log("clicked the song");
                 setCurrentSongId(song.id);
                 addSong(song);
+                setSongs(detailSongs.songs);
                 // console.log("addded the song to the state");
               }}>
               <img

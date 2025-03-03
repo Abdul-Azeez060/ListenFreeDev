@@ -9,6 +9,7 @@ function SongsResult() {
   const { searchSongsResult } = useSearchSongs();
   const { addSong, setCurrentSongId } = useSongs();
   const navigate = useNavigate();
+
   return (
     <>
       {searchSongsResult.map((song: Song) => (

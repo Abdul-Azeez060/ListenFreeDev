@@ -3,7 +3,7 @@ const BASE_URL = "https://saavn.dev/api";
 export const fetchSongs = async (query: string, category: string) => {
   try {
     const response = await fetch(
-      `${BASE_URL}/search/${category}?limit=30&query=${encodeURIComponent(
+      `${BASE_URL}/search/${category}?limit=15&query=${encodeURIComponent(
         query
       )}`
     );
@@ -29,7 +29,7 @@ export const fetchArtists = async (id: string, link: string) => {
 
 export const fetchPlaylistSongs = async (id: string, link: string) => {
   const response = await fetch(
-    `${BASE_URL}/playlists?id=${id}&link=${link}&limit=30`
+    `${BASE_URL}/playlists?id=${id}&link=${link}&limit=15`
   );
   return response.json();
 };

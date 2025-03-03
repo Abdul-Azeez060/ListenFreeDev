@@ -40,7 +40,9 @@ const Player = () => {
   } = useSongs();
 
   // Find the current song
-  const currentSongIndex = songs.findIndex((song) => song.id === currentSongId);
+  const currentSongIndex = songs.findIndex(
+    (song) => song?.id === currentSongId
+  );
   const currentSong = songs[currentSongIndex];
   useCustomBackNavigation();
   // Set current song if it's not already set
