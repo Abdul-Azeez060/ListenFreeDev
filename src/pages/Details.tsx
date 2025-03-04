@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSearchSongs } from "@/context/searchContext";
-import { fetchAlbumSongs, fetchPlaylistSongs } from "@/lib/api";
+import {
+  fetchAlbumSongs,
+  fetchArtistSongs,
+  fetchPlaylistSongs,
+} from "@/lib/api";
 import { useLocation } from "react-router-dom";
 import { Song } from "@/types/music";
 import { useNavigate } from "react-router-dom";
@@ -15,6 +19,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSongs } from "@/context/songsContext";
+import AlbumComponent from "@/components/AlbumComponent";
 
 interface DetailSongs {
   songs: Song[];
@@ -22,9 +27,10 @@ interface DetailSongs {
   name: string;
   image: object;
   description?: string;
+  topAlbums?: Array<object>;
 }
 function Details() {
-  const { albumId, playlistId } = useParams();
+  const { albumId, playlistId, artistId } = useParams();
   const { category, url } = useSearchSongs();
   const { addSong, setSongs, songs, setCurrentSongId } = useSongs();
   const navigate = useNavigate();
@@ -39,6 +45,14 @@ function Details() {
       } else if (category === "playlists") {
         const result = await fetchPlaylistSongs(playlistId, url);
         setDetailSongs(result.data);
+      } else if (category === "artists") {
+        const result = await fetchArtistSongs(artistId);
+        // console.log(result);
+        result.data.songs = [...result.data.topSongs];
+        setDetailSongs(result.data);
+        // console.log(result.data, "this is hte data");
+
+        setDetailSongs(result.data);
       }
     }
     getSongs();
@@ -50,12 +64,17 @@ function Details() {
         <img
           src={detailSongs?.image[2].url}
           alt=""
-          className="md:w-full md:h-[35rem] opacity-50"
+          className="sm:w-[20rem] md:p-10 md:w-[30rem] opacity-50 mx-auto"
         />
+
         <div className="flex justify-between items-center">
-          <p className="px-5 text-slate-300 w-[80%]">
-            {detailSongs?.description}
-          </p>
+          {category === "artists" ? (
+            <h2 className="text-white px-5">{detailSongs?.name}</h2>
+          ) : (
+            <p className="px-5 text-slate-300 w-[80%]">
+              {detailSongs?.description}
+            </p>
+          )}
           {detailSongs && (
             <button
               className="mx-4"
@@ -90,9 +109,11 @@ function Details() {
                 alt={song.name}
                 className="w-12 mr-3 h-12 rounded-md object-cover"
               />
-              <div>
-                <h3 className="font-medium  text-slate-300">{song.name}</h3>
-                <p className="text-sm text-slate-400">
+              <div className="w-[11rem] sm:w-[13rem] md:w-[15rem] lg:w-[20rem] xl:w-[35rem]">
+                <h3 className="font-medium  truncate   text-slate-300">
+                  {song.name}
+                </h3>
+                <p className="text-sm text-slate-400  truncate ">
                   {song?.artists.primary
                     ?.map((artist) => artist.name)
                     .join(", ")}

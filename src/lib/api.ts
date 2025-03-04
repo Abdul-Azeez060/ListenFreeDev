@@ -22,8 +22,8 @@ export const fetchSongs = async (query: string, category: string) => {
   }
 };
 
-export const fetchArtists = async (id: string, link: string) => {
-  const response = await fetch(`${BASE_URL}/artists?id=${id}&link=${link}`);
+export const fetchArtistSongs = async (id: string) => {
+  const response = await fetch(`${BASE_URL}/artists/${id}`);
   return response.json();
 };
 

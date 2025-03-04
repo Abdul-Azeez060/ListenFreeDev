@@ -32,9 +32,9 @@ function SongsResult() {
             <div>
               <h3 className="font-medium  text-slate-300">{song.name}</h3>
               <p className="text-sm text-muted">
-                {Array.isArray(song.primaryArtists)
-                  ? song.primaryArtists.join(", ")
-                  : song.primaryArtists}
+                {song?.artists?.primary
+                  ?.map((artist) => artist.name)
+                  .join(", ")}
               </p>
             </div>
           </div>

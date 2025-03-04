@@ -17,6 +17,7 @@ const Search = () => {
   const navigate = useNavigate();
   const { addSong } = useSongs();
   let songQuerySearched = "";
+
   const {
     searchSongsResult,
     songQuery,

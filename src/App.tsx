@@ -35,6 +35,7 @@ const App = () => {
                   <Route path="/player/:songId" element={<Player />} />
                   <Route path="/album/:albumId" element={<Details />} />
                   <Route path="/playlist/:playlistId" element={<Details />} />
+                  <Route path="/artist/:artistId" element={<Details />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Layout>

@@ -119,6 +119,7 @@ export const SongsProvider = ({ children }) => {
     if (audioRef.current && currentSong?.downloadUrl?.[4]?.url) {
       setTimeout(() => {
         audioRef.current.src = currentSong.downloadUrl[4].url;
+        console.log(audioRef.current.src, "this is sthe soruc");
 
         if (isPlaying) {
           audioRef.current
