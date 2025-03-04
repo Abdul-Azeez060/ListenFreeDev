@@ -20,7 +20,7 @@ function ArtistResult() {
           <div
             className="flex items-center w-[calc(100vw-5rem)]"
             onClick={() => {
-              console.log(artist);
+              // console.log(artist);
               navigate(`/artist/${artist.id}`);
             }}>
             <img

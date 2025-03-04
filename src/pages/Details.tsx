@@ -10,16 +10,9 @@ import { useLocation } from "react-router-dom";
 import { Song } from "@/types/music";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import {
-  BugPlay,
-  PlayCircle,
-  PlayCircleIcon,
-  PlayIcon,
-  PlusCircleIcon,
-} from "lucide-react";
+import { PlayCircleIcon, PlusCircleIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSongs } from "@/context/songsContext";
-import AlbumComponent from "@/components/AlbumComponent";
 
 interface DetailSongs {
   songs: Song[];

@@ -33,11 +33,25 @@
     <meta name="twitter:image" content="./logo.jpeg" />
     <link rel="shortcut icon" href="./logo.jpeg" type="image/x-icon" />
   </head>
+  <!-- Google tag (gtag.js) -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-LWB697F798"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-LWB697F798");
+  </script>
 
   <body>
     <div id="root"></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
