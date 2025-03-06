@@ -31,10 +31,15 @@ const Search = () => {
   useEffect(() => {
     // call the fetchSongs function and pass the songQuery as an argument
     const fetchSearchSongs = async () => {
-      setIsLoading(true);
-      const songs = await fetchSongs(songQuery, category);
-      setIsLoading(false);
-      setSearchSongsResult(songs);
+      try {
+        setIsLoading(true);
+        const songs = await fetchSongs(songQuery, category);
+        setSearchSongsResult(songs);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchSearchSongs();
@@ -82,28 +87,14 @@ const Search = () => {
             Search Results
           </h2>
           <div className="grid gap-4">
-            {isLoading && (category === "songs" || category === "artists") ? (
-              Array(4)
-                .fill(0)
-                .map((_, index) => (
-                  <div
-                    key={index}
-                    className="animate-pulse flex items-center space-x-4 p-2">
-                    <div className="w-12 h-12 bg-secondary rounded-md" />
-                    <div className="space-y-2">
-                      <div className="h-4 w-48 bg-secondary rounded" />
-                      <div className="h-3 w-32 bg-secondary rounded" />
-                    </div>
-                  </div>
-                ))
-            ) : category === "songs" ? (
+            {category === "songs" ? (
               <SongsResult />
             ) : category === "albums" ? (
               <AlbumResult isLoading={isLoading} />
             ) : category === "artists" ? (
               <ArtistResult />
             ) : category === "playlists" ? (
-              <PlaylistResult />
+              <PlaylistResult isLoading={isLoading} />
             ) : null}
           </div>
         </motion.div>

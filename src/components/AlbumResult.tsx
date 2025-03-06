@@ -7,12 +7,12 @@ import { useNavigate } from "react-router-dom";
 import { set } from "date-fns";
 import AlbumComponent from "./AlbumComponent";
 
-function AlbumResult() {
+function AlbumResult({isLoading}) {
   const { searchSongsResult, setUrl } = useSearchSongs();
   const navigate = useNavigate();
   return (
     <div className="flex flex-wrap justify-center  scrollbar-hide mb-32">
-      <AlbumComponent searchSongsResult={searchSongsResult} />
+      <AlbumComponent isLoading={isLoading} searchSongsResult={searchSongsResult} />
     </div>
   );
 }

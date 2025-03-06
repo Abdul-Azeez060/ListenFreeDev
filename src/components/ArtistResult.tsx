@@ -15,7 +15,7 @@ function ArtistResult() {
       {searchSongsResult.map((artist: Artist) => (
         <motion.div
           key={artist.id}
-          className="flex items-center justify-between space-x-4 p-2 hover:text-black hover:bg-muted rounded-lg cursor-pointer"
+          className="flex items-center justify-between space-x-4 p-2 hover:text-black hover:bg-gray-600 rounded-lg cursor-pointer"
           whileHover={{ scale: 1.01 }}>
           <div
             className="flex items-center w-[calc(100vw-5rem)]"

@@ -57,9 +57,9 @@ function Details() {
   return (
     <div className="h-screen  scrollbar-hide overflow-auto">
       {isLoading ? (
-        <div className="animate-pulse">
+        <div className="animate-pulse ">
           {/* Placeholder for Image */}
-          <div className="bg-gray-600 sm:w-[20rem] md:w-[30rem] h-48 md:h-60 opacity-50 mx-auto rounded-lg"></div>
+          <div className="bg-gray-600 mt-10 sm:w-[20rem] md:p-10  md:w-[30rem] h-48 md:h-60 opacity-50 mx-auto rounded-lg"></div>
 
           <div className="flex justify-between items-center mt-4 px-5">
             {/* Placeholder for Text */}
@@ -95,6 +95,19 @@ function Details() {
                   setSongs(detailSongs.songs);
                   console.log("button clicked");
                   setCurrentSongId(detailSongs?.songs[0].id);
+
+                  const playlists = JSON.parse(
+                    localStorage.getItem("playlists") || "[]"
+                  );
+
+                  // Update the playlists array with the new detailSongs
+                  const updatedPlaylists = [...playlists, detailSongs];
+
+                  // Save the updated playlists array back to localStorage
+                  localStorage.setItem(
+                    "playlists",
+                    JSON.stringify(updatedPlaylists)
+                  );
                 }}>
                 <PlayCircleIcon className="text-white size-14" />
               </button>
@@ -121,7 +134,7 @@ function Details() {
           : detailSongs?.songs?.map((song: Song) => (
               <motion.div
                 key={song.id}
-                className="flex items-center justify-between space-x-4 p-2 hover:text-black hover:bg-muted rounded-lg cursor-pointer"
+                className="flex items-center justify-between space-x-4 p-2 hover:text-black hover:bg-gray-600 rounded-lg cursor-pointer"
                 whileHover={{ scale: 1.01 }}>
                 <div
                   className="flex items-center w-[calc(100vw-5rem)]"

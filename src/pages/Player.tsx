@@ -13,6 +13,7 @@ import {
   Shuffle,
   ArrowLeft,
   Loader2,
+  Download,
 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { useSongs } from "@/context/songsContext";
@@ -168,8 +169,37 @@ const Player = () => {
                   <SkipForward size={28} />
                 </button>
 
-                <button className="p-2  text-white hover:text-primary-foreground">
+                {/* <button className="p-2  text-white hover:text-primary-foreground">
                   <Repeat size={20} />
+                </button> */}
+                <button className="p-2  text-white hover:text-primary-foreground">
+                  <Download
+                    size={20}
+                    onClick={async () => {
+                      try {
+                        const url = currentSong.downloadUrl[4].url;
+                        const response = await fetch(url);
+                        const blob = await response.blob();
+                        // console.log(blob, "thisis the blob");
+                        const blobUrl = URL.createObjectURL(blob);
+                        // console.log(blobUrl, "this is the url");
+                        const link = document.createElement("a");
+                        link.href = blobUrl;
+                        link.setAttribute(
+                          "download",
+                          `${currentSong.name}.mp4`
+                        ); // Change filename if needed
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+
+                        // Cleanup the blob URL
+                        URL.revokeObjectURL(blobUrl);
+                      } catch (error) {
+                        console.log(error);
+                      }
+                    }}
+                  />
                 </button>
               </div>
 

@@ -155,6 +155,63 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      <section className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-semibold text-white px-4">Playlists</h2>
+          <Heart className="text-accent mr-2" />
+        </div>
+        <div className="overflow-x-auto scrollbar-hide ">
+          <div className="grid grid-flow-col  auto-cols-max w-screen">
+            {!isLoading &&
+              favoriteSongs?.map((song: any) => (
+                <motion.div
+                  key={song?.id}
+                  className="relative flex flex-col  items-center group cursor-pointer"
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 0.2 }}
+                  onClick={() => {
+                    setCurrentSongId(song.id);
+                    favoriteSongs.unshift(
+                      favoriteSongs.splice(recentSongs.indexOf(song), 1)[0]
+                    );
+                    setFavoriteSongs(recentSongs);
+
+                    setSongs(recentSongs);
+                  }}>
+                  <div className=" aspect-square rounded-lg overflow-x-auto size-36 md:size-60 mx-2  ">
+                    <img
+                      src={song?.image[2].url}
+                      alt={song?.name}
+                      className="object-cover w-full h-full"
+                    />
+                    <div className="absolute inset-0 bg-secondary/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <PlayCircle className="w-12 h-12 text-primary-foreground" />
+                    </div>
+                  </div>
+                  <h3 className="mt-2 text-sm font-medium truncate w-[9rem] md:w-[15rem]   text-center text-white">
+                    {song?.name}
+                  </h3>
+                  <p className="text-xs text-muted truncate">
+                    {Array.isArray(song?.primaryArtists)
+                      ? song?.primaryArtists.join(", ")
+                      : song?.primaryArtists}
+                  </p>
+                </motion.div>
+              ))}
+            {isLoading &&
+              Array(4)
+                .fill(0)
+                .map((_, index) => (
+                  <div key={index} className="animate-pulse">
+                    <div className="aspect-square bg-secondary rounded-lg"></div>
+                    <div className="mt-2 h-4 bg-secondary rounded w-3/4"></div>
+                    <div className="mt-1 h-3 bg-secondary rounded w-1/2"></div>
+                  </div>
+                ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
