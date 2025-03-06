@@ -23,6 +23,7 @@ interface SongsContextProps {
   seekTo: (percentage: number) => void;
   addSong: (song: Song) => void;
   togglePause: () => void;
+  isPlayerLoading: boolean;
 }
 const SongsContext = createContext<SongsContextProps | undefined>(undefined);
 
@@ -34,6 +35,7 @@ export const SongsProvider = ({ children }) => {
   const [isPlaying, setIsPlaying] = useState(true);
   const [isFavorite, setIsFavorite] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
+  const [isPlayerLoading, setIsPlayerLoading] = useState(false);
 
   // Audio element reference stored in context
   const audioRef = useRef(null);
@@ -187,10 +189,13 @@ export const SongsProvider = ({ children }) => {
         playPreviousSong,
         seekTo,
         addSong,
+        isPlayerLoading,
       }}>
       {/* Single audio element for the entire app */}
       <audio
         ref={audioRef}
+        onLoadStart={() => setIsPlayerLoading(true)}
+        onCanPlay={() => setIsPlayerLoading(false)}
         onTimeUpdate={handleTimeUpdate}
         onEnded={playNextSong}
         onDurationChange={() => setDuration(audioRef.current.duration)}

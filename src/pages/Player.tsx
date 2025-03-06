@@ -12,6 +12,7 @@ import {
   Repeat,
   Shuffle,
   ArrowLeft,
+  Loader2,
 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { useSongs } from "@/context/songsContext";
@@ -37,6 +38,7 @@ const Player = () => {
     seekTo,
     togglePause,
     currentSongId,
+    isPlayerLoading,
   } = useSongs();
 
   // Find the current song
@@ -150,7 +152,13 @@ const Player = () => {
                 <button
                   className="p-4 rounded-full  text-white hover:bg-slate-400/90"
                   onClick={isPlaying ? togglePause : togglePlay}>
-                  {isPlaying ? <Pause size={32} /> : <Play size={32} />}
+                  {isPlayerLoading ? (
+                    <span>
+                      <Loader2 className=" animate-spin" />
+                    </span>
+                  ) : (
+                    <>{isPlaying ? <Pause size={32} /> : <Play size={32} />}</>
+                  )}
                 </button>
 
                 <button

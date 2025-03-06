@@ -1,5 +1,13 @@
 import { useNavigate } from "react-router-dom";
-import { Play, Pause, SkipBack, SkipForward, Heart, X } from "lucide-react";
+import {
+  Play,
+  Pause,
+  SkipBack,
+  SkipForward,
+  Heart,
+  X,
+  Loader2,
+} from "lucide-react";
 import { useSongs } from "@/context/songsContext";
 import { memo, useEffect } from "react"; // Add memo to prevent unnecessary re-renders
 import { Song } from "@/types/music";
@@ -14,6 +22,7 @@ const MiniPlayer = memo(() => {
     togglePlay,
     playNextSong,
     togglePause,
+    isPlayerLoading,
   } = useSongs();
 
   const currentSongIndex = songs.findIndex((song) => song.id === currentSongId);
@@ -67,7 +76,13 @@ const MiniPlayer = memo(() => {
             <button
               className="p-2 text-white"
               onClick={isPlaying ? togglePause : togglePlay}>
-              {isPlaying ? <Pause size={32} /> : <Play size={32} />}
+              {isPlayerLoading ? (
+                <span>
+                  <Loader2 className=" animate-spin" />
+                </span>
+              ) : (
+                <>{isPlaying ? <Pause size={32} /> : <Play size={32} />}</>
+              )}
             </button>
             <button
               className="p-2 text-white"

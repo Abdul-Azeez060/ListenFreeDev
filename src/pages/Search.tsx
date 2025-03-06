@@ -82,7 +82,7 @@ const Search = () => {
             Search Results
           </h2>
           <div className="grid gap-4">
-            {isLoading ? (
+            {isLoading && (category === "songs" || category === "artists") ? (
               Array(4)
                 .fill(0)
                 .map((_, index) => (
@@ -99,7 +99,7 @@ const Search = () => {
             ) : category === "songs" ? (
               <SongsResult />
             ) : category === "albums" ? (
-              <AlbumResult />
+              <AlbumResult isLoading={isLoading} />
             ) : category === "artists" ? (
               <ArtistResult />
             ) : category === "playlists" ? (
