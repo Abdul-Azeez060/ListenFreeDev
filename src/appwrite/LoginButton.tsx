@@ -6,13 +6,12 @@ const LoginButton = () => {
     try {
       await account.createOAuth2Session(
         OAuthProvider.Google,
-        "http://localhost:8080/",
-        "http://localhost:8080/fail"
+        "https://listen-free-dev.vercel.app/",
+        "https://listen-free-dev.vercel.app/"
       );
     } catch (error) {
       console.error("Google login failed", error);
     }
-
   };
 
   return (
