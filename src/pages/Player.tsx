@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Play,
   Pause,
@@ -19,6 +19,9 @@ import { Slider } from "@/components/ui/slider";
 import { useSongs } from "@/context/songsContext";
 import useCustomBackNavigation from "@/lib/BackNavigation";
 import { set } from "date-fns";
+import SongDetails from "@/components/SongDetails";
+import { Song } from "@/types/music";
+import { fetchSongLyrics } from "@/lib/api";
 
 const Player = () => {
   const { songId } = useParams();
@@ -42,6 +45,8 @@ const Player = () => {
     isPlayerLoading,
   } = useSongs();
 
+  const [lyrics, setlyrics] = useState("");
+
   // Find the current song
   const currentSongIndex = songs.findIndex(
     (song) => song?.id === currentSongId
@@ -55,13 +60,15 @@ const Player = () => {
     }
 
     localStorage.getItem("favoriteSongs") &&
-      JSON.parse(localStorage.getItem("favoriteSongs")).forEach((song) => {
-        if (song.id == currentSongId) {
-          setIsFavorite(song.isFavorite);
-        } else {
-          setIsFavorite(false);
+      JSON.parse(localStorage.getItem("favoriteSongs")).forEach(
+        (song: Song) => {
+          if (song.id == currentSongId) {
+            setIsFavorite(song.isFavorite);
+          } else {
+            setIsFavorite(false);
+          }
         }
-      });
+      );
 
     const recentSongs = JSON.parse(localStorage.getItem("recentSongs")) || [];
 
@@ -79,6 +86,17 @@ const Player = () => {
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
+  // useEffect(() => {
+  //   console.log("first");
+  //   getLyrics();
+  // }, [currentSongId]);
+
+  // async function getLyrics() {
+  //   if (currentSong?.hasLyrics) {
+  //     const response = await fetchSongLyrics(currentSong.id);
+  //   }
+  // }
+
   return (
     <div
       className="fixed inset-0"
@@ -90,8 +108,8 @@ const Player = () => {
       <div
         className="absolute inset-0"
         style={{
-          background: `linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 1))`,
-          backdropFilter: "blur(50px)",
+          background: `linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 1))`,
+          backdropFilter: "blur(100px)",
         }}>
         <div className="container h-full px-4 py-8 flex flex-col justify-between">
           <div className="flex justify-start">
@@ -116,17 +134,20 @@ const Player = () => {
                 className="w-full h-full object-cover"
               />
             </motion.div>
+            <div className="w-72 md:w-80">
+              <SongDetails currentSong={currentSong} />
+            </div>
 
-            <div className="text-center space-y-2 max-w-md">
-              <h1 className=" text-2xl font-bold text-primary">
-                {currentSong?.name.slice(0, 40)}...
+            {/* <div className="text-center space-y-2">
+              <h1 className=" text-2xl text-white font-bold text-primary">
+                {currentSong?.name}
               </h1>
               <p className="text-white">
                 {currentSong?.artists.primary
                   ?.map((artist) => artist.name)
                   .join(", ")}
               </p>
-            </div>
+            </div> */}
 
             <div className="w-full max-w-md space-y-4">
               <div className="space-y-2">
@@ -156,7 +177,7 @@ const Player = () => {
                 </button>
 
                 <button
-                  className="p-4 rounded-full  text-white hover:bg-slate-400/90"
+                  className="p-4 rounded-full  text-white bg-slate-400/90"
                   onClick={isPlaying ? togglePause : togglePlay}>
                   {isPlayerLoading ? (
                     <span>

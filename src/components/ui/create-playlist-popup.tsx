@@ -5,21 +5,21 @@ const DialogDemo = () => (
   <Dialog.Root>
     <Dialog.Trigger asChild>
       <button className="inline-flex h-[35px] items-center justify-center rounded bg-violet4 px-[15px] font-medium leading-none text-violet11 outline-none outline-offset-1 hover:bg-mauve3 focus-visible:outline-2 focus-visible:outline-violet6 select-none">
-        Edit profile
+        Create Space
       </button>
     </Dialog.Trigger>
     <Dialog.Portal>
       <Dialog.Overlay className="fixed inset-0 bg-blackA6 data-[state=open]:animate-overlayShow" />
       <Dialog.Content className="fixed left-1/2 top-1/2 max-h-[85vh] w-[90vw] max-w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-md bg-gray1 p-[25px] shadow-[var(--shadow-6)] focus:outline-none data-[state=open]:animate-contentShow">
         <Dialog.Title className="m-0 text-[17px] font-medium text-mauve12">
-          Edit profile
+          Create a space
         </Dialog.Title>
         <Dialog.Description className="mb-5 mt-2.5 text-[15px] leading-normal text-mauve11">
-          Make changes to your profile here. Click save when you're done.
+          Enter a unique username for the space
         </Dialog.Description>
         <fieldset className="mb-[15px] flex items-center gap-5">
           <label
-            className="w-[90px] text-right text-[15px] text-violet11"
+            className=" text-right text-[15px] text-violet11"
             htmlFor="name">
             Name
           </label>
@@ -31,7 +31,7 @@ const DialogDemo = () => (
         </fieldset>
         <fieldset className="mb-[15px] flex items-center gap-5">
           <label
-            className="w-[90px] text-right text-[15px] text-violet11"
+            className="text-right text-[15px] text-violet11"
             htmlFor="username">
             Username
           </label>

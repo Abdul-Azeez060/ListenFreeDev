@@ -5,6 +5,7 @@ export interface Song {
   duration: string;
   image: object;
   primaryArtists: string[];
+  hasLyrics?: boolean;
   album: {
     id: string;
     name: string;

@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import DialogDemo from "@/components/ui/create-playlist-popup";
 
 const Library = () => {
@@ -16,25 +18,25 @@ const Library = () => {
         </button>
       </motion.div>
 
-      <div className="space-y-6">
-        <section>
+      <div className="space-y-6 ">
+        <section className="w-full">
           <h2 className="text-xl text-white font-semibold mb-4">
-            Your Playlists
+            Join a Space
           </h2>
-          <div className="grid gap-4">
-            {/* Playlist items will go here */}
-            <div
-              className="p-4 rounded-lg border border-gray-200 hover:border-accent transition-colors"
-              onClick={() => {}}>
-              <h3 className="font-medium text-white">Create New Playlist</h3>
-              <p className="text-sm text-gray-500">Add your favorite songs</p>
-            </div>
+
+          <div className="flex w-full max-w-sm items-center space-x-2">
+            <Input type="text" className="text-muted" placeholder="Space Id" />
+            <Button
+              type="submit"
+              className="bg-white text-black hover:bg-green-300">
+              Join
+            </Button>
           </div>
         </section>
 
         <section>
           <h2 className="text-xl font-semibold mb-4 text-white">
-            Your Playlists
+            Create a Space
           </h2>
           <div className="grid gap-4">
             {/* Playlist items will go here */}
@@ -45,7 +47,6 @@ const Library = () => {
             </div>
           </div>
         </section>
-        {/* <DialogDemo /> */}
       </div>
     </div>
   );

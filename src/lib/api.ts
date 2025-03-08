@@ -53,3 +53,13 @@ export const fetchSongDetails = async (id: string) => {
     return null;
   }
 };
+
+export const fetchSongLyrics = async (id: string) => {
+  try {
+    const response = await fetch(`${BASE_URL}/songs/${id}/lyrics`);
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching song lyrics", error);
+    return null;
+  }
+};

@@ -50,11 +50,11 @@ const Search = () => {
   return (
     <div className=" h-screen bg-black scrollbar-hide overflow-auto  py-6 space-y-6">
       <div className="relative px-2">
-        <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted ml-2" />
+        <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-black ml-2" />
         <input
           type="text"
           placeholder="Search songs, artists, or albums..."
-          className="w-full pl-10   pr-4 py-3 rounded-full bg-secondary text-primary-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/50"
+          className="w-full pl-10    pr-4 py-3 rounded-full text-black bg-slate-300  placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/50"
           value={songQuery}
           onChange={(e) => {
             songQuerySearched = e.target.value;
