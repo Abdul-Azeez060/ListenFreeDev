@@ -34,7 +34,7 @@ const Index = () => {
   // const songs = recentSongs?.data ? Array.isArray(recentSongs.data) ? recentSongs.data : [] : [];
 
   return (
-    <div className=" py-6 space-y-8 bg-black mb-10 ">
+    <div className=" py-6 space-y-8 bg-black mb-10  ">
       <div className="flex  justify-between px-4">
         <motion.h1
           className="text-2xl md:text-4xl font-bold text-white "
@@ -43,7 +43,6 @@ const Index = () => {
           transition={{ delay: 0.1 }}>
           Welcome Back {user?.name.split(" ")[0]}
         </motion.h1>
-        <div>{user ? <LogOutButton /> : <LoginButton />}</div>
       </div>
 
       <section className="space-y-4 w-screen">

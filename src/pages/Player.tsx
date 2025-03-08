@@ -87,7 +87,12 @@ const Player = () => {
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}>
-      <div className="absolute inset-0 backdrop-blur-3xl bg-black/30">
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 1))`,
+          backdropFilter: "blur(50px)",
+        }}>
         <div className="container h-full px-4 py-8 flex flex-col justify-between">
           <div className="flex justify-start">
             <button
