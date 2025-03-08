@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import { SongsProvider } from "./context/songsContext";
 import { SearchedSongsProvider } from "./context/searchContext";
 import Details from "./pages/Details";
+import { UserProvider } from "./context/userContext";
 
 const queryClient = new QueryClient();
 
@@ -20,28 +21,30 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <SongsProvider>
-          <SearchedSongsProvider>
-            <TooltipProvider>
-              <Toaster />
-              <Sonner />
+        <UserProvider>
+          <SongsProvider>
+            <SearchedSongsProvider>
+              <TooltipProvider>
+                <Toaster />
+                <Sonner />
 
-              <Layout>
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/search" element={<Search />} />
-                  <Route path="/library" element={<Library />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/player/:songId" element={<Player />} />
-                  <Route path="/album/:albumId" element={<Details />} />
-                  <Route path="/playlist/:playlistId" element={<Details />} />
-                  <Route path="/artist/:artistId" element={<Details />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </Layout>
-            </TooltipProvider>
-          </SearchedSongsProvider>
-        </SongsProvider>
+                <Layout>
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/search" element={<Search />} />
+                    <Route path="/library" element={<Library />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/player/:songId" element={<Player />} />
+                    <Route path="/album/:albumId" element={<Details />} />
+                    <Route path="/playlist/:playlistId" element={<Details />} />
+                    <Route path="/artist/:artistId" element={<Details />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </Layout>
+              </TooltipProvider>
+            </SearchedSongsProvider>
+          </SongsProvider>
+        </UserProvider>
       </BrowserRouter>
     </QueryClientProvider>
   );

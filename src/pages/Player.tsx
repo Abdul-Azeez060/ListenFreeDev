@@ -114,7 +114,7 @@ const Player = () => {
 
             <div className="text-center space-y-2 max-w-md">
               <h1 className=" text-2xl font-bold text-primary">
-                {currentSong?.name.slice(0, 20)}...
+                {currentSong?.name.slice(0, 40)}...
               </h1>
               <p className="text-white">
                 {currentSong?.artists.primary

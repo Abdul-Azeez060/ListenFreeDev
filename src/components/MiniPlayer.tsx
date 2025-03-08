@@ -52,7 +52,7 @@ const MiniPlayer = memo(() => {
       <div className=" inset-0 backdrop-blur-3xl bg-black/60">
         <div className="container px-4 py-2 flex items-center justify-between">
           <div
-            className="flex items-center space-x-4 cursor-pointer"
+            className="flex items-center space-x-4 cursor-pointer w-[80%]"
             onClick={() => navigate(`/player/${currentSongId}`)}>
             <img
               src={currentSong?.image?.[2]?.url || "/placeholder.svg"}

@@ -1,9 +1,11 @@
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { Heart, Clock, PlayCircle } from "lucide-react";
-import { fetchSongs } from "@/lib/api";
 import { useEffect, useState } from "react";
 import { useSongs } from "@/context/songsContext";
+import LoginButton from "@/appwrite/LoginButton";
+import { useCurrentUserData } from "@/context/userContext";
+import LogOutButton from "@/appwrite/LogOutButton";
 
 const Index = () => {
   // const { data: recentSongs, isLoading } = useQuery({
@@ -13,6 +15,7 @@ const Index = () => {
   const [favoriteSongs, setFavoriteSongs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [recentSongs, setRecentSongs] = useState([]);
+  const { user } = useCurrentUserData();
 
   useEffect(() => {
     setIsLoading(true);
@@ -32,13 +35,16 @@ const Index = () => {
 
   return (
     <div className=" py-6 space-y-8 bg-black mb-10 ">
-      <motion.h1
-        className="text-4xl font-bold text-white px-4"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}>
-        Welcome Back
-      </motion.h1>
+      <div className="flex  justify-between px-4">
+        <motion.h1
+          className="text-2xl md:text-4xl font-bold text-white "
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}>
+          Welcome Back {user?.name.split(" ")[0]}
+        </motion.h1>
+        <div>{user ? <LogOutButton /> : <LoginButton />}</div>
+      </div>
 
       <section className="space-y-4 w-screen">
         <div className="flex items-center justify-between">

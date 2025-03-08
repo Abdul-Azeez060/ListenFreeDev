@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import { mauve, violet, red, blackA, gray } from "@radix-ui/colors";
 const plugin = require("tailwindcss/plugin");
 export default {
   darkMode: ["class"],
@@ -24,6 +25,13 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+
+        ...mauve,
+        ...violet,
+        ...red,
+        ...blackA,
+        ...gray,
+
         primary: {
           DEFAULT: "#E0E1DD",
           foreground: "#0D1B2A",
