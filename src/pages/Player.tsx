@@ -22,6 +22,7 @@ import { set } from "date-fns";
 import SongDetails from "@/components/SongDetails";
 import { Song } from "@/types/music";
 import { fetchSongLyrics } from "@/lib/api";
+import SongsQueue from "@/components/SongsQueue";
 
 const Player = () => {
   const { songId } = useParams();
@@ -86,6 +87,44 @@ const Player = () => {
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
+  useEffect(() => {
+    const disableReload = (e) => {
+      if (
+        e.key === "F5" ||
+        (e.ctrlKey && e.key === "r") || // Windows/Linux
+        (e.metaKey && e.key === "r") // Mac ⌘ + R
+      ) {
+        e.preventDefault();
+      }
+    };
+
+    window.addEventListener("keydown", disableReload);
+    return () => window.removeEventListener("keydown", disableReload);
+  }, []);
+
+  useEffect(() => {
+    let lastTouchY = 0;
+
+    const preventSwipeReload = (e) => {
+      const touchY = e.touches[0].clientY;
+
+      // If the user swipes down while at the top of the page
+      if (touchY - lastTouchY > 1 && window.scrollY === 0) {
+        e.preventDefault(); // Prevent pull-to-refresh
+      }
+
+      lastTouchY = touchY;
+    };
+
+    document.addEventListener("touchmove", preventSwipeReload, {
+      passive: false,
+    });
+
+    return () => {
+      document.removeEventListener("touchmove", preventSwipeReload);
+    };
+  }, []);
+
   // useEffect(() => {
   //   console.log("first");
   //   getLyrics();
@@ -108,7 +147,7 @@ const Player = () => {
       <div
         className="absolute inset-0"
         style={{
-          background: `linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 1))`,
+          background: `linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgb(0,0,0))`,
           backdropFilter: "blur(100px)",
         }}>
         <div className="container h-full px-4 py-8 flex flex-col justify-between">
@@ -266,6 +305,7 @@ const Player = () => {
                   }}>
                   <Heart fill={isFavorite ? "currentColor" : "none"} />
                 </button>
+                <SongsQueue />
 
                 <div className="flex items-center space-x-2">
                   <Volume2 className="text-white" size={20} />

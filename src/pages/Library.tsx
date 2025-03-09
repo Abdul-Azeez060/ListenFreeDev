@@ -4,8 +4,36 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import DialogDemo from "@/components/ui/create-playlist-popup";
-
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 const Library = () => {
+  const FormSchema = z.object({
+    spaceId: z.string().min(2, {
+      message: "spaceId must be at least 2 characters.",
+    }),
+    name: z.string().min(2, { message: "name must be at least 2 characters" }),
+  });
+
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      spaceId: "",
+      name: "",
+    },
+  });
+
+  function onSubmit(data: z.infer<typeof FormSchema>) {}
+
   return (
     <div className="container px-4 py-6 space-y-8">
       <motion.div
@@ -38,6 +66,54 @@ const Library = () => {
           <h2 className="text-xl font-semibold mb-4 text-white">
             Create a Space
           </h2>
+          <div>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="w-2/3 space-y-6">
+                <FormField
+                  control={form.control}
+                  name="spaceId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-white">Space Id</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter Space Id"
+                          className="text-white"
+                          {...field}
+                        />
+                      </FormControl>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-white">
+                        Name of the Space
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          className="text-white"
+                          placeholder="Enter name of the space"
+                          {...field}
+                        />
+                      </FormControl>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button type="submit">Submit</Button>
+              </form>
+            </Form>
+          </div>
+
           <div className="grid gap-4">
             {/* Playlist items will go here */}
             <h1>hi how ar </h1>

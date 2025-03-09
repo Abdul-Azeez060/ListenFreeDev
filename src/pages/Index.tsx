@@ -31,6 +31,7 @@ const Index = () => {
   }, []);
 
   const { currentSongId, setCurrentSongId, setSongs } = useSongs();
+
   // const songs = recentSongs?.data ? Array.isArray(recentSongs.data) ? recentSongs.data : [] : [];
 
   return (
