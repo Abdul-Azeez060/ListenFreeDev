@@ -6,10 +6,10 @@ import { Album } from "@/types/music";
 import { useSearchSongs } from "@/context/searchContext";
 import { useNavigate } from "react-router-dom";
 
-function AlbumComponent({ searchSongsResult, isLoading }) {
-  const { setUrl } = useSearchSongs();
+function AlbumComponent({ isLoading }) {
+  const { setUrl, searchSongsResult } = useSearchSongs();
   const navigate = useNavigate();
-  console.log(isLoading, "this is isLoading");
+
   return (
     <>
       {isLoading ? (

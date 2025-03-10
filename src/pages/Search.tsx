@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Search as SearchIcon, PlusCircleIcon, PlayCircle } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -12,6 +12,7 @@ import SongsResult from "@/components/SongsResult";
 import AlbumResult from "@/components/AlbumResult";
 import ArtistResult from "@/components/ArtistResult";
 import PlaylistResult from "@/components/PlaylistResult";
+import debounce from "lodash.debounce";
 
 const Search = () => {
   const navigate = useNavigate();
@@ -27,38 +28,49 @@ const Search = () => {
     setCategory,
   } = useSearchSongs();
   const [isLoading, setIsLoading] = useState(false);
+  const [debouncedQuery, setDebouncedQuery] = useState(songQuery);
 
+  const fetchSearchSongs = async (query: string) => {
+    try {
+      setIsLoading(true);
+      const songs = await fetchSongs(query, category);
+      setSearchSongsResult(songs);
+      console.log("updated the search result");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  // Update search query with debounce
   useEffect(() => {
-    // call the fetchSongs function and pass the songQuery as an argument
-    const fetchSearchSongs = async () => {
-      try {
-        setIsLoading(true);
-        const songs = await fetchSongs(songQuery, category);
-        setSearchSongsResult(songs);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    if (debouncedQuery.trim() !== "") {
+      fetchSearchSongs(debouncedQuery);
+    }
+  }, [debouncedQuery, category]);
 
-    fetchSearchSongs();
-  }, [songQuery, category]);
+  // **Debounced function using useCallback**
+  const debouncedSetQuery = useCallback(
+    debounce((query) => {
+      setDebouncedQuery(query);
+    }, 500), // Adjust delay as needed
+    []
+  );
   const categories = ["songs", "albums", "playlists", "artists"];
-  console.log("this is the songs");
 
   return (
     <div className=" h-screen bg-black scrollbar-hide overflow-auto  py-6 space-y-6">
       <div className="relative px-2">
-        <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-black ml-2" />
+        <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white ml-2" />
         <input
           type="text"
           placeholder="Search songs, artists, or albums..."
-          className="w-full pl-10    pr-4 py-3 rounded-full text-black bg-slate-300  placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/50"
+          className="w-full pl-10    pr-4 py-3 rounded-full   text-white bg-slate-800  placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/50"
           value={songQuery}
           onChange={(e) => {
             songQuerySearched = e.target.value;
             setSongsQuery(e.target.value);
+            debouncedSetQuery(e.target.value);
           }}
         />
       </div>

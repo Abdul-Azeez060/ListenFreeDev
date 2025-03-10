@@ -1,20 +1,15 @@
 import { useRef, useEffect, useState } from "react";
-import { Minus, Plus } from "lucide-react";
+import { ListMusic, Minus, MinusCircle, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { motion } from "framer-motion";
 import { useSongs } from "@/context/songsContext";
 import { Song } from "@/types/music";
-import { VisuallyHidden } from "radix-ui";
 
 function SongsQueue() {
   const [isQueueOpen, setisQueueOpen] = useState(false);
@@ -36,8 +31,11 @@ function SongsQueue() {
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <Button variant="outline" onClick={() => setisQueueOpen(!isQueueOpen)}>
-          Songs
+        <Button
+          className="bg-transparent text-white relative right-6"
+          variant="secondary"
+          onClick={() => setisQueueOpen(!isQueueOpen)}>
+          Queue
         </Button>
       </DrawerTrigger>
 
@@ -79,7 +77,7 @@ function SongsQueue() {
               </div>
               <div>
                 <button>
-                  <Minus
+                  <MinusCircle
                     className="text-white"
                     onClick={() => {
                       console.log("clicked");

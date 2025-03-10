@@ -31,9 +31,9 @@ export const SearchedSongsProvider = ({
 }) => {
   const [searchSongsResult, setSearchSongsResult] = useState([]);
 
-  const [songQuery, setSongsQuery] = useState<string>("party");
+  const [songQuery, setSongsQuery] = useState<string>("");
 
-  const [category, setCategory] = useState<Category>("playlists");
+  const [category, setCategory] = useState<Category>("songs");
   const [url, setUrl] = useState<string>("");
 
   return (

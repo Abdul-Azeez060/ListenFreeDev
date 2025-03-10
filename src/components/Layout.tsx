@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate, useLocation, matchPath } from "react-router-dom";
-import { Home, Search, Library, User } from "lucide-react";
+import { Home, Search, Library, User, ListMusic } from "lucide-react";
 import MiniPlayer from "./MiniPlayer";
 import useCustomBackNavigation from "@/lib/BackNavigation";
+import SongsQueue from "./SongsQueue";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
@@ -63,6 +64,16 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 </button>
               );
             })}
+          </div>
+        </nav>
+      )}
+      {isPlayerRoute && (
+        <nav className="fixed bottom-0  w-full bg-black backdrop-blur-lg border-t border-black">
+          <div className="flex justify-center  items-center py-1 px-4">
+            <button className="w-7">
+              <ListMusic className="text-white w-full" />
+              <SongsQueue />
+            </button>
           </div>
         </nav>
       )}

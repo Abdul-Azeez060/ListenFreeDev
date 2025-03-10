@@ -21,7 +21,7 @@ import useCustomBackNavigation from "@/lib/BackNavigation";
 import { set } from "date-fns";
 import SongDetails from "@/components/SongDetails";
 import { Song } from "@/types/music";
-import { fetchSongLyrics } from "@/lib/api";
+import { fetchSongLyrics, fetchSongSuggestions } from "@/lib/api";
 import SongsQueue from "@/components/SongsQueue";
 
 const Player = () => {
@@ -29,6 +29,7 @@ const Player = () => {
   const navigate = useNavigate();
   const {
     songs,
+    setSongs,
     setCurrentSongId,
     volume,
     setVolume,
@@ -124,6 +125,25 @@ const Player = () => {
       document.removeEventListener("touchmove", preventSwipeReload);
     };
   }, []);
+
+  useEffect(() => {
+    getSongSuggestions();
+  }, [currentSongIndex]);
+
+  async function getSongSuggestions() {
+    if (currentSongIndex > songs.length - 4) {
+      const response = await fetchSongSuggestions(currentSongId);
+      console.log(response.data, "this is the response");
+      //@ts-ignore
+      setSongs((prevSongs) => {
+        const newSongs = response.data.filter(
+          (song) =>
+            !prevSongs.some((existingSong) => existingSong.id === song.id)
+        );
+        return [...prevSongs, ...newSongs];
+      });
+    }
+  }
 
   // useEffect(() => {
   //   console.log("first");
@@ -305,7 +325,6 @@ const Player = () => {
                   }}>
                   <Heart fill={isFavorite ? "currentColor" : "none"} />
                 </button>
-                <SongsQueue />
 
                 <div className="flex items-center space-x-2">
                   <Volume2 className="text-white" size={20} />

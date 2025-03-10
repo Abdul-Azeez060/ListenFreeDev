@@ -1,4 +1,5 @@
-const BASE_URL = "https://saavn.dev/api";
+const BASE_URL = "https://jiosaavn-api.abdulazeezmd060.workers.dev/api";
+const BASE_URL_VERCEL = "https://backend-music-blush.vercel.app/api";
 
 export const fetchSongs = async (query: string, category: string) => {
   try {
@@ -57,6 +58,18 @@ export const fetchSongDetails = async (id: string) => {
 export const fetchSongLyrics = async (id: string) => {
   try {
     const response = await fetch(`${BASE_URL}/songs/${id}/lyrics`);
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching song lyrics", error);
+    return null;
+  }
+};
+
+export const fetchSongSuggestions = async (songId: string) => {
+  try {
+    const response = await fetch(
+      `${BASE_URL_VERCEL}/songs/${songId}/suggestions?id=${songId}&limit=15`
+    );
     return await response.json();
   } catch (error) {
     console.error("Error fetching song lyrics", error);

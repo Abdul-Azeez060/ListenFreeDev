@@ -59,7 +59,7 @@ function Details() {
       {isLoading ? (
         <div className="animate-pulse ">
           {/* Placeholder for Image */}
-          <div className="bg-gray-600 mt-10 sm:w-[20rem] md:p-10  md:w-[30rem] h-48 md:h-60 opacity-50 mx-auto rounded-lg"></div>
+          <div className="bg-gray-600  sm:w-[20rem] md:p-10  md:w-[30rem] h-80  md:h-96 md:mt-10 md:mb-5 opacity-50 mx-auto rounded-lg"></div>
 
           <div className="flex justify-between items-center mt-4 px-5">
             {/* Placeholder for Text */}

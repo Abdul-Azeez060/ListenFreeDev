@@ -7,7 +7,7 @@ import { Song } from "@/types/music";
 import { useNavigate } from "react-router-dom";
 function SongsResult() {
   const { searchSongsResult } = useSearchSongs();
-  const { addSong, setCurrentSongId } = useSongs();
+  const { addSong, setCurrentSongId, setSongs } = useSongs();
   const navigate = useNavigate();
 
   return (
@@ -41,6 +41,7 @@ function SongsResult() {
           <div>
             <PlusCircleIcon
               onClick={() => {
+                setSongs([]);
                 addSong(song);
                 toast("Song added to queue");
               }}
