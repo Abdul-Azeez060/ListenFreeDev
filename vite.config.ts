@@ -24,14 +24,16 @@ export default defineConfig(({ mode }) => ({
         theme_color: "#000000",
         icons: [
           {
-            src: "./logo.jpeg",
+            src: "./logo.png",
             sizes: "192x192",
             type: "image/png",
+            purpose: "any maskable",
           },
           {
-            src: "./logo.jpeg",
+            src: "./logo.png",
             sizes: "512x512",
             type: "image/png",
+            purpose: "any maskable",
           },
         ],
       },
