@@ -10,6 +10,7 @@ import {
 import { motion } from "framer-motion";
 import { useSongs } from "@/context/songsContext";
 import { Song } from "@/types/music";
+import he from "he";
 
 function SongsQueue() {
   const [isQueueOpen, setisQueueOpen] = useState(false);
@@ -31,12 +32,15 @@ function SongsQueue() {
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <Button
-          className="bg-transparent text-white relative right-6"
-          variant="secondary"
-          onClick={() => setisQueueOpen(!isQueueOpen)}>
-          Queue
-        </Button>
+        <div>
+          <Button
+            className="bg-transparent text-white relative right-6"
+            variant="secondary"
+            onClick={() => setisQueueOpen(!isQueueOpen)}>
+            <ListMusic className="text-white" />
+            Queue
+          </Button>
+        </div>
       </DrawerTrigger>
 
       <DrawerTitle />
@@ -64,13 +68,15 @@ function SongsQueue() {
                 />
                 <div>
                   <h3 className="font-medium  text-slate-300">
-                    {song?.name?.slice(0, 20)}...
+                    {he.decode(song?.name?.slice(0, 20))}...
                   </h3>
                   <p className="text-sm text-muted">
-                    {song?.artists?.primary
-                      ?.map((artist) => artist.name)
-                      .join(", ")
-                      .slice(0, 20)}
+                    {he.decode(
+                      song?.artists?.primary
+                        ?.map((artist) => artist.name)
+                        .join(", ")
+                        .slice(0, 20)
+                    )}
                     ...
                   </p>
                 </div>

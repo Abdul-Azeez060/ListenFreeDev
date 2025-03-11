@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { useSongs } from "@/context/songsContext";
 import { Song } from "@/types/music";
 import { useNavigate } from "react-router-dom";
+import he from "he";
 function SongsResult() {
   const { searchSongsResult } = useSearchSongs();
   const { addSong, setCurrentSongId, setSongs } = useSongs();
@@ -20,6 +21,7 @@ function SongsResult() {
           <div
             className="flex items-center w-[calc(100vw-5rem)]"
             onClick={() => {
+              setSongs([]);
               setCurrentSongId(song.id);
               addSong(song);
               navigate(`/player/${song.id}`);
@@ -30,11 +32,15 @@ function SongsResult() {
               className="w-12 mr-3 h-12 rounded-md object-cover"
             />
             <div>
-              <h3 className="font-medium  text-slate-300">{song.name}</h3>
+              <h3 className="font-medium  text-slate-300">
+                {he.decode(song.name.slice(0, 25))}...
+              </h3>
               <p className="text-sm text-muted">
                 {song?.artists?.primary
                   ?.map((artist) => artist.name)
-                  .join(", ")}
+                  .join(", ")
+                  .slice(0, 25)}
+                ...
               </p>
             </div>
           </div>
