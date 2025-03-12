@@ -6,6 +6,8 @@ import { useSongs } from "@/context/songsContext";
 import LoginButton from "@/appwrite/LoginButton";
 import { useCurrentUserData } from "@/context/userContext";
 import LogOutButton from "@/appwrite/LogOutButton";
+import { getUserFavoriteSongs } from "@/appwrite/databaseActions";
+import { toast } from "sonner";
 
 const Index = () => {
   // const { data: recentSongs, isLoading } = useQuery({
@@ -19,16 +21,36 @@ const Index = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    const favorite = localStorage.getItem("favoriteSongs");
-    const songs = favorite ? JSON.parse(favorite) : [];
-    setFavoriteSongs(songs);
+    loadFavoriteSongs();
+    if (localStorage.getItem("favoriteSongs"))
+      localStorage.removeItem("favoriteSongs");
 
     const recentSongs = localStorage.getItem("recentSongs");
-    const recent = recentSongs ? JSON.parse(recentSongs) : [];
+    let recent = recentSongs ? JSON.parse(recentSongs) : [];
+    recent = recent.reverse();
     setRecentSongs(recent);
 
     setIsLoading(false);
-  }, []);
+  }, [user]);
+
+  // In your component
+  async function loadFavoriteSongs() {
+    setIsLoading(true);
+    try {
+      const result = await getUserFavoriteSongs(user.$id);
+
+      if (result.success) {
+        setFavoriteSongs(result.songs);
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.error("Error loading favorites:", error);
+      toast.error("Failed to load favorite songs");
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   const { currentSongId, setCurrentSongId, setSongs } = useSongs();
 
@@ -130,7 +152,7 @@ const Index = () => {
                   }}>
                   <div className=" aspect-square rounded-lg overflow-x-auto size-36 md:size-60 mx-2  ">
                     <img
-                      src={song?.image[2].url}
+                      src={song?.image}
                       alt={song?.name}
                       className="object-cover w-full h-full"
                     />
@@ -142,9 +164,7 @@ const Index = () => {
                     {song?.name}
                   </h3>
                   <p className="text-xs text-muted truncate">
-                    {Array.isArray(song?.primaryArtists)
-                      ? song?.primaryArtists.join(", ")
-                      : song?.primaryArtists}
+                    {song?.primaryArtists}
                   </p>
                 </motion.div>
               ))}

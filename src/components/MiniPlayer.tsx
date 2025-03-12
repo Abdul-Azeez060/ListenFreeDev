@@ -11,14 +11,13 @@ import {
 import { useSongs } from "@/context/songsContext";
 import { memo, useEffect } from "react"; // Add memo to prevent unnecessary re-renders
 import { Song } from "@/types/music";
+import IsFavoriteHeartComponent from "./IsFavoriteHeartComponent";
 const MiniPlayer = memo(() => {
   const navigate = useNavigate();
   const {
     songs,
     currentSongId,
     isPlaying,
-    isFavorite,
-    setIsFavorite,
     togglePlay,
     playNextSong,
     togglePause,
@@ -27,16 +26,6 @@ const MiniPlayer = memo(() => {
 
   const currentSongIndex = songs.findIndex((song) => song.id === currentSongId);
   const currentSong = songs[currentSongIndex];
-  useEffect(() => {
-    localStorage.getItem("favoriteSongs") &&
-      JSON.parse(localStorage.getItem("favoriteSongs")).forEach((song) => {
-        if (song.id == currentSongId) {
-          setIsFavorite(song.isFavorite);
-        } else {
-          setIsFavorite(false);
-        }
-      });
-  }, [currentSongId, setIsFavorite]);
 
   // If no song is playing, don't render the mini player
   if (!currentSong) return null;
@@ -90,40 +79,7 @@ const MiniPlayer = memo(() => {
               disabled={currentSongIndex === songs.length - 1}>
               <SkipForward size={24} />
             </button>
-            <button
-              className="p-2"
-              onClick={() => {
-                if (!isFavorite) {
-                  localStorage.getItem("favoriteSongs")
-                    ? localStorage.setItem(
-                        "favoriteSongs",
-                        JSON.stringify([
-                          ...JSON.parse(localStorage.getItem("favoriteSongs")),
-                          { ...currentSong, isFavorite: true },
-                        ])
-                      )
-                    : localStorage.setItem(
-                        "favoriteSongs",
-                        JSON.stringify([currentSong])
-                      );
-                  setIsFavorite(true);
-                } else {
-                  const newFavoriteSongs = JSON.parse(
-                    localStorage.getItem("favoriteSongs")
-                  ).filter((song) => song.id !== currentSong.id);
-                  localStorage.setItem(
-                    "favoriteSongs",
-                    JSON.stringify(newFavoriteSongs)
-                  );
-                  setIsFavorite(false);
-                }
-              }}>
-              <Heart
-                size={24}
-                fill={isFavorite ? "currentColor" : "none"}
-                className={isFavorite ? "text-red-500" : "text-white"}
-              />
-            </button>
+            <IsFavoriteHeartComponent />
           </div>
         </div>
       </div>

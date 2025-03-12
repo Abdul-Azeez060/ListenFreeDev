@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Play,
   Pause,
@@ -14,8 +14,6 @@ import {
   ArrowLeft,
   Loader2,
   Download,
-  ListMinus,
-  ListMusic,
 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { useSongs } from "@/context/songsContext";
@@ -25,6 +23,7 @@ import SongDetails from "@/components/SongDetails";
 import { Song } from "@/types/music";
 import { fetchSongLyrics, fetchSongSuggestions } from "@/lib/api";
 import SongsQueue from "@/components/SongsQueue";
+import IsFavoriteHeartComponent from "@/components/IsFavoriteHeartComponent";
 
 const Player = () => {
   const { songId } = useParams();
@@ -62,18 +61,6 @@ const Player = () => {
     if (songId !== currentSongId) {
       setCurrentSongId(currentSongId);
     }
-
-    localStorage.getItem("favoriteSongs") &&
-      JSON.parse(localStorage.getItem("favoriteSongs")).forEach(
-        (song: Song) => {
-          if (song.id == currentSongId) {
-            setIsFavorite(true);
-            console.log("set the is fav to true");
-          } else {
-            setIsFavorite(false);
-          }
-        }
-      );
 
     const recentSongs = JSON.parse(localStorage.getItem("recentSongs")) || [];
 
@@ -133,32 +120,16 @@ const Player = () => {
     getSongSuggestions();
   }, [currentSongIndex]);
 
-  const addedSongIds = useRef(new Set()); // Keeps track of already added song IDs
-
   async function getSongSuggestions() {
-    if (currentSongIndex > 5) {
-      setSongs((prevSongs) => prevSongs.slice(5));
-    }
-
     if (currentSongIndex > songs.length - 4) {
       const response = await fetchSongSuggestions(currentSongId);
       console.log(response.data, "this is the response");
-
       //@ts-ignore
       setSongs((prevSongs) => {
-        const newSongs = response.data.filter((song) => {
-          // Check if song is already in state OR in the ref
-          const isDuplicate =
-            prevSongs.some((existingSong) => existingSong.id === song.id) ||
-            addedSongIds.current.has(song.id);
-
-          if (!isDuplicate) {
-            addedSongIds.current.add(song.id); // Mark song as added
-            return true;
-          }
-          return false;
-        });
-
+        const newSongs = response.data.filter(
+          (song) =>
+            !prevSongs.some((existingSong) => existingSong.id === song.id)
+        );
         return [...prevSongs, ...newSongs];
       });
     }
@@ -308,53 +279,13 @@ const Player = () => {
               </div>
 
               <div className="flex items-center justify-between px-4">
-                <button
-                  className={`p-2 ${
-                    isFavorite
-                      ? "text-red-500"
-                      : "text-white hover:text-primary-foreground"
-                  }`}
-                  onClick={() => {
-                    if (!isFavorite) {
-                      localStorage.getItem("favoriteSongs")
-                        ? localStorage.setItem(
-                            "favoriteSongs",
-                            JSON.stringify([
-                              ...JSON.parse(
-                                localStorage.getItem("favoriteSongs")
-                              ),
-                              { ...currentSong, isFavorite: true },
-                            ])
-                          )
-                        : localStorage.setItem(
-                            "favoriteSongs",
-                            JSON.stringify([currentSong])
-                          );
-                      setIsFavorite(true);
-                    } else {
-                      const newFavoriteSongs = JSON.parse(
-                        localStorage.getItem("favoriteSongs")
-                      ).filter((song) => song.id !== currentSong.id);
-                      localStorage.setItem(
-                        "favoriteSongs",
-                        JSON.stringify(newFavoriteSongs)
-                      );
-                      setIsFavorite(false);
-                    }
-                  }}>
-                  <Heart fill={isFavorite ? "currentColor" : "none"} />
-                </button>
-
                 <div>
-                  <nav className=" w-full ">
-                    <div className="flex justify-center  items-center py-1 px-4">
-                      <button className="w-7">
-                        <SongsQueue />
-                      </button>
-                    </div>
-                  </nav>
+                  <IsFavoriteHeartComponent />
                 </div>
 
+                <div className="relative left-12">
+                  <SongsQueue />
+                </div>
                 <div className="flex items-center space-x-2">
                   <Volume2 className="text-white" size={20} />
                   <Slider

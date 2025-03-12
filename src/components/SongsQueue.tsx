@@ -20,7 +20,6 @@ function SongsQueue() {
   useEffect(() => {
     setTimeout(() => {
       if (songRefs.current[currentSongId]) {
-        console.log("triggered");
         songRefs.current[currentSongId].scrollIntoView({
           behavior: "smooth",
           block: "center",

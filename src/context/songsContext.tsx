@@ -4,6 +4,8 @@
 import { Song } from "@/types/music";
 import { createContext, useContext, useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useCurrentUserData } from "./userContext";
+import { getIsFavorite } from "@/appwrite/databaseActions";
 
 interface SongsContextProps {
   songs: Song[];
@@ -24,6 +26,7 @@ interface SongsContextProps {
   addSong: (song: Song) => void;
   togglePause: () => void;
   isPlayerLoading: boolean;
+  currentSong: Song;
 }
 const SongsContext = createContext<SongsContextProps | undefined>(undefined);
 
@@ -40,6 +43,7 @@ export const SongsProvider = ({ children }) => {
   // Audio element reference stored in context
   const audioRef = useRef(null);
   const navigate = useNavigate();
+  const { user } = useCurrentUserData();
 
   // Get current song
 
@@ -139,6 +143,23 @@ export const SongsProvider = ({ children }) => {
     }
   }, [volume]);
 
+  //handle isFavorite function
+  useEffect(() => {
+    setIsFavorite(false);
+    async function checkIsFavorite() {
+      if (user) {
+        console.log(user, "this is user");
+        const result = await getIsFavorite(currentSongId, user.$id);
+        if (result.success) {
+          console.log(result.message, "this is message");
+          if (result.message == 1) setIsFavorite(true);
+          else setIsFavorite(false);
+        }
+      }
+    }
+    checkIsFavorite();
+  }, [currentSongId]);
+
   // Handle time updates
   const handleTimeUpdate = () => {
     setCurrentTime(audioRef.current.currentTime);
@@ -190,6 +211,7 @@ export const SongsProvider = ({ children }) => {
         seekTo,
         addSong,
         isPlayerLoading,
+        currentSong,
       }}>
       {/* Single audio element for the entire app */}
       <audio
