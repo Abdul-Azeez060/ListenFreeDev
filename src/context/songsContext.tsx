@@ -5,7 +5,7 @@ import { Song } from "@/types/music";
 import { createContext, useContext, useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCurrentUserData } from "./userContext";
-import { getIsFavorite } from "@/appwrite/databaseActions";
+import { fetchSongSuggestions } from "@/lib/api";
 
 interface SongsContextProps {
   songs: Song[];
@@ -43,7 +43,7 @@ export const SongsProvider = ({ children }) => {
   // Audio element reference stored in context
   const audioRef = useRef(null);
   const navigate = useNavigate();
-  const { user } = useCurrentUserData();
+  const { user, favoriteSongIds } = useCurrentUserData();
 
   // Get current song
 
@@ -125,7 +125,6 @@ export const SongsProvider = ({ children }) => {
     if (audioRef.current && currentSong?.downloadUrl?.[4]?.url) {
       setTimeout(() => {
         audioRef.current.src = currentSong.downloadUrl[4].url;
-        console.log(audioRef.current.src, "this is sthe soruc");
 
         if (isPlaying) {
           audioRef.current
@@ -135,6 +134,55 @@ export const SongsProvider = ({ children }) => {
       }, 200);
     }
   }, [currentSongId, currentSong]);
+
+  // Update audio source when song changes  + onLoad ??
+  // useEffect(() => {
+  //   if (audioRef.current && currentSong?.downloadUrl?.[4]?.url) {
+  //     setTimeout(() => {
+  //       audioRef.current.src = currentSong.downloadUrl[4].url;
+  //       console.log(audioRef.current.src, "this is the source");
+
+  //       if (isPlaying) {
+  //         audioRef.current
+  //           .play()
+  //           .catch((err) => console.error("Playback error:", err));
+  //       }
+  //     }, 200);
+  //   }
+
+  //   // Handle network disconnection
+  //   const handleStalled = () => {
+  //     console.warn("Audio stalled due to network issue");
+  //     setIsPlaying(true);
+
+  //     setTimeout(() => {
+  //       console.log("Retrying playback...");
+  //       audioRef.current.load(); // Reload the audio source
+  //       audioRef.current
+  //         .play()
+  //         .catch((err) => console.error("Retry playback error:", err));
+  //     }, 2000); // Retry after 2 seconds
+  //   };
+
+  //   const handleOnline = () => {
+  //     console.log("Internet reconnected, resuming playback...");
+  //     setIsPlaying(true);
+  //     console.log("isPlaying", isPlaying);
+
+  //     audioRef.current.load();
+  //     audioRef.current
+  //       .play()
+  //       .catch((err) => console.error("Reconnection playback error:", err));
+  //   };
+
+  //   audioRef.current?.addEventListener("stalled", handleStalled);
+  //   window.addEventListener("online", handleOnline);
+
+  //   return () => {
+  //     audioRef.current?.removeEventListener("stalled", handleStalled);
+  //     window.removeEventListener("online", handleOnline);
+  //   };
+  // }, [currentSongId, currentSong]);
 
   // Update volume when changed
   useEffect(() => {
@@ -148,17 +196,35 @@ export const SongsProvider = ({ children }) => {
     setIsFavorite(false);
     async function checkIsFavorite() {
       if (user) {
-        console.log(user, "this is user");
-        const result = await getIsFavorite(currentSongId, user.$id);
-        if (result.success) {
-          console.log(result.message, "this is message");
-          if (result.message == 1) setIsFavorite(true);
-          else setIsFavorite(false);
+        for (let song of favoriteSongIds) {
+          if (song === currentSongId) {
+            setIsFavorite(true);
+          }
         }
       }
     }
     checkIsFavorite();
   }, [currentSongId]);
+
+  useEffect(() => {
+    getSongSuggestions();
+  }, [currentSongIndex]);
+
+  // change this for non duplicate songs
+  async function getSongSuggestions() {
+    if (currentSongId && currentSongIndex > songs.length - 4) {
+      const response = await fetchSongSuggestions(currentSongId);
+      console.log(response.data, "this is the response");
+      //@ts-ignore
+      setSongs((prevSongs) => {
+        const newSongs = response?.data?.filter(
+          (song) =>
+            !prevSongs.some((existingSong) => existingSong.id === song.id)
+        );
+        return [...prevSongs, ...newSongs];
+      });
+    }
+  }
 
   // Handle time updates
   const handleTimeUpdate = () => {
@@ -218,6 +284,7 @@ export const SongsProvider = ({ children }) => {
         ref={audioRef}
         onLoadStart={() => setIsPlayerLoading(true)}
         onCanPlay={() => setIsPlayerLoading(false)}
+        onLoad={() => setIsPlayerLoading(true)}
         onTimeUpdate={handleTimeUpdate}
         onEnded={playNextSong}
         onDurationChange={() => setDuration(audioRef.current.duration)}

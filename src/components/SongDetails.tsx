@@ -50,16 +50,3 @@ export default function SongDetails({ currentSong }) {
     </div>
   );
 }
-
-function decodeHtmlEntities(html: string): string {
-  const textArea = document.createElement("textarea");
-  textArea.innerHTML = html;
-  return textArea.value;
-}
-
-// Example usage:
-const songTitle = `Tum Kya Mile - Pritam' s Version (From &quot;Rocky Aur Rani Kii Prem Kahaani&quot;)`;
-const decodedTitle = decodeHtmlEntities(songTitle);
-
-console.log(decodedTitle);
-// Output: Tum Kya Mile - Pritam' s Version (From "Rocky Aur Rani Kii Prem Kahaani")

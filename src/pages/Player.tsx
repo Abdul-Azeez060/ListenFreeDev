@@ -1,12 +1,12 @@
 import { motion } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Logo from "../../logo.jpeg";
 import {
   Play,
   Pause,
   SkipBack,
   SkipForward,
-  Heart,
   Volume2,
   X,
   Repeat,
@@ -18,16 +18,16 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { useSongs } from "@/context/songsContext";
 import useCustomBackNavigation from "@/lib/BackNavigation";
-import { set } from "date-fns";
 import SongDetails from "@/components/SongDetails";
-import { Song } from "@/types/music";
-import { fetchSongLyrics, fetchSongSuggestions } from "@/lib/api";
+import usePreventPullToRefresh from "@/components/PreventReload";
 import SongsQueue from "@/components/SongsQueue";
 import IsFavoriteHeartComponent from "@/components/IsFavoriteHeartComponent";
+import { DownloadButton } from "@/components/DownloadButton";
 
 const Player = () => {
   const { songId } = useParams();
   const navigate = useNavigate();
+
   const {
     songs,
     setSongs,
@@ -64,7 +64,7 @@ const Player = () => {
 
     const recentSongs = JSON.parse(localStorage.getItem("recentSongs")) || [];
 
-    if (!recentSongs.some((song) => song?.id === songId)) {
+    if (!recentSongs.some((song) => song?.id === currentSongId)) {
       localStorage.setItem(
         "recentSongs",
         JSON.stringify([...recentSongs, currentSong])
@@ -93,47 +93,7 @@ const Player = () => {
     return () => window.removeEventListener("keydown", disableReload);
   }, []);
 
-  useEffect(() => {
-    let lastTouchY = 0;
-
-    const preventSwipeReload = (e) => {
-      const touchY = e.touches[0].clientY;
-
-      // If the user swipes down while at the top of the page
-      if (touchY - lastTouchY > 1 && window.scrollY === 0) {
-        e.preventDefault(); // Prevent pull-to-refresh
-      }
-
-      lastTouchY = touchY;
-    };
-
-    document.addEventListener("touchmove", preventSwipeReload, {
-      passive: false,
-    });
-
-    return () => {
-      document.removeEventListener("touchmove", preventSwipeReload);
-    };
-  }, []);
-
-  useEffect(() => {
-    getSongSuggestions();
-  }, [currentSongIndex]);
-
-  async function getSongSuggestions() {
-    if (currentSongIndex > songs.length - 4) {
-      const response = await fetchSongSuggestions(currentSongId);
-      console.log(response.data, "this is the response");
-      //@ts-ignore
-      setSongs((prevSongs) => {
-        const newSongs = response.data.filter(
-          (song) =>
-            !prevSongs.some((existingSong) => existingSong.id === song.id)
-        );
-        return [...prevSongs, ...newSongs];
-      });
-    }
-  }
+  usePreventPullToRefresh();
 
   // useEffect(() => {
   //   console.log("first");
@@ -178,7 +138,7 @@ const Player = () => {
               animate={{ scale: 1 }}
               className="w-72 h-72 md:w-80 md:h-80 rounded-lg overflow-hidden shadow-black shadow-2xl">
               <img
-                src={currentSong?.image[2]?.url || "/placeholder.svg"}
+                src={currentSong?.image[2]?.url || Logo}
                 alt={currentSong?.name}
                 className="w-full h-full object-cover"
               />
@@ -186,17 +146,6 @@ const Player = () => {
             <div className="w-72 md:w-80">
               <SongDetails currentSong={currentSong} />
             </div>
-
-            {/* <div className="text-center space-y-2">
-              <h1 className=" text-2xl text-white font-bold text-primary">
-                {currentSong?.name}
-              </h1>
-              <p className="text-white">
-                {currentSong?.artists.primary
-                  ?.map((artist) => artist.name)
-                  .join(", ")}
-              </p>
-            </div> */}
 
             <div className="w-full max-w-md space-y-4">
               <div className="space-y-2">
@@ -247,35 +196,7 @@ const Player = () => {
                 {/* <button className="p-2  text-white hover:text-primary-foreground">
                   <Repeat size={20} />
                 </button> */}
-                <button className="p-2  text-white hover:text-primary-foreground">
-                  <Download
-                    size={20}
-                    onClick={async () => {
-                      try {
-                        const url = currentSong.downloadUrl[4].url;
-                        const response = await fetch(url);
-                        const blob = await response.blob();
-                        // console.log(blob, "thisis the blob");
-                        const blobUrl = URL.createObjectURL(blob);
-                        // console.log(blobUrl, "this is the url");
-                        const link = document.createElement("a");
-                        link.href = blobUrl;
-                        link.setAttribute(
-                          "download",
-                          `${currentSong.name}.mp4`
-                        ); // Change filename if needed
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-
-                        // Cleanup the blob URL
-                        URL.revokeObjectURL(blobUrl);
-                      } catch (error) {
-                        console.log(error);
-                      }
-                    }}
-                  />
-                </button>
+                <DownloadButton currentSong={currentSong} />
               </div>
 
               <div className="flex items-center justify-between px-4">

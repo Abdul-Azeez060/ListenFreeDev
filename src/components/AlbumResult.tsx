@@ -8,11 +8,11 @@ import { set } from "date-fns";
 import AlbumComponent from "./AlbumComponent";
 
 function AlbumResult({isLoading}) {
-  const { searchSongsResult, setUrl } = useSearchSongs();
+  const {  setUrl } = useSearchSongs();
   const navigate = useNavigate();
   return (
     <div className="flex flex-wrap justify-center  scrollbar-hide mb-32">
-      <AlbumComponent isLoading={isLoading} searchSongsResult={searchSongsResult} />
+      <AlbumComponent isLoading={isLoading}  />
     </div>
   );
 }

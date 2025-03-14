@@ -1,11 +1,14 @@
 import LoginButton from "@/appwrite/LoginButton";
 import LogOutButton from "@/appwrite/LogOutButton";
+import usePreventPullToRefresh from "@/components/PreventReload";
 import { useCurrentUserData } from "@/context/userContext";
 import { motion } from "framer-motion";
 import { Settings, Music, Clock } from "lucide-react";
 
 const Profile = () => {
   const { user } = useCurrentUserData();
+
+  usePreventPullToRefresh();
 
   if (!user) {
     return (

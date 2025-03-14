@@ -13,6 +13,7 @@ import AlbumResult from "@/components/AlbumResult";
 import ArtistResult from "@/components/ArtistResult";
 import PlaylistResult from "@/components/PlaylistResult";
 import debounce from "lodash.debounce";
+import usePreventPullToRefresh from "@/components/PreventReload";
 
 const Search = () => {
   const navigate = useNavigate();
@@ -56,6 +57,8 @@ const Search = () => {
     }, 500), // Adjust delay as needed
     []
   );
+
+  // usePreventPullToRefresh();
   const categories = ["songs", "albums", "playlists", "artists"];
 
   return (
@@ -75,7 +78,7 @@ const Search = () => {
         />
       </div>
 
-      <div className="flex items-center mx-auto">
+      <div className="flex items-center mx-auto px-4">
         {categories.map((cat) => (
           <button
             key={cat}

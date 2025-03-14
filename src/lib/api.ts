@@ -30,7 +30,7 @@ export const fetchArtistSongs = async (id: string) => {
 
 export const fetchPlaylistSongs = async (id: string, link: string) => {
   const response = await fetch(
-    `${BASE_URL}/playlists?id=${id}&link=${link}&limit=15`
+    `${BASE_URL}/playlists?id=${id}&link=${link}&limit=50`
   );
   return response.json();
 };
@@ -74,5 +74,24 @@ export const fetchSongSuggestions = async (songId: string) => {
   } catch (error) {
     console.error("Error fetching song lyrics", error);
     return null;
+  }
+};
+
+export const fetchSongsByIds = async (songIds: string[]) => {
+  try {
+    // Create an array of fetch promises
+    const fetchPromises = songIds.map((songId) =>
+      fetch(`${BASE_URL}/songs/${songId}`).then((res) => res.json())
+    );
+
+    // console.log(fetchPromises, "this is fetch promises");
+
+    // Wait for all requests to complete in parallel
+    let songs = await Promise.all(fetchPromises);
+    songs = songs.map((song) => song.data[0]);
+    return songs;
+  } catch (error) {
+    console.error("Error fetching songs:", error);
+    return []; // Return empty array in case of an error
   }
 };

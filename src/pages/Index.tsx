@@ -8,49 +8,31 @@ import { useCurrentUserData } from "@/context/userContext";
 import LogOutButton from "@/appwrite/LogOutButton";
 import { getUserFavoriteSongs } from "@/appwrite/databaseActions";
 import { toast } from "sonner";
+import { fetchSongsByIds } from "@/lib/api";
+import SongLoader from "@/components/Loaders/SongLoader";
+import { Song } from "@/types/music";
 
 const Index = () => {
   // const { data: recentSongs, isLoading } = useQuery({
   //   queryKey: ['recentSongs'],
   //   queryFn: () => fetchSongs('latest'),
   // });
-  const [favoriteSongs, setFavoriteSongs] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+
   const [recentSongs, setRecentSongs] = useState([]);
-  const { user } = useCurrentUserData();
+  const { user, favoriteSongIds, favoriteSongs, setFavoriteSongs, isLoading } =
+    useCurrentUserData();
 
   useEffect(() => {
-    setIsLoading(true);
-    loadFavoriteSongs();
-    if (localStorage.getItem("favoriteSongs"))
-      localStorage.removeItem("favoriteSongs");
-
     const recentSongs = localStorage.getItem("recentSongs");
-    let recent = recentSongs ? JSON.parse(recentSongs) : [];
+    let recent: Song[] = recentSongs ? JSON.parse(recentSongs) : [];
+
+    if (recent.length > 30) {
+      recent = recent.slice(0, 30);
+      localStorage.setItem("recentSongs", JSON.stringify(recent));
+    }
     recent = recent.reverse();
     setRecentSongs(recent);
-
-    setIsLoading(false);
-  }, [user]);
-
-  // In your component
-  async function loadFavoriteSongs() {
-    setIsLoading(true);
-    try {
-      const result = await getUserFavoriteSongs(user.$id);
-
-      if (result.success) {
-        setFavoriteSongs(result.songs);
-      } else {
-        toast.error(result.message);
-      }
-    } catch (error) {
-      console.error("Error loading favorites:", error);
-      toast.error("Failed to load favorite songs");
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  }, [user, favoriteSongIds]);
 
   const { currentSongId, setCurrentSongId, setSongs } = useSongs();
 
@@ -77,42 +59,41 @@ const Index = () => {
         </div>
         <div className="overflow-x-auto scrollbar-hide ">
           <div className="grid grid-flow-col  auto-cols-max w-screen">
-            {!isLoading &&
-              recentSongs?.map((song: any) => (
-                <motion.div
-                  key={song?.id}
-                  className="relative flex flex-col  items-center group cursor-pointer"
-                  whileHover={{ scale: 1.02 }}
-                  transition={{ duration: 0.2 }}
-                  onClick={() => {
-                    setCurrentSongId(song.id);
-                    recentSongs.unshift(
-                      recentSongs.splice(recentSongs.indexOf(song), 1)[0]
-                    );
-                    setRecentSongs(recentSongs);
+            {recentSongs?.map((song: any) => (
+              <motion.div
+                key={song?.id}
+                className="relative flex flex-col  items-center group cursor-pointer"
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.2 }}
+                onClick={() => {
+                  setCurrentSongId(song.id);
+                  recentSongs.unshift(
+                    recentSongs.splice(recentSongs.indexOf(song), 1)[0]
+                  );
+                  setRecentSongs(recentSongs);
 
-                    setSongs(recentSongs);
-                  }}>
-                  <div className=" aspect-square rounded-lg overflow-x-auto size-36 md:size-60 mx-2  ">
-                    <img
-                      src={song?.image[2].url}
-                      alt={song?.name}
-                      className="object-cover w-full h-full"
-                    />
-                    <div className="absolute inset-0 bg-secondary/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <PlayCircle className="w-12 h-12 text-primary-foreground" />
-                    </div>
+                  setSongs(recentSongs);
+                }}>
+                <div className=" aspect-square rounded-lg overflow-x-auto size-36 md:size-60 mx-2  ">
+                  <img
+                    src={song?.image[2].url}
+                    alt={song?.name}
+                    className="object-cover w-full h-full"
+                  />
+                  <div className="absolute inset-0 bg-secondary/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <PlayCircle className="w-12 h-12 text-primary-foreground" />
                   </div>
-                  <h3 className="mt-2 text-sm font-medium w-[9rem] md:w-[15rem] text-center truncate text-white">
-                    {song?.name}
-                  </h3>
-                  <p className="text-xs text-muted truncate">
-                    {Array.isArray(song?.primaryArtists)
-                      ? song?.primaryArtists.join(", ")
-                      : song?.primaryArtists}
-                  </p>
-                </motion.div>
-              ))}
+                </div>
+                <h3 className="mt-2 text-sm font-medium w-[9rem] md:w-[15rem] text-center truncate text-white">
+                  {song?.name}
+                </h3>
+                <p className="text-xs text-muted truncate">
+                  {Array.isArray(song?.primaryArtists)
+                    ? song?.primaryArtists?.join(", ")
+                    : song?.primaryArtists}
+                </p>
+              </motion.div>
+            ))}
             {isLoading &&
               Array(4)
                 .fill(0)
@@ -134,50 +115,39 @@ const Index = () => {
         </div>
         <div className="overflow-x-auto scrollbar-hide ">
           <div className="grid grid-flow-col  auto-cols-max w-screen">
-            {!isLoading &&
-              favoriteSongs?.map((song: any) => (
-                <motion.div
-                  key={song?.id}
-                  className="relative flex flex-col  items-center group cursor-pointer"
-                  whileHover={{ scale: 1.02 }}
-                  transition={{ duration: 0.2 }}
-                  onClick={() => {
-                    setCurrentSongId(song.id);
-                    favoriteSongs.unshift(
-                      favoriteSongs.splice(recentSongs.indexOf(song), 1)[0]
-                    );
-                    setFavoriteSongs(recentSongs);
+            {favoriteSongs?.map((song: any) => (
+              <motion.div
+                key={song?.id}
+                className="relative flex flex-col  items-center group cursor-pointer"
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.2 }}
+                onClick={() => {
+                  setCurrentSongId(song.id);
+                  setSongs(favoriteSongs);
+                }}>
+                <div className=" aspect-square rounded-lg overflow-x-auto size-36 md:size-60 mx-2  ">
+                  <img
+                    src={song?.image[2].url}
+                    alt={song?.name}
+                    className="object-cover w-full h-full"
+                  />
+                  <div className="absolute inset-0 bg-secondary/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <PlayCircle className="w-12 h-12 text-primary-foreground" />
+                  </div>
+                </div>
+                <h3 className="mt-2 text-sm font-medium truncate w-[9rem] md:w-[15rem]   text-center text-white">
+                  {song?.name}
+                </h3>
+                <p className=" text-xs  truncate w-[9rem] md:w-[15rem]   text-center text-slate-400">
+                  {song?.artists.primary
+                    ?.map((artist) => artist.name)
+                    .join(", ")}
+                </p>
+              </motion.div>
+            ))}
 
-                    setSongs(recentSongs);
-                  }}>
-                  <div className=" aspect-square rounded-lg overflow-x-auto size-36 md:size-60 mx-2  ">
-                    <img
-                      src={song?.image}
-                      alt={song?.name}
-                      className="object-cover w-full h-full"
-                    />
-                    <div className="absolute inset-0 bg-secondary/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <PlayCircle className="w-12 h-12 text-primary-foreground" />
-                    </div>
-                  </div>
-                  <h3 className="mt-2 text-sm font-medium truncate w-[9rem] md:w-[15rem]   text-center text-white">
-                    {song?.name}
-                  </h3>
-                  <p className="text-xs text-muted truncate">
-                    {song?.primaryArtists}
-                  </p>
-                </motion.div>
-              ))}
             {isLoading &&
-              Array(4)
-                .fill(0)
-                .map((_, index) => (
-                  <div key={index} className="animate-pulse">
-                    <div className="aspect-square bg-secondary rounded-lg"></div>
-                    <div className="mt-2 h-4 bg-secondary rounded w-3/4"></div>
-                    <div className="mt-1 h-3 bg-secondary rounded w-1/2"></div>
-                  </div>
-                ))}
+              [...Array(6)].map((_, index) => <SongLoader key={index} />)}
           </div>
         </div>
       </section>
