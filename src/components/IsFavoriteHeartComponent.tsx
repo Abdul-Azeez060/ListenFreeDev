@@ -67,7 +67,7 @@ function IsFavoriteHeartComponent() {
     if (!user) {
       toast(
         <div className="flex justify-between w-full items-center">
-          <h1 className="text-sm md:text-xl font-medium">
+          <h1 className="text-sm md:text-md font-medium">
             Sign in to add to favorites
           </h1>
           <Button

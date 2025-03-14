@@ -207,22 +207,46 @@ export const SongsProvider = ({ children }) => {
   }, [currentSongId]);
 
   useEffect(() => {
+    if (currentSongIndex > 20) {
+      setSongs((preSongs) => preSongs.splice(0, 20));
+    }
+    if (playedSongs.current.size > 40) {
+      const songIdsInQueue = new Set(songs.map((song) => song.id));
+
+      playedSongs.current.forEach((songId: string) => {
+        if (!songIdsInQueue.has(songId)) {
+          playedSongs.current.delete(songId);
+        }
+      });
+    }
     getSongSuggestions();
   }, [currentSongIndex]);
+
+  const playedSongs = useRef<Set<String>>(new Set());
 
   // change this for non duplicate songs
   async function getSongSuggestions() {
     if (currentSongId && currentSongIndex > songs.length - 4) {
       const response = await fetchSongSuggestions(currentSongId);
       console.log(response.data, "this is the response");
-      //@ts-ignore
-      setSongs((prevSongs) => {
-        const newSongs = response?.data?.filter(
-          (song) =>
-            !prevSongs.some((existingSong) => existingSong.id === song.id)
-        );
-        return [...prevSongs, ...newSongs];
-      });
+
+      if (response?.data) {
+        const filteredSongs = response.data.filter((song) => {
+          return !playedSongs.current.has(song.id); // ✅ Exclude already played songs
+        });
+
+        // ✅ Add only new songs to playedSongs
+        filteredSongs.forEach((song) => playedSongs.current.add(song.id));
+
+        //@ts-ignore
+        setSongs((prevSongs) => {
+          const newSongs = filteredSongs.filter(
+            (song) =>
+              !prevSongs.some((existingSong) => existingSong.id === song.id)
+          );
+          return [...prevSongs, ...newSongs];
+        });
+      }
     }
   }
 

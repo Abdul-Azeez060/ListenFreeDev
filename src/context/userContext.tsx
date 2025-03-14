@@ -41,6 +41,9 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   }, [session]);
 
   useEffect(() => {
+    if (localStorage.getItem("favoriteSongs")) {
+      localStorage.removeItem("favoriteSongs");
+    }
     const fav = JSON.parse(localStorage.getItem("favorites"));
     const expiryTime = parseInt(JSON.parse(localStorage.getItem("expiryTime")));
 

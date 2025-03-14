@@ -3,14 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 import { Heart, Clock, PlayCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSongs } from "@/context/songsContext";
-import LoginButton from "@/appwrite/LoginButton";
 import { useCurrentUserData } from "@/context/userContext";
-import LogOutButton from "@/appwrite/LogOutButton";
-import { getUserFavoriteSongs } from "@/appwrite/databaseActions";
-import { toast } from "sonner";
-import { fetchSongsByIds } from "@/lib/api";
 import SongLoader from "@/components/Loaders/SongLoader";
 import { Song } from "@/types/music";
+import he from "he";
 
 const Index = () => {
   // const { data: recentSongs, isLoading } = useQuery({
@@ -26,12 +22,20 @@ const Index = () => {
     const recentSongs = localStorage.getItem("recentSongs");
     let recent: Song[] = recentSongs ? JSON.parse(recentSongs) : [];
 
+    // ✅ Convert to a Map to remove duplicates (keep latest occurrence)
+    const uniqueSongsMap = new Map(recent.map((song) => [song.id, song]));
+    recent = Array.from(uniqueSongsMap.values());
+
+    // ✅ Keep only the latest 30 songs
     if (recent.length > 30) {
-      recent = recent.slice(0, 30);
-      localStorage.setItem("recentSongs", JSON.stringify(recent));
+      recent = recent.slice(-30);
     }
-    recent = recent.reverse();
-    setRecentSongs(recent);
+
+    // ✅ Save back to localStorage
+    localStorage.setItem("recentSongs", JSON.stringify(recent));
+
+    // ✅ Reverse for UI display
+    setRecentSongs(recent.reverse());
   }, [user, favoriteSongIds]);
 
   const { currentSongId, setCurrentSongId, setSongs } = useSongs();
@@ -85,7 +89,7 @@ const Index = () => {
                   </div>
                 </div>
                 <h3 className="mt-2 text-sm font-medium w-[9rem] md:w-[15rem] text-center truncate text-white">
-                  {song?.name}
+                  {he.decode(song?.name)}
                 </h3>
                 <p className="text-xs text-muted truncate">
                   {Array.isArray(song?.primaryArtists)
@@ -136,7 +140,7 @@ const Index = () => {
                   </div>
                 </div>
                 <h3 className="mt-2 text-sm font-medium truncate w-[9rem] md:w-[15rem]   text-center text-white">
-                  {song?.name}
+                  {he.decode(song?.name)}
                 </h3>
                 <p className=" text-xs  truncate w-[9rem] md:w-[15rem]   text-center text-slate-400">
                   {song?.artists.primary
