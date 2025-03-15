@@ -66,7 +66,7 @@ const Index = () => {
             {recentSongs?.map((song: any) => (
               <motion.div
                 key={song?.id}
-                className="relative flex flex-col  items-center group cursor-pointer"
+                className="relative flex flex-col overflow-hidden  items-center group cursor-pointer"
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.2 }}
                 onClick={() => {
@@ -131,6 +131,7 @@ const Index = () => {
                 }}>
                 <div className=" aspect-square rounded-lg overflow-x-auto size-36 md:size-60 mx-2  ">
                   <img
+                    loading="lazy"
                     src={song?.image[2].url}
                     alt={song?.name}
                     className="object-cover w-full h-full"

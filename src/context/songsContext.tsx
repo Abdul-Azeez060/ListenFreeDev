@@ -13,6 +13,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useCurrentUserData } from "./userContext";
 import { fetchSongSuggestions } from "@/lib/api";
+import he from "he";
 
 interface SongsContextProps {
   songs: Song[];
@@ -74,13 +75,15 @@ export const SongsProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    let decodedName = he.decode(currentSong?.name || "ListenFree");
+    let decodedArtistsName = he.decode(
+      currentSong?.artists.primary.map((artist) => artist.name).join(", ") ||
+        "ListenFree"
+    );
     if ("mediaSession" in navigator && currentSong !== undefined) {
       navigator.mediaSession.metadata = new MediaMetadata({
-        title: currentSong?.name,
-        artist:
-          currentSong?.artists.primary
-            .map((artist) => artist.name)
-            .join(", ") || "ListenFree",
+        title: decodedName,
+        artist: decodedArtistsName,
         album: currentSong?.album?.name || "ListenFree",
         artwork: currentSong?.image?.[2]?.url
           ? [

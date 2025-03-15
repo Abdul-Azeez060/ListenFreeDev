@@ -26,6 +26,7 @@ function ArtistResult() {
             <img
               src={artist.image[2].url}
               alt={artist.name}
+              loading="lazy"
               className="w-12 mr-3 h-12 rounded-full object-cover"
             />
             <div>

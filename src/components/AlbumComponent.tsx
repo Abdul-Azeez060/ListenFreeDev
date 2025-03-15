@@ -32,6 +32,7 @@ function AlbumComponent({ isLoading }) {
               <img
                 src={album?.image[2].url}
                 alt={album?.name}
+                loading="lazy"
                 className="object-cover w-full h-full"
               />
               <div className="absolute inset-0 bg-secondary/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">

@@ -61,6 +61,7 @@ function SongsQueue() {
                   setCurrentSongId(song?.id);
                 }}>
                 <img
+                  loading="lazy"
                   src={song?.image[2].url}
                   alt={song?.name}
                   className="w-12 mr-3 h-12 rounded-md object-cover"

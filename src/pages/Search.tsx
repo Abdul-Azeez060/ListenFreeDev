@@ -58,11 +58,11 @@ const Search = () => {
     []
   );
 
-  // usePreventPullToRefresh();
+  usePreventPullToRefresh();
   const categories = ["songs", "albums", "playlists", "artists"];
 
   return (
-    <div className=" h-screen bg-black scrollbar-hide overflow-auto  py-6 space-y-6">
+    <div className=" h-screen bg-black overflow-y-auto scrollbar-hide   py-6 space-y-6">
       <div className="relative px-2">
         <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white ml-2" />
         <input
@@ -97,7 +97,7 @@ const Search = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="space-y-4">
+          className="space-y-4 overflow-hidden ">
           <h2 className="text-xl font-semibold text-slate-300 px-4">
             Search Results
           </h2>
