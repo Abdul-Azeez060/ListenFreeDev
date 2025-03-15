@@ -2,7 +2,14 @@
 
 // songsContext.jsx
 import { Song } from "@/types/music";
-import { createContext, useContext, useState, useRef, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useRef,
+  useEffect,
+  useMemo,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { useCurrentUserData } from "./userContext";
 import { fetchSongSuggestions } from "@/lib/api";
@@ -47,14 +54,23 @@ export const SongsProvider = ({ children }) => {
 
   // Get current song
 
-  const currentSongIndex = songs?.findIndex(
-    (song) => song?.id === currentSongId
-  );
+  const currentSongIndex = useMemo(() => {
+    return songs?.findIndex((song) => song?.id === currentSongId);
+  }, [songs, currentSongId]);
   const currentSong = songs[currentSongIndex] || null;
 
   // Add song to playlist
   const addSong = (song) => {
-    setSongs([...songs, song]);
+    setSongs((prevSongs) => {
+      if (prevSongs.length == 0) {
+        setCurrentSongId(song.id);
+        setSongs([...prevSongs, song]);
+      }
+      const filteredSongs = prevSongs.filter(
+        (currentSong) => currentSong.id !== song.id
+      );
+      return [...filteredSongs, song];
+    });
   };
 
   useEffect(() => {

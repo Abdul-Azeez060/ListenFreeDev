@@ -47,7 +47,6 @@ function SongsResult() {
           <div>
             <PlusCircleIcon
               onClick={() => {
-                setSongs([]);
                 addSong(song);
                 toast("Song added to queue");
               }}
