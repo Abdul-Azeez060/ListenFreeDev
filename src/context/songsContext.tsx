@@ -229,7 +229,7 @@ export const SongsProvider = ({ children }) => {
     if (currentSongIndex > 20) {
       setSongs((preSongs) => preSongs.splice(0, 20));
     }
-    if (playedSongs.current.size > 40) {
+    if (playedSongs.current.size > 20) {
       const songIdsInQueue = new Set(songs.map((song) => song.id));
 
       playedSongs.current.forEach((songId: string) => {
@@ -245,6 +245,7 @@ export const SongsProvider = ({ children }) => {
 
   // change this for non duplicate songs
   async function getSongSuggestions() {
+    console.log("Inside the suggesstions ");
     if (currentSongId && currentSongIndex > songs.length - 4) {
       const response = await fetchSongSuggestions(currentSongId);
       console.log(response.data, "this is the response");

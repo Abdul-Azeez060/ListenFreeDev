@@ -6,10 +6,12 @@ import { useSongs } from "@/context/songsContext";
 import { Song } from "@/types/music";
 import { useNavigate } from "react-router-dom";
 import he from "he";
+import { useState } from "react";
 function SongsResult() {
   const { searchSongsResult } = useSearchSongs();
   const { addSong, setCurrentSongId, setSongs } = useSongs();
   const navigate = useNavigate();
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
     <div className="">
@@ -30,6 +32,10 @@ function SongsResult() {
               loading="lazy"
               src={song.image[2].url}
               alt={song.name}
+              onLoad={() => {
+                setImageLoaded(true);
+              }}
+              onError={() => console.log("Failed to load image")}
               className="w-12 mr-3 h-12 rounded-md object-cover"
             />
             <div>

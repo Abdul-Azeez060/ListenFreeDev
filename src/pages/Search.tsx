@@ -1,13 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Search as SearchIcon, PlusCircleIcon, PlayCircle } from "lucide-react";
+import {
+  Search as SearchIcon,
+  PlusCircleIcon,
+  PlayCircle,
+  Cross,
+  X,
+} from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { fetchSongs } from "@/lib/api";
-import { Song } from "@/types/music";
 import { useSongs } from "@/context/songsContext";
 import { useSearchSongs } from "@/context/searchContext";
-import { toast } from "sonner";
 import SongsResult from "@/components/SongsResult";
 import AlbumResult from "@/components/AlbumResult";
 import ArtistResult from "@/components/ArtistResult";
@@ -63,7 +67,7 @@ const Search = () => {
 
   return (
     <div className=" h-screen bg-black overflow-y-auto scrollbar-hide   py-6 space-y-6">
-      <div className="relative px-2">
+      <div className="relative px-2 flex items-center">
         <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white ml-2" />
         <input
           type="text"
@@ -76,6 +80,7 @@ const Search = () => {
             debouncedSetQuery(e.target.value);
           }}
         />
+        <X className="text-white" onClick={() => setSongsQuery("")} />
       </div>
 
       <div className="flex items-center mx-auto px-4">

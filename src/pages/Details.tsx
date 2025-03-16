@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { PlayCircleIcon, PlusCircleIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSongs } from "@/context/songsContext";
+import he from "he";
 
 interface DetailSongs {
   songs: Song[];
@@ -29,16 +30,19 @@ function Details() {
   const navigate = useNavigate();
   const [detailSongs, setDetailSongs] = useState<DetailSongs>();
   const [isLoading, setIsLoading] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
     async function getSongs() {
       setIsLoading(true);
+      setImageLoaded(false);
       if (category === "albums") {
         const result = await fetchAlbumSongs(albumId, url);
         //console.log(result.data, "these are the songs in the album");
         setDetailSongs(result.data);
       } else if (category === "playlists") {
         const result = await fetchPlaylistSongs(playlistId, url);
+        console.log(result, "this is the result");
         setDetailSongs(result.data);
       } else if (category === "artists") {
         const result = await fetchArtistSongs(artistId);
@@ -56,10 +60,14 @@ function Details() {
 
   return (
     <div className="h-screen  scrollbar-hide overflow-auto">
+      {!imageLoaded && (
+        <div className="animate-pulse ">
+          <div className="bg-gray-600  sm:w-[20rem] md:p-10  md:w-[30rem] h-80  md:h-96 md:mt-10 md:mb-5 opacity-80 mx-auto rounded-lg"></div>
+        </div>
+      )}
       {isLoading ? (
         <div className="animate-pulse ">
           {/* Placeholder for Image */}
-          <div className="bg-gray-600  sm:w-[20rem] md:p-10  md:w-[30rem] h-80  md:h-96 md:mt-10 md:mb-5 opacity-50 mx-auto rounded-lg"></div>
 
           <div className="flex justify-between items-center mt-4 px-5">
             {/* Placeholder for Text */}
@@ -77,7 +85,13 @@ function Details() {
           <img
             src={detailSongs?.image[2].url}
             alt=""
-            className="sm:w-[20rem] md:p-10 md:w-[30rem] opacity-50 mx-auto"
+            className="sm:w-[20rem] md:p-10 md:w-[30rem] opacity-80 mx-auto"
+            loading="eager"
+            onLoad={() => {
+              setImageLoaded(true);
+            }}
+            onError={() => console.log("Failed to load image")}
+            style={{ display: imageLoaded ? "block" : "none" }} // Hide image until fully loaded
           />
 
           <div className="flex justify-between items-center">
@@ -134,7 +148,7 @@ function Details() {
           : detailSongs?.songs?.map((song: Song) => (
               <motion.div
                 key={song.id}
-                className="flex items-center justify-between space-x-4 p-2 hover:text-black hover:bg-gray-600 rounded-lg cursor-pointer"
+                className="flex items-center justify-between space-x-4 p-2 hover:text-black hover:bg-gray-700/60 rounded-lg cursor-pointer"
                 whileHover={{ scale: 1.01 }}>
                 <div
                   className="flex items-center w-[calc(100vw-5rem)]"
@@ -149,15 +163,18 @@ function Details() {
                     src={song.image[2].url}
                     alt={song.name}
                     className="w-12 mr-3 h-12 rounded-md object-cover"
+                    loading="lazy"
                   />
                   <div className="w-[11rem] sm:w-[13rem] md:w-[15rem] lg:w-[20rem] xl:w-[35rem]">
                     <h3 className="font-medium  truncate   text-slate-300">
-                      {song.name}
+                      {he.decode(song.name)}
                     </h3>
                     <p className="text-sm text-slate-400  truncate ">
-                      {song?.artists.primary
-                        ?.map((artist) => artist.name)
-                        .join(", ")}
+                      {he.decode(
+                        song?.artists.primary
+                          ?.map((artist) => artist.name)
+                          .join(", ")
+                      )}
                     </p>
                   </div>
                 </div>
