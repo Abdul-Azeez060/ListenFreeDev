@@ -14,13 +14,13 @@ function TopCharts2() {
   const navigate = useNavigate();
 
   const fetchTopCharts = async () => {
-    console.log("feching songs");
+    // console.log("feching songs");
     try {
       setIsLoading(true);
       let topCharts = [];
       let topChartsExpiry = 0;
       if (localStorage.getItem("TopCharts2")) {
-        console.log("Fetching songs from localstorage");
+        // console.log("Fetching songs from localstorage");
         topCharts = JSON.parse(localStorage.getItem("TopCharts2"));
         topChartsExpiry = parseInt(localStorage.getItem("TopChartsExpiry2"));
       } else if (!topCharts || topCharts.length < 1) {

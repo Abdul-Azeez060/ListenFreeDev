@@ -12,12 +12,16 @@ import TopHits from "@/components/HomePage/TopHits";
 import MostSearched from "@/components/HomePage/MostSearched";
 import TopCharts from "@/components/HomePage/TopCharts";
 import TopCharts2 from "@/components/HomePage/TopCharts2";
+import useSessionReload from "@/components/SessionReload";
+import { Button } from "@/components/ui/button";
 
 const Index = () => {
   // const { data: recentSongs, isLoading } = useQuery({
   //   queryKey: ['recentSongs'],
   //   queryFn: () => fetchSongs('latest'),
   // });
+
+  useSessionReload();
 
   const [recentSongs, setRecentSongs] = useState([]);
   const { user, favoriteSongIds, favoriteSongs, setFavoriteSongs, isLoading } =
@@ -58,6 +62,7 @@ const Index = () => {
           Welcome Back {user?.name.split(" ")[0]}
         </motion.h1>
       </div>
+
       {recentSongs.length > 0 && (
         <section className="space-y-4 w-screen">
           <div className="flex items-center justify-between">

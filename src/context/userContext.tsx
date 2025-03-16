@@ -68,7 +68,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       if (user) {
         setIsLoading(true);
         const result = await fetchSongsByIds(favoriteSongIds);
-        console.log(result);
+        // console.log(result);
         setFavoriteSongs(result);
       }
     } catch (error) {
@@ -84,12 +84,12 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       setIsLoading(true);
       console.log("executing the getUser function");
       const session = await account.getSession("current");
-      console.log(session, "this is session");
+      // console.log(session, "this is session");
 
       if (session) {
         const userData = await account.get();
         setUser(userData);
-        console.log(userData, "this is user");
+        // console.log(userData, "this is user");
       } else {
         setUser(null);
       }
