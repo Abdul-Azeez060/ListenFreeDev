@@ -1,5 +1,7 @@
 const BASE_URL = "https://jiosaavn-api.abdulazeezmd060.workers.dev/api";
 const BASE_URL_VERCEL = "https://backend-music-blush.vercel.app/api";
+const BASE_URL2 = "https://jiosaavn-api2.abdulazeezmd060.workers.dev/api";
+const BASE_URL_VERCEL2 = "https://backend-music1212.vercel.app/api";
 
 export const fetchSongs = async (query: string, category: string) => {
   try {
@@ -30,19 +32,21 @@ export const fetchArtistSongs = async (id: string) => {
 
 export const fetchPlaylistSongs = async (id: string, link: string) => {
   const response = await fetch(
-    `${BASE_URL}/playlists?id=${id}&link=${link}&limit=50`
+    `${BASE_URL2}/playlists?id=${id}&link=${link}&limit=50`
   );
   return response.json();
 };
 
 export const fetchAlbumSongs = async (id: string, link: string) => {
-  const response = await fetch(`${BASE_URL}/albums?id=${id}&link=${link}`);
+  const response = await fetch(
+    `${BASE_URL_VERCEL}/albums?id=${id}&link=${link}`
+  );
   return response.json();
 };
 
 export const fetchSongDetails = async (id: string) => {
   try {
-    const response = await fetch(`${BASE_URL}/songs?id=${id}`);
+    const response = await fetch(`${BASE_URL2}/songs?id=${id}`);
     if (!response.ok) {
       throw new Error("Failed to fetch song details");
     }
@@ -81,7 +85,7 @@ export const fetchSongsByIds = async (songIds: string[]) => {
   try {
     // Create an array of fetch promises
     const fetchPromises = songIds.map((songId) =>
-      fetch(`${BASE_URL}/songs/${songId}`).then((res) => res.json())
+      fetch(`${BASE_URL2}/songs/${songId}`).then((res) => res.json())
     );
 
     // console.log(fetchPromises, "this is fetch promises");

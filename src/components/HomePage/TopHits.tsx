@@ -20,11 +20,11 @@ function TopHits() {
       let topHits = [];
       let topHitsExpiry = 0;
       if (localStorage.getItem("TopHits")) {
-        console.log("Fetching songs from localstorage");
+        // console.log("Fetching songs from localstorage");
         topHits = JSON.parse(localStorage.getItem("TopHits"));
         topHitsExpiry = parseInt(localStorage.getItem("TopHitsExpiry"));
       } else if (!topHits || topHits.length < 1) {
-        console.log("Trending hits not found fetching from api");
+        // console.log("Trending hits not found fetching from api");
         topHits = await fetchSongs("top", "playlists");
         localStorage.setItem("TopHits", JSON.stringify(topHits));
         localStorage.setItem(
@@ -32,7 +32,7 @@ function TopHits() {
           (Date.now() + 24 * 60 * 60 * 1000).toString()
         );
       } else if (topHits && topHitsExpiry < Date.now()) {
-        console.log("Trending hits time expired");
+        // console.log("Trending hits time expired");
         topHits = await fetchSongs("top", "playlists");
         localStorage.setItem("TopHits", JSON.stringify(topHits));
         localStorage.setItem(
@@ -41,10 +41,10 @@ function TopHits() {
         );
       }
 
-      console.log(topHits, "these are trendingsongs ");
+    //   console.log(topHits, "these are trendingsongs ");
 
       setTrendingPlaylsits(topHits);
-      console.log("updated the search result");
+    //   console.log("updated the search result");
     } catch (error) {
       console.log(error);
     } finally {

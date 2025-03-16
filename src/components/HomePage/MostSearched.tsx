@@ -14,19 +14,19 @@ function MostSearched() {
   const navigate = useNavigate();
 
   const fetchmostSearched = async () => {
-    console.log("feching most searched songs");
+    // console.log("feching most searched songs");
     try {
       setIsLoading(true);
       let mostSearched = [];
       let mostSearchedExpiry = 0;
       if (localStorage.getItem("MostSearched")) {
-        console.log("Fetching songs from localstorage");
+        // console.log("Fetching songs from localstorage");
         mostSearched = JSON.parse(localStorage.getItem("MostSearched"));
         mostSearchedExpiry = parseInt(
           localStorage.getItem("MostSearchedExpiry")
         );
       } else if (!mostSearched || mostSearched.length < 1) {
-        console.log("Trending hits not found fetching from api");
+        // console.log("Trending hits not found fetching from api");
         mostSearched = await fetchSongs("most searched", "playlists");
         localStorage.setItem("MostSearched", JSON.stringify(mostSearched));
         localStorage.setItem(
@@ -34,7 +34,7 @@ function MostSearched() {
           (Date.now() + 24 * 60 * 60 * 1000).toString()
         );
       } else if (mostSearched && mostSearchedExpiry < Date.now()) {
-        console.log("Mostsearched time expired");
+        // console.log("Mostsearched time expired");
         mostSearched = await fetchSongs("most searched", "playlists");
         localStorage.setItem("MostSearched", JSON.stringify(mostSearched));
         localStorage.setItem(
@@ -43,10 +43,10 @@ function MostSearched() {
         );
       }
 
-      console.log(mostSearched, "these are trendingsongs ");
+    //   console.log(mostSearched, "these are trendingsongs ");
 
       setMostSearchedPlaylist(mostSearched);
-      console.log("updated the search result");
+    //   console.log("updated the search result");
     } catch (error) {
       console.log(error);
     } finally {

@@ -86,7 +86,7 @@ function SongsQueue() {
                   <MinusCircle
                     className="text-white"
                     onClick={() => {
-                      console.log("clicked");
+
                       setSongs(
                         songs.filter((currentSong) => currentSong.id != song.id)
                       );

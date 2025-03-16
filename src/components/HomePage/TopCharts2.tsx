@@ -24,7 +24,7 @@ function TopCharts2() {
         topCharts = JSON.parse(localStorage.getItem("TopCharts2"));
         topChartsExpiry = parseInt(localStorage.getItem("TopChartsExpiry2"));
       } else if (!topCharts || topCharts.length < 1) {
-        console.log("Trending hits not found fetching from api");
+        // console.log("Trending hits not found fetching from api");
         topCharts = await fetchSongs("Sid Sriram", "playlists");
         localStorage.setItem("TopCharts2", JSON.stringify(topCharts));
         localStorage.setItem(
@@ -32,7 +32,7 @@ function TopCharts2() {
           (Date.now() + 24 * 60 * 60 * 1000).toString()
         );
       } else if (topCharts && topChartsExpiry < Date.now()) {
-        console.log("Trending hits time expired");
+        // console.log("Trending hits time expired");
         topCharts = await fetchSongs("Sid Sri Ram", "playlists");
         localStorage.setItem("TopCharts2", JSON.stringify(topCharts));
         localStorage.setItem(
@@ -41,10 +41,10 @@ function TopCharts2() {
         );
       }
 
-      console.log(topCharts, "these are trendingsongs ");
+    //   console.log(topCharts, "these are trendingsongs ");
 
       setTopCharts(topCharts);
-      console.log("updated the search result");
+    //   console.log("updated the search result");
     } catch (error) {
       console.log(error);
     } finally {

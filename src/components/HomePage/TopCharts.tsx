@@ -14,17 +14,17 @@ function TopCharts() {
   const navigate = useNavigate();
 
   const fetchTopCharts = async () => {
-    console.log("feching songs");
+    // console.log("feching songs");
     try {
       setIsLoading(true);
       let topCharts = [];
       let topChartsExpiry = 0;
       if (localStorage.getItem("TopCharts")) {
-        console.log("Fetching songs from localstorage");
+        // console.log("Fetching songs from localstorage");
         topCharts = JSON.parse(localStorage.getItem("TopCharts"));
         topChartsExpiry = parseInt(localStorage.getItem("TopChartsExpiry"));
       } else if (!topCharts || topCharts.length < 1) {
-        console.log("Trending hits not found fetching from api");
+        // console.log("Trending hits not found fetching from api");
         topCharts = await fetchSongs("Shreya Ghoshal", "playlists");
         localStorage.setItem("TopCharts", JSON.stringify(topCharts));
         localStorage.setItem(
@@ -32,7 +32,7 @@ function TopCharts() {
           (Date.now() + 24 * 60 * 60 * 1000).toString()
         );
       } else if (topCharts && topChartsExpiry < Date.now()) {
-        console.log("Trending hits time expired");
+        // console.log("Trending hits time expired");
         topCharts = await fetchSongs("Shreya Ghoshal", "playlists");
         localStorage.setItem("TopCharts", JSON.stringify(topCharts));
         localStorage.setItem(
@@ -41,10 +41,10 @@ function TopCharts() {
         );
       }
 
-      console.log(topCharts, "these are trendingsongs ");
+    //   console.log(topCharts, "these are trendingsongs ");
 
       setTopCharts(topCharts);
-      console.log("updated the search result");
+    //   console.log("updated the search result");
     } catch (error) {
       console.log(error);
     } finally {

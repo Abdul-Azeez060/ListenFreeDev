@@ -22,7 +22,7 @@ export async function setIsNotFavorite(
     );
 
     if (favorites.documents.length > 0) {
-      console.log("yes fav length");
+
       // Song is already a favorite - remove it
       const favoriteId = favorites.documents[0].$id;
       await database.deleteDocument(
@@ -92,7 +92,7 @@ export async function getUserFavoriteSongs(userId: string) {
     // Extract the song IDs from the favorites
     const songIds: string[] = favorites.documents.map((doc) => doc.songId);
 
-    console.log(songIds);
+
 
     return {
       success: true,
