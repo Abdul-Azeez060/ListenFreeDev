@@ -21,7 +21,7 @@ const Index = () => {
   //   queryFn: () => fetchSongs('latest'),
   // });
 
-  useSessionReload();
+  // useSessionReload();
 
   const [recentSongs, setRecentSongs] = useState([]);
   const { user, favoriteSongIds, favoriteSongs, setFavoriteSongs, isLoading } =
