@@ -62,7 +62,9 @@ const Index = () => {
           Welcome Back {user?.name.split(" ")[0]}
         </motion.h1>
       </div>
-
+      <div className="flex items-center ">
+        <h1 className="text-white px-2 md:px-4">Reload for latest Updates</h1>
+      </div>
       {recentSongs.length > 0 && (
         <section className="space-y-4 w-screen">
           <div className="flex items-center justify-between">
