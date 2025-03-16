@@ -34,7 +34,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="h-screen bg-background bg-[#12121e]  overflow-hidden scrollbar-hide">
       <motion.main
-        className="h-screen overflow-y-auto scrollbar-hide"
+        className="h-screen overflow-y-auto scrollbar-hide bg-[#12121e]"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 20 }}

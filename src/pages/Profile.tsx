@@ -18,7 +18,7 @@ const Profile = () => {
     );
   } else {
     return (
-      <div className="container px-4 py-6 space-y-8">
+      <div className="container px-4 py-6 space-y-8 bg-[#12121e]">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

@@ -59,7 +59,7 @@ function Details() {
   }, []);
 
   return (
-    <div className="h-screen  scrollbar-hide overflow-auto">
+    <div className="h-screen  scrollbar-hide bg-[#12121e] overflow-auto ">
       {!imageLoaded && (
         <div className="animate-pulse ">
           <div className="bg-gray-600  sm:w-[20rem] md:p-10  md:w-[30rem] h-80  md:h-96 md:mt-10 md:mb-5 opacity-80 mx-auto rounded-lg"></div>

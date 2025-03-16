@@ -99,7 +99,7 @@ export const fetchSongsByIds = async (songIds: string[]) => {
   try {
     // Create an array of fetch promises
     const fetchPromises = songIds.map((songId) =>
-      fetch(`${BASE_URL2}/songs/${songId}`).then((res) => res.json())
+      fetch(`${BASE_URL_VERCEL2}/songs/${songId}`).then((res) => res.json())
     );
 
     // console.log(fetchPromises, "this is fetch promises");

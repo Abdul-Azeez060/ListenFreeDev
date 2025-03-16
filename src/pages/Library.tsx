@@ -38,7 +38,7 @@ const Library = () => {
   usePreventPullToRefresh();
 
   return (
-    <div className="flex justify-center items-center text-white h-screen w-screen text-2xl px-4">
+    <div className="flex justify-center items-center text-white h-screen w-screen text-2xl px-4 bg-[#12121e]">
       Sooooon🤞 Regularly refresh the home page to get the latest updates
     </div>
     // <div className="container px-4 py-6 space-y-8">
