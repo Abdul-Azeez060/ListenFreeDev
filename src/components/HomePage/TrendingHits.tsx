@@ -26,7 +26,7 @@ function TrendingHits() {
           localStorage.getItem("TrendingHitsExpiry")
         );
       } else if (!trendingHits || trendingHits.length < 1) {
-        // console.log("Trending hits not found fetching from api");
+        console.log("Trending hits not found fetching from api");
         trendingHits = await fetchSongs("trending", "playlists");
         localStorage.setItem("TrendingHits", JSON.stringify(trendingHits));
         localStorage.setItem(
@@ -43,7 +43,7 @@ function TrendingHits() {
         );
       }
 
-    //   console.log(trendingHits, "these are trendingsongs ");
+      //   console.log(trendingHits, "these are trendingsongs ");
 
       setTrendingPlaylsits(trendingHits);
       console.log("updated the search result");

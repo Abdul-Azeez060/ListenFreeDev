@@ -23,7 +23,7 @@ function TopHits() {
         // console.log("Fetching songs from localstorage");
         topHits = JSON.parse(localStorage.getItem("TopHits"));
         topHitsExpiry = parseInt(localStorage.getItem("TopHitsExpiry"));
-      } else if (!topHits || topHits.length < 1) {
+      } else if (!topHits || topHits.length <= 0) {
         // console.log("Trending hits not found fetching from api");
         topHits = await fetchSongs("top", "playlists");
         localStorage.setItem("TopHits", JSON.stringify(topHits));
@@ -41,10 +41,10 @@ function TopHits() {
         );
       }
 
-    //   console.log(topHits, "these are trendingsongs ");
+      //   console.log(topHits, "these are trendingsongs ");
 
       setTrendingPlaylsits(topHits);
-    //   console.log("updated the search result");
+      //   console.log("updated the search result");
     } catch (error) {
       console.log(error);
     } finally {

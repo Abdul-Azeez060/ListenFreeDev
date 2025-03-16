@@ -6,7 +6,7 @@ const BASE_URL_VERCEL2 = "https://backend-music1212.vercel.app/api";
 export const fetchSongs = async (query: string, category: string) => {
   try {
     const response = await fetch(
-      `${BASE_URL}/search/${category}?limit=15&query=${encodeURIComponent(
+      `${BASE_URL_VERCEL}/search/${category}?limit=15&query=${encodeURIComponent(
         query
       )}`
     );
@@ -26,13 +26,13 @@ export const fetchSongs = async (query: string, category: string) => {
 };
 
 export const fetchArtistSongs = async (id: string) => {
-  const response = await fetch(`${BASE_URL}/artists/${id}`);
+  const response = await fetch(`${BASE_URL_VERCEL}/artists/${id}`);
   return response.json();
 };
 
 export const fetchPlaylistSongs = async (id: string, link: string) => {
   const response = await fetch(
-    `${BASE_URL2}/playlists?id=${id}&link=${link}&limit=50`
+    `${BASE_URL_VERCEL2}/playlists?id=${id}&link=${link}&limit=50`
   );
   return response.json();
 };
@@ -46,7 +46,7 @@ export const fetchAlbumSongs = async (id: string, link: string) => {
 
 export const fetchSongDetails = async (id: string) => {
   try {
-    const response = await fetch(`${BASE_URL2}/songs?id=${id}`);
+    const response = await fetch(`${BASE_URL_VERCEL2}/songs?id=${id}`);
     if (!response.ok) {
       throw new Error("Failed to fetch song details");
     }
@@ -61,7 +61,7 @@ export const fetchSongDetails = async (id: string) => {
 
 export const fetchSongLyrics = async (id: string) => {
   try {
-    const response = await fetch(`${BASE_URL}/songs/${id}/lyrics`);
+    const response = await fetch(`${BASE_URL_VERCEL}/songs/${id}/lyrics`);
     return await response.json();
   } catch (error) {
     console.error("Error fetching song lyrics", error);
@@ -85,7 +85,7 @@ export const fetchSongsByIds = async (songIds: string[]) => {
   try {
     // Create an array of fetch promises
     const fetchPromises = songIds.map((songId) =>
-      fetch(`${BASE_URL2}/songs/${songId}`).then((res) => res.json())
+      fetch(`${BASE_URL_VERCEL}/songs/${songId}`).then((res) => res.json())
     );
 
     // console.log(fetchPromises, "this is fetch promises");
