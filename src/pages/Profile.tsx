@@ -37,7 +37,7 @@ const Profile = () => {
             transition={{ delay: 0.1 }}
             className="flex items-center justify-between p-4 rounded-lg bg-white shadow-sm">
             <div className="flex items-center space-x-3">
-              <Music className="text-accent" />
+              <Music className="text-black" />
               <span>Your Music</span>
             </div>
           </motion.div>
@@ -48,7 +48,7 @@ const Profile = () => {
             transition={{ delay: 0.2 }}
             className="flex items-center justify-between p-4 rounded-lg bg-white shadow-sm">
             <div className="flex items-center space-x-3">
-              <Clock className="text-accent" />
+              <Clock className="text-black" />
               <span>Listening History</span>
             </div>
           </motion.div>
@@ -59,7 +59,7 @@ const Profile = () => {
             transition={{ delay: 0.3 }}
             className="flex items-center justify-between p-4 rounded-lg bg-white shadow-sm">
             <div className="flex items-center space-x-3">
-              <Settings className="text-accent" />
+              <Settings className="text-black" />
               <span>Settings</span>
             </div>
           </motion.div>

@@ -66,13 +66,13 @@ const Search = () => {
   const categories = ["songs", "albums", "playlists", "artists"];
 
   return (
-    <div className=" h-screen bg-black overflow-y-auto scrollbar-hide   py-6 space-y-6">
+    <div className=" h-screen bg-[#12121e] overflow-y-auto scrollbar-hide   py-6 space-y-6">
       <div className="relative px-2 flex items-center">
         <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white ml-2" />
         <input
           type="text"
           placeholder="Search songs, artists, or albums..."
-          className="w-full pl-10    pr-4 py-3 rounded-full   text-white bg-slate-800  placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/50"
+          className="w-full pl-10    pr-4 py-3 rounded-full   text-white bg-[#9B86BD]  placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/50"
           value={songQuery}
           onChange={(e) => {
             songQuerySearched = e.target.value;
@@ -80,7 +80,10 @@ const Search = () => {
             debouncedSetQuery(e.target.value);
           }}
         />
-        <X className="text-white" onClick={() => setSongsQuery("")} />
+        <X
+          className="text-white absolute right-5 text-3xl "
+          onClick={() => setSongsQuery("")}
+        />
       </div>
 
       <div className="flex items-center mx-auto px-4">

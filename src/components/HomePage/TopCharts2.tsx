@@ -25,7 +25,7 @@ function TopCharts2() {
         topChartsExpiry = parseInt(localStorage.getItem("TopChartsExpiry2"));
       } else if (!topCharts || topCharts.length < 1) {
         // console.log("Trending hits not found fetching from api");
-        topCharts = await fetchSongs("Sid Sriram", "playlists");
+        topCharts = await fetchSongs("Telugu", "playlists");
         localStorage.setItem("TopCharts2", JSON.stringify(topCharts));
         localStorage.setItem(
           "TopChartsExpiry2",
@@ -33,7 +33,7 @@ function TopCharts2() {
         );
       } else if (topCharts && topChartsExpiry < Date.now()) {
         // console.log("Trending hits time expired");
-        topCharts = await fetchSongs("Sid Sri Ram", "playlists");
+        topCharts = await fetchSongs("Telugu", "playlists");
         localStorage.setItem("TopCharts2", JSON.stringify(topCharts));
         localStorage.setItem(
           "TopChartsExpiry2",
@@ -41,10 +41,10 @@ function TopCharts2() {
         );
       }
 
-    //   console.log(topCharts, "these are trendingsongs ");
+      //   console.log(topCharts, "these are trendingsongs ");
 
       setTopCharts(topCharts);
-    //   console.log("updated the search result");
+      //   console.log("updated the search result");
     } catch (error) {
       console.log(error);
     } finally {
@@ -59,7 +59,7 @@ function TopCharts2() {
     <section className="space-y-2">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-semibold text-white px-2 md:px-4">
-          Sid Sriram
+          {topCharts && "Telugu Lovers"}
         </h2>
         <List />
       </div>

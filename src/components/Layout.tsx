@@ -32,7 +32,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const isPlayerRoute = matchPath("/player/:songId", location.pathname);
 
   return (
-    <div className="h-screen bg-background bg-black overflow-hidden scrollbar-hide">
+    <div className="h-screen bg-background bg-[#12121e]  overflow-hidden scrollbar-hide">
       <motion.main
         className="h-screen overflow-y-auto scrollbar-hide"
         initial={{ opacity: 0, y: 20 }}
@@ -45,7 +45,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         {!isPlayerRoute && <MiniPlayer />}
       </div>
       {!isPlayerRoute && (
-        <nav className="fixed bottom-0  w-full bg-red-300 backdrop-blur-lg border-t border-black">
+        <nav className="fixed bottom-0  w-full bg-[#E2BBE9] backdrop-blur-lg border-t border-black">
           <div className="flex justify-around  items-center py-3  px-4">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -55,7 +55,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                   onClick={() => navigate(item.path)}
                   className={`flex flex-col items-center ${
                     location.pathname === item.path
-                      ? "text-accent"
+                      ? "text-[#2f3660]"
                       : "text-gray-500"
                   }`}>
                   <Icon size={22} />
