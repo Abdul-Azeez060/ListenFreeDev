@@ -3,6 +3,8 @@ import {
   DATABASE_ID,
   FAVORITE_COLLECTION,
   SONG_COLLECTION,
+  PLAYLIST_METADATA_COLLECTION,
+  PLAYLIST_SONGS_COLLECTION,
 } from "@/appwrite/appwrite";
 import { Song } from "@/types/music";
 
@@ -22,7 +24,6 @@ export async function setIsNotFavorite(
     );
 
     if (favorites.documents.length > 0) {
-
       // Song is already a favorite - remove it
       const favoriteId = favorites.documents[0].$id;
       await database.deleteDocument(
@@ -92,8 +93,6 @@ export async function getUserFavoriteSongs(userId: string) {
     // Extract the song IDs from the favorites
     const songIds: string[] = favorites.documents.map((doc) => doc.songId);
 
-
-
     return {
       success: true,
       songs: songIds,
@@ -104,6 +103,60 @@ export async function getUserFavoriteSongs(userId: string) {
       success: false,
       songs: [],
       message: error.message || "An error occurred fetching favorite songs",
+      error,
+    };
+  }
+}
+
+export async function getUserPlaylistMetadata(userId: string) {
+  try {
+    const playlists = await database.listDocuments(
+      DATABASE_ID,
+      PLAYLIST_METADATA_COLLECTION,
+      [Query.equal("userId", userId)]
+    );
+
+    console.log(playlists, "these are playlists");
+
+    return {
+      success: true,
+      playlists: playlists,
+      message: "Found",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      playlists: [],
+      message: error.message || "An error occurred fetching playlists",
+      error,
+    };
+  }
+}
+
+export async function createPlaylist(playlistName: string, userId: string) {
+  console.log(PLAYLIST_METADATA_COLLECTION, "this is playlist collection");
+  try {
+    const playlist = await database.createDocument(
+      DATABASE_ID,
+      PLAYLIST_METADATA_COLLECTION,
+      ID.unique(),
+      {
+        userId,
+        name: playlistName,
+      }
+    );
+
+    console.log(playlist, "this isthe new playlist created");
+    return {
+      success: true,
+      message: "successfull created playlist",
+      playlist,
+    };
+  } catch (error) {
+    console.log(error, "this is error");
+    return {
+      sucess: false,
+      message: error.message || "An error occured creating a playlist",
       error,
     };
   }

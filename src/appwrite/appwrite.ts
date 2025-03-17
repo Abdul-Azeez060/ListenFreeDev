@@ -13,3 +13,7 @@ export default client;
 export const FAVORITE_COLLECTION = import.meta.env.VITE_FAVORITES_COLLECTION;
 export const DATABASE_ID = import.meta.env.VITE_DATABASE_ID;
 export const SONG_COLLECTION = import.meta.env.VITE_SONG_COLLECTION;
+export const PLAYLIST_METADATA_COLLECTION = import.meta.env
+  .VITE_PLAYLIST_METADATA_COLLECTION;
+export const PLAYLIST_SONGS_COLLECTION = import.meta.env
+  .VITE_PLAYLIST_SONGS_COLLECTION;

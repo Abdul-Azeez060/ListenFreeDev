@@ -1,4 +1,4 @@
-import React, {
+import {
   createContext,
   useContext,
   useState,
@@ -6,7 +6,10 @@ import React, {
   ReactNode,
 } from "react";
 import { account } from "@/appwrite/appwrite";
-import { getUserFavoriteSongs } from "@/appwrite/databaseActions";
+import {
+  getUserFavoriteSongs,
+  getUserPlaylistMetadata,
+} from "@/appwrite/databaseActions";
 import { fetchSongsByIds } from "@/lib/api";
 import { toast } from "sonner";
 import { Song } from "@/types/music";
@@ -25,6 +28,8 @@ interface UserContextProps {
   favoriteSongs: Song[];
   setFavoriteSongs: (songs: Song[]) => void;
   isLoading: boolean;
+  playlists: any[];
+  setPlaylists: (playlist: any) => void;
 }
 
 const UserContext = createContext<UserContextProps | undefined>(undefined);
@@ -35,6 +40,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [favoriteSongIds, setFavoriteSongIds] = useState();
   const [favoriteSongs, setFavoriteSongs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [playlists, setPlaylists] = useState([]);
 
   useEffect(() => {
     getUser();
@@ -44,7 +50,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     if (localStorage.getItem("favoriteSongs")) {
       localStorage.removeItem("favoriteSongs");
     }
-    const fav = JSON.parse(localStorage.getItem("favorites"));
+    const fav = JSON.parse(localStorage.getItem("favorites") || "[]") || [];
     const expiryTime = parseInt(JSON.parse(localStorage.getItem("expiryTime")));
 
     if (!fav) {
@@ -57,6 +63,22 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       console.log("fetching songs from localstorage");
       setFavoriteSongIds(fav);
     }
+    // getting user playlist metadata
+    const playlistMetadata =
+      JSON.parse(localStorage.getItem("PlaylistMetadata") || "[]") || [];
+    const playlistMetadataExpiryTime = parseInt(
+      JSON.parse(localStorage.getItem("PlaylistMetadataExpiryTime") || "0")
+    );
+    if (!playlistMetadata || playlistMetadata.length < 1) {
+      // playlists not present fetch the playlists
+      getPlaylistMetadata();
+    } else if (playlistMetadataExpiryTime < Date.now()) {
+      getPlaylistMetadata();
+    } else {
+      getPlaylistMetadata();
+    }
+    console.log(playlistMetadata, "this is going in the state");
+    setPlaylists(playlistMetadata);
   }, [user]);
 
   useEffect(() => {
@@ -103,12 +125,35 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     if (user) {
       console.log("fetching songs from db");
       const res = await getUserFavoriteSongs(user.$id);
+      if (res.songs.length < 1) {
+        return;
+      }
       localStorage.setItem("favorites", JSON.stringify(res.songs));
       //@ts-ignore
       setFavoriteSongIds(res.songs);
       localStorage.setItem(
         "expiryTime",
-        (Date.now() + 3 * 60 * 60 * 1000).toString()
+        (Date.now() + 5 * 60 * 60 * 1000).toString()
+      );
+    }
+  };
+
+  const getPlaylistMetadata = async () => {
+    if (user) {
+      const res: any = await getUserPlaylistMetadata(user.$id);
+      if (res.playlists.total < 1) {
+        return;
+      }
+
+      console.log(res.playlists.documents, "htese are playlists ");
+      setPlaylists(res.playlists.documents);
+      localStorage.setItem(
+        "PlaylistMetadata",
+        JSON.stringify(res.playlists.documents)
+      );
+      localStorage.setItem(
+        "PlaylistMetadataExpiryTime",
+        (Date.now() + 24 * 60 * 60 * 1000).toString()
       );
     }
   };
@@ -123,6 +168,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         favoriteSongs,
         setFavoriteSongs,
         isLoading,
+        playlists,
+        setPlaylists,
       }}>
       {children}
     </UserContext.Provider>
