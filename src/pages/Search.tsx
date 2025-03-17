@@ -66,13 +66,13 @@ const Search = () => {
   const categories = ["songs", "albums", "playlists", "artists"];
 
   return (
-    <div className=" h-screen bg-[#12121e] overflow-y-auto scrollbar-hide   py-6 space-y-6">
+    <div className=" h-screen bg-[#09122c]  scrollbar-hide   py-6 space-y-6">
       <div className="relative px-2 flex items-center">
         <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white ml-2" />
         <input
           type="text"
           placeholder="Search songs, artists, or albums..."
-          className="w-full pl-10    pr-4 py-3 rounded-full   text-white bg-[#9B86BD]  placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/50"
+          className="w-full pl-10    pr-4 py-3 rounded-full   text-white bg-[#5A639C]  placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/50"
           value={songQuery}
           onChange={(e) => {
             songQuerySearched = e.target.value;
@@ -105,7 +105,7 @@ const Search = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="space-y-4 overflow-hidden ">
+          className="space-y-4 overflow-y-auto h-[calc(100vh-18rem)] ">
           <h2 className="text-xl font-semibold text-slate-300 px-4">
             Search Results
           </h2>
