@@ -14,6 +14,7 @@ import TopCharts from "@/components/HomePage/TopCharts";
 import TopCharts2 from "@/components/HomePage/TopCharts2";
 import useSessionReload from "@/components/SessionReload";
 import { Button } from "@/components/ui/button";
+import InstallPWA from "@/components/InstallPwa";
 
 const Index = () => {
   // const { data: recentSongs, isLoading } = useQuery({
@@ -61,6 +62,7 @@ const Index = () => {
           transition={{ delay: 0.1 }}>
           Welcome Back {user?.name.split(" ")[0]}
         </motion.h1>
+        <InstallPWA />
       </div>
       <div className="flex items-center ">
         <h1 className="text-white px-2 md:px-4">Reload for latest Updates</h1>
