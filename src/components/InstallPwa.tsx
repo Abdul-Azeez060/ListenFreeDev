@@ -55,14 +55,14 @@ const InstallPWA = () => {
   };
 
   return (
-    showButton && (
+    true && (
       <button
         onClick={handleInstallClick}
         style={{
           position: "fixed",
           bottom: "20px",
           right: "20px",
-          background: "#007bff",
+          background: "#000000",
           color: "white",
           padding: "12px 16px",
           borderRadius: "50px",
