@@ -3,9 +3,10 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Playlist } from "@/types/music";
 import { List, PlayCircle } from "lucide-react";
-import SongLoader from "../Loaders/SongLoader";
+import SongLoader from "../Loaders/HomeSongLoader";
 import { useNavigate } from "react-router-dom";
 import { useSearchSongs } from "@/context/searchContext";
+import LazyImage from "../LazyImage";
 
 function MostSearched() {
   const { setUrl, setCategory } = useSearchSongs();
@@ -25,7 +26,9 @@ function MostSearched() {
         mostSearchedExpiry = parseInt(
           localStorage.getItem("MostSearchedExpiry")
         );
-      } else if (!mostSearched || mostSearched.length < 1) {
+      }
+
+      if (!mostSearched || mostSearched.length < 1) {
         // console.log("Trending hits not found fetching from api");
         mostSearched = await fetchSongs("most searched", "playlists");
         localStorage.setItem("MostSearched", JSON.stringify(mostSearched));
@@ -43,10 +46,10 @@ function MostSearched() {
         );
       }
 
-    //   console.log(mostSearched, "these are trendingsongs ");
+      //   console.log(mostSearched, "these are trendingsongs ");
 
       setMostSearchedPlaylist(mostSearched);
-    //   console.log("updated the search result");
+      //   console.log("updated the search result");
     } catch (error) {
       console.log(error);
     } finally {
@@ -81,8 +84,17 @@ function MostSearched() {
                 navigate(`/playlist/${playlist.id}`);
               }}>
               <div className="relative aspect-square rounded-lg overflow-hidden">
-                <img
+                {/* <img
                   loading="lazy"
+                  src={
+                    playlist?.image[2].url ||
+                    playlist?.image[1].url ||
+                    playlist?.image[0].url
+                  }
+                  alt={playlist?.name}
+                  className="object-cover w-full h-full"
+                /> */}
+                <LazyImage
                   src={
                     playlist?.image[2].url ||
                     playlist?.image[1].url ||

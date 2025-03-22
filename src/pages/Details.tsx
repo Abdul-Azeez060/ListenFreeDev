@@ -5,6 +5,7 @@ import {
   fetchAlbumSongs,
   fetchArtistSongs,
   fetchPlaylistSongs,
+  fetchSongsByIds,
 } from "@/lib/api";
 import { useLocation } from "react-router-dom";
 import { Song } from "@/types/music";
@@ -14,18 +15,22 @@ import { PlayCircleIcon, PlusCircleIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSongs } from "@/context/songsContext";
 import he from "he";
+import { fetchUserPlaylstSongs } from "@/appwrite/databaseActions";
+import { useCurrentUserData } from "@/context/userContext";
+import LazyImage from "@/components/LazyImage";
 
 interface DetailSongs {
   songs: Song[];
   id: string;
-  name: string;
-  image: object;
+  name?: string;
+  image: object | string;
   description?: string;
   topAlbums?: Array<object>;
 }
 function Details() {
   const { albumId, playlistId, artistId } = useParams();
   const { category, url } = useSearchSongs();
+  const { playlists } = useCurrentUserData();
   const { addSong, setSongs, songs, setCurrentSongId } = useSongs();
   const navigate = useNavigate();
   const [detailSongs, setDetailSongs] = useState<DetailSongs>();
@@ -52,6 +57,35 @@ function Details() {
         // console.log(result.data, "this is hte data");
 
         setDetailSongs(result.data);
+      } else if (category === "userPlaylists") {
+        console.log(playlistId, "This is playlistId");
+        const songIds = JSON.parse(
+          localStorage.getItem(`playlist:${playlistId}`)
+        );
+        console.log(songIds, "these are songsIds");
+        const songs = await fetchSongsByIds(songIds);
+        console.log(songs, "these are the playlist songs");
+        if (songs) {
+          console.log(playlists, "this is playlists");
+          const playlistMetaData = playlists.filter((playlist) => {
+            if (playlistId == playlist.$id) {
+              return playlist;
+            }
+          });
+          const id = playlistId;
+          const description = playlistMetaData[0].name;
+          const image =
+            "https://res.cloudinary.com/djanknlys/image/upload/v1742619937/ListenFreeLogo.jpg";
+          setDetailSongs((prevSongs: any) => {
+            const newObj: DetailSongs = {
+              songs,
+              description,
+              image,
+              id,
+            };
+            return newObj;
+          });
+        }
       }
       setIsLoading(false);
     }
@@ -83,7 +117,11 @@ function Details() {
       ) : (
         <div>
           <img
-            src={detailSongs?.image[2].url}
+            src={
+              detailSongs?.image[2]?.url
+                ? detailSongs?.image[2].url
+                : detailSongs?.image
+            }
             alt=""
             className="sm:w-[20rem] md:p-10 md:w-[30rem] opacity-80 mx-auto"
             loading="eager"
@@ -159,11 +197,16 @@ function Details() {
                     setSongs(detailSongs.songs);
                     // console.log("addded the song to the state");
                   }}>
-                  <img
+                  {/* <img
                     src={song.image[2].url}
                     alt={song.name}
                     className="w-12 mr-3 h-12 rounded-md object-cover"
                     loading="lazy"
+                  /> */}
+                  <LazyImage
+                    src={song.image[2].url}
+                    alt={song.name}
+                    className="w-12 mr-3 h-12 rounded-md object-cover"
                   />
                   <div className="w-[11rem] sm:w-[13rem] md:w-[15rem] lg:w-[20rem] xl:w-[35rem]">
                     <h3 className="font-medium  truncate   text-slate-300">

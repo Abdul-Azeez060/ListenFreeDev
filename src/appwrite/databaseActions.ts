@@ -161,3 +161,78 @@ export async function createPlaylist(playlistName: string, userId: string) {
     };
   }
 }
+
+export async function addSongToPlaylist(songId: string, playlistId: string) {
+  console.log(songId, playlistId, "this is song id ");
+  try {
+    const res = await database.createDocument(
+      DATABASE_ID,
+      PLAYLIST_SONGS_COLLECTION,
+      ID.unique(),
+      {
+        playlistId,
+        songId,
+      }
+    );
+    return {
+      success: true,
+      message: "Added song to playlist",
+      playlistId,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error || "An error occured adding song to playlist",
+      error,
+    };
+  }
+}
+
+export async function fetchUserPlaylstSongs(playlistIds: any[]) {
+  console.log(playlistIds, "these are in fetch ");
+  playlistIds = playlistIds.map((playlistIds) => playlistIds.$id);
+  // Helper function to batch the playlist IDs
+  const batchSize = 10; // You can adjust the batch size based on your use case
+  const batchFetch = async (batch: any[]) => {
+    try {
+      const res = await database.listDocuments(
+        DATABASE_ID,
+        PLAYLIST_SONGS_COLLECTION,
+        [Query.equal("playlistId", batch)]
+      );
+      return res; // Return the fetched songs for the batch
+    } catch (error) {
+      throw new Error(
+        "Error fetching batch of playlist songs: " + error.message
+      );
+    }
+  };
+
+  try {
+    // Split the playlistIds into smaller batches
+    const batches = [];
+    for (let i = 0; i < playlistIds.length; i += batchSize) {
+      batches.push(playlistIds.slice(i, i + batchSize));
+    }
+
+    console.log(batches, "these are batches");
+
+    // Fetch all batches in parallel
+    const batchResults = await Promise.all(batches.map(batchFetch));
+
+    // Flatten the results from each batch into a single array of songs
+    const allSongs = batchResults.flat();
+    console.log(allSongs, "these are all the songs");
+    return {
+      success: true,
+      message: "Successfully fetched the songs",
+      songs: allSongs,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message || "An error occurred fetching playlist songs",
+      error,
+    };
+  }
+}

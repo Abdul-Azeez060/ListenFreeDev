@@ -14,6 +14,9 @@ import {
   ArrowLeft,
   Loader2,
   Download,
+  ArrowDown,
+  ArrowBigDownDash,
+  ChevronDown,
 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { useSongs } from "@/context/songsContext";
@@ -23,6 +26,8 @@ import usePreventPullToRefresh from "@/components/PreventReload";
 import SongsQueue from "@/components/SongsQueue";
 import IsFavoriteHeartComponent from "@/components/IsFavoriteHeartComponent";
 import { DownloadButton } from "@/components/DownloadButton";
+import { AddToPlaylist } from "@/components/AddToPlaylist";
+import LazyImage from "@/components/LazyImage";
 
 const Player = () => {
   const { songId } = useParams();
@@ -131,7 +136,7 @@ const Player = () => {
             <button
               onClick={() => navigate("/search")}
               className="p-2 text-white hover:bg-secondary rounded-full">
-              <ArrowLeft size={32} />
+              <ChevronDown size={24} />
             </button>
           </div>
 
@@ -161,8 +166,13 @@ const Player = () => {
                   opacity: { duration: 0.1 },
                 }}
                 className="w-80 h-80 md:w-80 md:h-80 rounded-lg overflow-hidden shadow-black shadow-2xl">
-                <img
+                {/* <img
                   src={currentSong?.image[2]?.url || Logo}
+                  alt={currentSong?.name}
+                  className="w-full h-full object-cover"
+                /> */}
+                <LazyImage
+                  src={currentSong?.image[2]?.url}
                   alt={currentSong?.name}
                   className="w-full h-full object-cover"
                 />
@@ -188,10 +198,10 @@ const Player = () => {
                 </div>
               </div>
 
-              <div className="flex items-center justify-center space-x-6">
-                <button className="p-2  text-white hover:text-primary-foreground">
-                  <Shuffle size={20} />
-                </button>
+              <div className="flex items-center  justify-center space-x-6">
+                <div className="relative left-2">
+                  <DownloadButton currentSong={currentSong} />
+                </div>
 
                 <button
                   className="p-2 text-white"
@@ -218,8 +228,9 @@ const Player = () => {
                   disabled={currentSongIndex === songs.length - 1}>
                   <SkipForward size={28} />
                 </button>
-
-                <DownloadButton currentSong={currentSong} />
+                <div className="pr-6">
+                  <AddToPlaylist songId={currentSongId} />
+                </div>
               </div>
 
               <div className="flex items-center justify-between px-4">
@@ -227,9 +238,6 @@ const Player = () => {
                   <IsFavoriteHeartComponent />
                 </div>
 
-                <div className="relative left-12">
-                  <SongsQueue />
-                </div>
                 <div className="flex items-center space-x-2">
                   <Volume2 className="text-white" size={20} />
                   <Slider
@@ -243,6 +251,11 @@ const Player = () => {
               </div>
             </div>
           </motion.div>
+        </div>
+      </div>
+      <div className="flex justify-center w-screen ml-4 bg-white">
+        <div className="absolute bottom-4">
+          <SongsQueue />
         </div>
       </div>
     </div>

@@ -36,8 +36,11 @@ const Search = () => {
   const [debouncedQuery, setDebouncedQuery] = useState(songQuery);
 
   const fetchSearchSongs = async (query: string) => {
+    if (category === "userPlaylists") return;
     try {
       setIsLoading(true);
+      console.log("set loading to true");
+      console.log("fetching the songs from api");
       const songs = await fetchSongs(query, category);
       setSearchSongsResult(songs);
       console.log("updated the search result");
@@ -49,6 +52,9 @@ const Search = () => {
   };
   // Update search query with debounce
   useEffect(() => {
+    if (category === "userPlaylists") {
+      setCategory("songs");
+    }
     if (debouncedQuery.trim() !== "") {
       fetchSearchSongs(debouncedQuery);
     }
@@ -111,7 +117,7 @@ const Search = () => {
           </h2>
           <div className="grid gap-4">
             {category === "songs" ? (
-              <SongsResult />
+              <SongsResult isLoading={isLoading} />
             ) : category === "albums" ? (
               <AlbumResult isLoading={isLoading} />
             ) : category === "artists" ? (

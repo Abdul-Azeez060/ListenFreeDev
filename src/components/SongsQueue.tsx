@@ -11,6 +11,8 @@ import { motion } from "framer-motion";
 import { useSongs } from "@/context/songsContext";
 import { Song } from "@/types/music";
 import he from "he";
+import LazyImage from "./LazyImage";
+import LongNames from "./LongNames";
 
 function SongsQueue() {
   const [isQueueOpen, setisQueueOpen] = useState(false);
@@ -60,33 +62,24 @@ function SongsQueue() {
                 onClick={() => {
                   setCurrentSongId(song?.id);
                 }}>
-                <img
+                {/* <img
                   loading="lazy"
                   src={song?.image[2].url}
                   alt={song?.name}
                   className="w-12 mr-3 h-12 rounded-md object-cover"
+                /> */}
+                <LazyImage
+                  src={song?.image[2].url}
+                  alt={song?.name}
+                  className="w-12 mr-3 h-12 rounded-md object-cover"
                 />
-                <div>
-                  <h3 className="font-medium  text-slate-300">
-                    {he.decode(song?.name?.slice(0, 20))}...
-                  </h3>
-                  <p className="text-sm text-muted">
-                    {he.decode(
-                      song?.artists?.primary
-                        ?.map((artist) => artist.name)
-                        .join(", ")
-                        .slice(0, 20)
-                    )}
-                    ...
-                  </p>
-                </div>
+                <LongNames song={song} />
               </div>
               <div>
                 <button>
                   <MinusCircle
                     className="text-white"
                     onClick={() => {
-
                       setSongs(
                         songs.filter((currentSong) => currentSong.id != song.id)
                       );

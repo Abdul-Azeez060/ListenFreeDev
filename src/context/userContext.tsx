@@ -7,6 +7,7 @@ import {
 } from "react";
 import { account } from "@/appwrite/appwrite";
 import {
+  fetchUserPlaylstSongs,
   getUserFavoriteSongs,
   getUserPlaylistMetadata,
 } from "@/appwrite/databaseActions";
@@ -38,7 +39,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState();
   const [favoriteSongIds, setFavoriteSongIds] = useState();
-  const [favoriteSongs, setFavoriteSongs] = useState([]);
+  const [favoriteSongs, setFavoriteSongs] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [playlists, setPlaylists] = useState([]);
 
@@ -56,6 +57,12 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     if (!fav) {
       console.log(fav, "favorites not presnt");
       getUserFavorites();
+      console.log(
+        expiryTime,
+        "this is expiry time",
+        Date.now(),
+        "this is current date"
+      );
     } else if (expiryTime < Date.now()) {
       console.log("expirted state refetching the songs");
       getUserFavorites();
@@ -82,6 +89,14 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   }, [user]);
 
   useEffect(() => {
+    const playlistSongs = [];
+    const playlistSongsExpiry = 0;
+    if (!playlistSongs || playlistSongs.length < 1) {
+      getUserPlaylistSongs();
+    }
+  }, [playlists]);
+
+  useEffect(() => {
     loadFavoriteSongs();
   }, [user, favoriteSongIds]);
 
@@ -89,9 +104,13 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     try {
       if (user) {
         setIsLoading(true);
-        const result = await fetchSongsByIds(favoriteSongIds);
-        // console.log(result);
-        setFavoriteSongs(result);
+        if (favoriteSongIds) {
+          const result = await fetchSongsByIds(favoriteSongIds);
+          // console.log(result);
+          setFavoriteSongs(result);
+        } else {
+          setFavoriteSongs([]);
+        }
       }
     } catch (error) {
       console.error("Error loading favorites:", error);
@@ -157,6 +176,37 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       );
     }
   };
+
+  async function getUserPlaylistSongs() {
+    const res = await fetchUserPlaylstSongs(playlists);
+
+    if (res.success) {
+      // Iterate through res.songs.documents to store songIds for each playlist
+      res.songs?.forEach((song) => {
+        song.documents.forEach((song) => {
+          const { playlistId, songId } = song;
+
+          // Create the key for localStorage (e.g., "playlist:67d7f95f001efb470706")
+          const key = `playlist:${playlistId}`;
+
+          // Retrieve the existing songs for this playlist or initialize an empty array
+          const existingSongs = JSON.parse(localStorage.getItem(key)) || [];
+
+          // Add the songId to the list (if not already in the list to avoid duplicates)
+          if (!existingSongs.includes(songId)) {
+            existingSongs.push(songId);
+          }
+
+          // Store the updated list of songIds back in localStorage
+          localStorage.setItem(key, JSON.stringify(existingSongs));
+        });
+      });
+
+      console.log("Songs have been stored in localStorage");
+    } else {
+      console.log(res.error);
+    }
+  }
 
   return (
     <UserContext.Provider

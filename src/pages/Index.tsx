@@ -4,7 +4,7 @@ import { Heart, Clock, PlayCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSongs } from "@/context/songsContext";
 import { useCurrentUserData } from "@/context/userContext";
-import SongLoader from "@/components/Loaders/SongLoader";
+import SongLoader from "@/components/Loaders/HomeSongLoader";
 import { Song } from "@/types/music";
 import he from "he";
 import TrendingHits from "@/components/HomePage/TrendingHits";
@@ -14,6 +14,7 @@ import TopCharts from "@/components/HomePage/TopCharts";
 import TopCharts2 from "@/components/HomePage/TopCharts2";
 import useSessionReload from "@/components/SessionReload";
 import { Button } from "@/components/ui/button";
+import LazyImage from "@/components/LazyImage";
 
 const Index = () => {
   // const { data: recentSongs, isLoading } = useQuery({
@@ -90,7 +91,12 @@ const Index = () => {
                     setSongs(recentSongs);
                   }}>
                   <div className=" aspect-square rounded-lg overflow-x-auto size-36 md:size-60 mx-2  ">
-                    <img
+                    {/* <img
+                      src={song?.image[2].url}
+                      alt={song?.name}
+                      className="object-cover w-full h-full"
+                    /> */}
+                    <LazyImage
                       src={song?.image[2].url}
                       alt={song?.name}
                       className="object-cover w-full h-full"
@@ -145,8 +151,13 @@ const Index = () => {
                     setSongs(favoriteSongs);
                   }}>
                   <div className=" aspect-square rounded-lg overflow-x-auto size-36 md:size-60 mx-2  ">
-                    <img
+                    {/* <img
                       loading="lazy"
+                      src={song?.image[2].url}
+                      alt={song?.name}
+                      className="object-cover w-full h-full"
+                    /> */}
+                    <LazyImage
                       src={song?.image[2].url}
                       alt={song?.name}
                       className="object-cover w-full h-full"

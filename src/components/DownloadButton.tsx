@@ -62,7 +62,7 @@ export function DownloadButton({ currentSong }: { currentSong: Song }) {
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button className="bg-transparent">
-          <Download size={20} />
+          <Download size={24} />
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>

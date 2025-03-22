@@ -12,7 +12,7 @@ export const fetchSongs = async (query: string, category: string) => {
     );
     if (!response.ok) {
       response = await fetch(
-        `${BASE_URL_VERCEL}/search/${category}?limit=15&query=${encodeURIComponent(
+        `${BASE_URL2}/search/${category}?limit=15&query=${encodeURIComponent(
           query
         )}`
       );
@@ -33,7 +33,7 @@ export const fetchSongs = async (query: string, category: string) => {
 };
 
 export const fetchArtistSongs = async (id: string) => {
-  let response = await fetch(`${BASE_URL}/artists/${id}`);
+  let response = await fetch(`${BASE_URL2}/artists/${id}`);
   if (!response.ok) {
     response = await fetch(`${BASE_URL_VERCEL}/artists/${id}`);
   }

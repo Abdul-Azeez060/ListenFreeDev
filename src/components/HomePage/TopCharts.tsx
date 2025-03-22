@@ -3,9 +3,10 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Playlist } from "@/types/music";
 import { List, PlayCircle } from "lucide-react";
-import SongLoader from "../Loaders/SongLoader";
+import SongLoader from "../Loaders/HomeSongLoader";
 import { useNavigate } from "react-router-dom";
 import { useSearchSongs } from "@/context/searchContext";
+import LazyImage from "../LazyImage";
 
 function TopCharts() {
   const { setUrl, setCategory } = useSearchSongs();
@@ -23,7 +24,9 @@ function TopCharts() {
         // console.log("Fetching songs from localstorage");
         topCharts = JSON.parse(localStorage.getItem("TopCharts"));
         topChartsExpiry = parseInt(localStorage.getItem("TopChartsExpiry"));
-      } else if (!topCharts || topCharts.length < 1) {
+      }
+
+      if (!topCharts || topCharts.length < 1) {
         // console.log("Trending hits not found fetching from api");
         topCharts = await fetchSongs("Shreya Ghoshal", "playlists");
         localStorage.setItem("TopCharts", JSON.stringify(topCharts));
@@ -41,10 +44,10 @@ function TopCharts() {
         );
       }
 
-    //   console.log(topCharts, "these are trendingsongs ");
+      //   console.log(topCharts, "these are trendingsongs ");
 
       setTopCharts(topCharts);
-    //   console.log("updated the search result");
+      //   console.log("updated the search result");
     } catch (error) {
       console.log(error);
     } finally {
@@ -79,8 +82,17 @@ function TopCharts() {
                 navigate(`/playlist/${playlist.id}`);
               }}>
               <div className="relative aspect-square rounded-lg overflow-hidden">
-                <img
+                {/* <img
                   loading="lazy"
+                  src={
+                    playlist?.image[2].url ||
+                    playlist?.image[1].url ||
+                    playlist?.image[0].url
+                  }
+                  alt={playlist?.name}
+                  className="object-cover w-full h-full"
+                /> */}
+                <LazyImage
                   src={
                     playlist?.image[2].url ||
                     playlist?.image[1].url ||

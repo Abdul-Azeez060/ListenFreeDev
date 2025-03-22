@@ -12,6 +12,7 @@ import { useSongs } from "@/context/songsContext";
 import { memo, useEffect } from "react"; // Add memo to prevent unnecessary re-renders
 import { Song } from "@/types/music";
 import IsFavoriteHeartComponent from "./IsFavoriteHeartComponent";
+import LazyImage from "./LazyImage";
 const MiniPlayer = memo(() => {
   const navigate = useNavigate();
   const {
@@ -43,8 +44,11 @@ const MiniPlayer = memo(() => {
           <div
             className="flex items-center space-x-4 cursor-pointer w-[80%]"
             onClick={() => navigate(`/player/${currentSongId}`)}>
-            <img
-              src={currentSong?.image?.[2]?.url || "/placeholder.svg"}
+            <LazyImage
+              src={
+                currentSong?.image?.[2]?.url ||
+                "@/tune-nectar/public/placeholder.svg"
+              }
               alt={currentSong?.name}
               className="w-11 h-11 rounded-lg object-cover"
             />

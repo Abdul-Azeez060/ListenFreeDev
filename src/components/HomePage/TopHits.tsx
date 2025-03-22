@@ -3,9 +3,10 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Playlist } from "@/types/music";
 import { List, PlayCircle } from "lucide-react";
-import SongLoader from "../Loaders/SongLoader";
+import SongLoader from "../Loaders/HomeSongLoader";
 import { useNavigate } from "react-router-dom";
 import { useSearchSongs } from "@/context/searchContext";
+import LazyImage from "../LazyImage";
 
 function TopHits() {
   const { setUrl, setCategory } = useSearchSongs();
@@ -23,7 +24,9 @@ function TopHits() {
         // console.log("Fetching songs from localstorage");
         topHits = JSON.parse(localStorage.getItem("TopHits"));
         topHitsExpiry = parseInt(localStorage.getItem("TopHitsExpiry"));
-      } else if (!topHits || topHits.length <= 0) {
+      }
+
+      if (!topHits || topHits.length <= 0) {
         // console.log("Trending hits not found fetching from api");
         topHits = await fetchSongs("top", "playlists");
         localStorage.setItem("TopHits", JSON.stringify(topHits));
@@ -79,8 +82,17 @@ function TopHits() {
                 navigate(`/playlist/${playlist.id}`);
               }}>
               <div className="relative aspect-square rounded-lg overflow-hidden">
-                <img
+                {/* <img
                   loading="lazy"
+                  src={
+                    playlist?.image[2].url ||
+                    playlist?.image[1].url ||
+                    playlist?.image[0].url
+                  }
+                  alt={playlist?.name}
+                  className="object-cover w-full h-full"
+                /> */}
+                <LazyImage
                   src={
                     playlist?.image[2].url ||
                     playlist?.image[1].url ||

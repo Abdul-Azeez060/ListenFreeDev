@@ -19,8 +19,18 @@ import {
 import usePreventPullToRefresh from "@/components/PreventReload";
 import { CreatePlaylistDialogue } from "@/components/Library/CreatePlaylistDialogue";
 import { useCurrentUserData } from "@/context/userContext";
+import { useNavigate } from "react-router-dom";
+import { useSearchSongs } from "@/context/searchContext";
+import LazyImage from "@/components/LazyImage";
 const Library = () => {
   const { playlists } = useCurrentUserData();
+  const { setCategory } = useSearchSongs();
+  const navigate = useNavigate();
+
+  async function handlePlaylistClick(playlistId: string) {
+    setCategory("userPlaylists");
+    navigate(`/playlist/${playlistId}`);
+  }
   // const FormSchema = z.object({
   //   spaceId: z.string().min(2, {
   //     message: "spaceId must be at least 2 characters.",
@@ -120,19 +130,31 @@ const Library = () => {
             </Form>
           </div> */}
           <div className="p-4 rounded-lg border flex justify-between border-gray-200 hover:border-accent transition-colors">
-            <div>
+            <div className="w-[80%]">
               <h3 className="font-medium text-white">Create New Playlist</h3>
               <p className="text-sm text-gray-500">Add your favorite songs</p>
             </div>
             <CreatePlaylistDialogue />
           </div>
-          <div className="grid gap-4">
+          <div className="grid gap-4 mt-4">
             {playlists?.map((playlist: any) => (
               <motion.div
-                key={playlist.id}
-                className="text-white border-gray-200 border  p-4 rounded-md flex ">
-                <h3 className="w-20">Name: </h3>
-                <span> {playlist.name}</span>
+                onClick={() => handlePlaylistClick(playlist.$id)}
+                key={playlist.$id}
+                className="text-black bg-white border-gray-200 border  p-2 rounded-md flex cursor-pointer ">
+                <div className="flex items-center">
+                  {/* <img
+                    className="w-10 h-10 rounded-md mx-2"
+                    src="https://res.cloudinary.com/djanknlys/image/upload/v1742624503/PlaylistLogo.jpg"
+                    alt="ListenFreeLogo"
+                  /> */}
+                  <LazyImage
+                    className="w-10 h-10 rounded-md mx-2"
+                    src="https://res.cloudinary.com/djanknlys/image/upload/v1742624503/PlaylistLogo.jpg"
+                    alt="ListenFreeLogo"
+                  />
+                  <span> {playlist.name}</span>
+                </div>
               </motion.div>
             ))}
             <div></div>

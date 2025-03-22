@@ -17,7 +17,7 @@ interface SearchSongsProps {
   url: string;
   setUrl: (url: string) => void;
 }
-type Category = "songs" | "albums" | "artists" | "playlists";
+type Category = "songs" | "albums" | "artists" | "playlists" | "userPlaylists";
 
 const SearchSongsContext = createContext<SearchSongsProps | undefined>(
   undefined
