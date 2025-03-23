@@ -19,6 +19,9 @@ function Favorites() {
   }, [user, favoriteSongIds]);
 
   async function loadFavoriteSongs() {
+    if (favoriteSongs && favoriteSongs?.length === favoriteSongIds.length) {
+      return;
+    }
     try {
       if (user) {
         setIsLoading(true);
