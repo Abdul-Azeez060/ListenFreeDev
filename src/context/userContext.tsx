@@ -117,8 +117,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
 
-      console.log(session, "This is the session");
-
       // Update session to refresh authentication
       try {
         session = await account.updateSession("current");
