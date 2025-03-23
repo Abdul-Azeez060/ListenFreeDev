@@ -74,8 +74,9 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       setFavoriteSongIds(fav);
     }
     // getting user playlist metadata
-    const playlistMetadata =
-      JSON.parse(localStorage.getItem("PlaylistMetadata") || "[]") || [];
+    const playlistMetadata = JSON.parse(
+      localStorage.getItem("PlaylistMetadata") || "[]"
+    );
     const playlistMetadataExpiryTime = parseInt(
       JSON.parse(localStorage.getItem("PlaylistMetadataExpiryTime") || "0")
     );
