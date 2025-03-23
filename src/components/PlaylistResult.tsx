@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { PlayCircle } from "lucide-react";
 import { useSongs } from "@/context/songsContext";
 import AlbumLoader from "./Loaders/AlbumLoader";
+import LazyImage from "./LazyImage";
 function PlaylistResult({ isLoading }) {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -30,12 +31,14 @@ function PlaylistResult({ isLoading }) {
               navigate(`/playlist/${playlist.id}`);
             }}>
             <div className="relative aspect-square rounded-lg overflow-hidden">
-              <img
-                src={
-                  playlist?.image[2].url ||
-                  playlist?.image[1].url ||
-                  playlist?.image[0].url
-                }
+              {/* <img
+                src={playlist?.image[2].url}
+                alt={playlist?.name}
+                className="object-cover w-full h-full"
+              /> */}
+
+              <LazyImage
+                src={playlist?.image[2].url}
                 alt={playlist?.name}
                 className="object-cover w-full h-full"
               />

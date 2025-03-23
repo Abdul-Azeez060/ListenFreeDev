@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Arrow } from "@radix-ui/react-tooltip";
 import { ArrowRight, ChevronRight } from "lucide-react";
+import LazyImage from "./LazyImage";
 function ArtistResult() {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -23,10 +24,9 @@ function ArtistResult() {
               // console.log(artist);
               navigate(`/artist/${artist.id}`);
             }}>
-            <img
+            <LazyImage
               src={artist.image[2].url}
               alt={artist.name}
-              loading="lazy"
               className="w-12 mr-3 h-12 rounded-full object-cover"
             />
             <div>

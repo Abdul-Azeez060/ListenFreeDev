@@ -3,9 +3,10 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Playlist } from "@/types/music";
 import { List, PlayCircle } from "lucide-react";
-import SongLoader from "../Loaders/SongLoader";
+import SongLoader from "../Loaders/HomeSongLoader";
 import { useNavigate } from "react-router-dom";
 import { useSearchSongs } from "@/context/searchContext";
+import LazyImage from "../LazyImage";
 
 function MostSearched() {
   const { setUrl, setCategory } = useSearchSongs();
@@ -17,7 +18,7 @@ function MostSearched() {
     // console.log("feching most searched songs");
     try {
       setIsLoading(true);
-      let mostSearched = [];
+      let mostSearched;
       let mostSearchedExpiry = 0;
       if (localStorage.getItem("MostSearched")) {
         // console.log("Fetching songs from localstorage");
@@ -25,9 +26,16 @@ function MostSearched() {
         mostSearchedExpiry = parseInt(
           localStorage.getItem("MostSearchedExpiry")
         );
-      } else if (!mostSearched || mostSearched.length < 1) {
+      }
+
+      if (!mostSearched || mostSearched.length < 1) {
         // console.log("Trending hits not found fetching from api");
         mostSearched = await fetchSongs("most searched", "playlists");
+        if (!mostSearched.success) {
+          setMostSearchedPlaylist([]);
+          return;
+        }
+        mostSearched = mostSearched.data;
         localStorage.setItem("MostSearched", JSON.stringify(mostSearched));
         localStorage.setItem(
           "MostSearchedExpiry",
@@ -36,6 +44,10 @@ function MostSearched() {
       } else if (mostSearched && mostSearchedExpiry < Date.now()) {
         // console.log("Mostsearched time expired");
         mostSearched = await fetchSongs("most searched", "playlists");
+        if (!mostSearched.success) {
+          return;
+        }
+        mostSearched = mostSearched.data;
         localStorage.setItem("MostSearched", JSON.stringify(mostSearched));
         localStorage.setItem(
           "MostSearchedExpiry",
@@ -43,10 +55,10 @@ function MostSearched() {
         );
       }
 
-    //   console.log(mostSearched, "these are trendingsongs ");
+      //   console.log(mostSearched, "these are trendingsongs ");
 
       setMostSearchedPlaylist(mostSearched);
-    //   console.log("updated the search result");
+      //   console.log("updated the search result");
     } catch (error) {
       console.log(error);
     } finally {
@@ -66,7 +78,7 @@ function MostSearched() {
         <List />
       </div>
       <div className="overflow-x-auto scrollbar-hide ">
-        <div className="grid grid-flow-col  auto-cols-max w-screen">
+        <div className="grid grid-flow-col gap-2  auto-cols-max w-screen">
           {mostSearchedPlaylists?.map((playlist: Playlist) => (
             <motion.div
               key={playlist?.id}
@@ -81,8 +93,17 @@ function MostSearched() {
                 navigate(`/playlist/${playlist.id}`);
               }}>
               <div className="relative aspect-square rounded-lg overflow-hidden">
-                <img
+                {/* <img
                   loading="lazy"
+                  src={
+                    playlist?.image[2].url ||
+                    playlist?.image[1].url ||
+                    playlist?.image[0].url
+                  }
+                  alt={playlist?.name}
+                  className="object-cover w-full h-full"
+                /> */}
+                <LazyImage
                   src={
                     playlist?.image[2].url ||
                     playlist?.image[1].url ||

@@ -5,6 +5,7 @@ import AlbumLoader from "./Loaders/AlbumLoader";
 import { Album } from "@/types/music";
 import { useSearchSongs } from "@/context/searchContext";
 import { useNavigate } from "react-router-dom";
+import LazyImage from "./LazyImage";
 
 function AlbumComponent({ isLoading }) {
   const { setUrl, searchSongsResult } = useSearchSongs();
@@ -24,15 +25,21 @@ function AlbumComponent({ isLoading }) {
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
             onClick={() => {
-              console.log("button clicked");
+              // console.log("button clicked");
               setUrl(album?.url);
               navigate(`/album/${album.id}`);
             }}>
             <div className="relative aspect-square rounded-lg overflow-hidden">
-              <img
+              {/* <img
                 src={album?.image[2].url}
                 alt={album?.name}
                 loading="lazy"
+                className="object-cover w-full h-full"
+              /> */}
+
+              <LazyImage
+                src={album?.image[2].url}
+                alt={album?.name}
                 className="object-cover w-full h-full"
               />
               <div className="absolute inset-0 bg-secondary/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">

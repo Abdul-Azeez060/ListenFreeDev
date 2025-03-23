@@ -12,7 +12,7 @@ export const fetchSongs = async (query: string, category: string) => {
     );
     if (!response.ok) {
       response = await fetch(
-        `${BASE_URL_VERCEL}/search/${category}?limit=15&query=${encodeURIComponent(
+        `${BASE_URL2}/search/${category}?limit=15&query=${encodeURIComponent(
           query
         )}`
       );
@@ -24,16 +24,24 @@ export const fetchSongs = async (query: string, category: string) => {
     const data = await response.json();
     // The API returns data in a nested structure
     // console.log(data, "this is the response");
-
-    return data.data.results || [];
+    // return data.data.results || [];
+    return {
+      success: true,
+      data: data.data.results || [],
+      message: "Successfull",
+    };
   } catch (error) {
-    console.error("Error fetching songs:", error);
-    return [];
+    console.log(error);
+    return {
+      success: false,
+      data: [],
+      message: error,
+    };
   }
 };
 
 export const fetchArtistSongs = async (id: string) => {
-  let response = await fetch(`${BASE_URL}/artists/${id}`);
+  let response = await fetch(`${BASE_URL2}/artists/${id}`);
   if (!response.ok) {
     response = await fetch(`${BASE_URL_VERCEL}/artists/${id}`);
   }

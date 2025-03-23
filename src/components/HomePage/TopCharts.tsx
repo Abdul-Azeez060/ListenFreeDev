@@ -3,9 +3,10 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Playlist } from "@/types/music";
 import { List, PlayCircle } from "lucide-react";
-import SongLoader from "../Loaders/SongLoader";
+import SongLoader from "../Loaders/HomeSongLoader";
 import { useNavigate } from "react-router-dom";
 import { useSearchSongs } from "@/context/searchContext";
+import LazyImage from "../LazyImage";
 
 function TopCharts() {
   const { setUrl, setCategory } = useSearchSongs();
@@ -17,15 +18,22 @@ function TopCharts() {
     // console.log("feching songs");
     try {
       setIsLoading(true);
-      let topCharts = [];
+      let topCharts;
       let topChartsExpiry = 0;
       if (localStorage.getItem("TopCharts")) {
         // console.log("Fetching songs from localstorage");
         topCharts = JSON.parse(localStorage.getItem("TopCharts"));
         topChartsExpiry = parseInt(localStorage.getItem("TopChartsExpiry"));
-      } else if (!topCharts || topCharts.length < 1) {
+      }
+
+      if (!topCharts || topCharts.length < 1) {
         // console.log("Trending hits not found fetching from api");
         topCharts = await fetchSongs("Shreya Ghoshal", "playlists");
+        if (!topCharts.success) {
+          setTopCharts([]);
+          return;
+        }
+        topCharts = topCharts.data;
         localStorage.setItem("TopCharts", JSON.stringify(topCharts));
         localStorage.setItem(
           "TopChartsExpiry",
@@ -34,6 +42,10 @@ function TopCharts() {
       } else if (topCharts && topChartsExpiry < Date.now()) {
         // console.log("Trending hits time expired");
         topCharts = await fetchSongs("Shreya Ghoshal", "playlists");
+        if (!topCharts.success) {
+          return;
+        }
+        topCharts = topCharts.data;
         localStorage.setItem("TopCharts", JSON.stringify(topCharts));
         localStorage.setItem(
           "TopChartsExpiry",
@@ -41,10 +53,10 @@ function TopCharts() {
         );
       }
 
-    //   console.log(topCharts, "these are trendingsongs ");
+      //   console.log(topCharts, "these are trendingsongs ");
 
       setTopCharts(topCharts);
-    //   console.log("updated the search result");
+      //   console.log("updated the search result");
     } catch (error) {
       console.log(error);
     } finally {
@@ -64,7 +76,7 @@ function TopCharts() {
         <List />
       </div>
       <div className="overflow-x-auto scrollbar-hide ">
-        <div className="grid grid-flow-col  auto-cols-max w-screen">
+        <div className="grid grid-flow-col gap-2  auto-cols-max w-screen">
           {topCharts?.map((playlist: Playlist) => (
             <motion.div
               key={playlist?.id}
@@ -79,8 +91,17 @@ function TopCharts() {
                 navigate(`/playlist/${playlist.id}`);
               }}>
               <div className="relative aspect-square rounded-lg overflow-hidden">
-                <img
+                {/* <img
                   loading="lazy"
+                  src={
+                    playlist?.image[2].url ||
+                    playlist?.image[1].url ||
+                    playlist?.image[0].url
+                  }
+                  alt={playlist?.name}
+                  className="object-cover w-full h-full"
+                /> */}
+                <LazyImage
                   src={
                     playlist?.image[2].url ||
                     playlist?.image[1].url ||

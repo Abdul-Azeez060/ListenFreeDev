@@ -226,10 +226,10 @@ export const SongsProvider = ({ children }) => {
   }, [currentSongId]);
 
   useEffect(() => {
-    if (currentSongIndex > 20) {
-      setSongs((preSongs) => preSongs.splice(0, 20));
+    if (currentSongIndex > 10) {
+      setSongs((preSongs) => preSongs.splice(0, 10));
     }
-    if (playedSongs.current.size > 20) {
+    if (playedSongs.current.size > 30) {
       const songIdsInQueue = new Set(songs.map((song) => song.id));
 
       playedSongs.current.forEach((songId: string) => {
