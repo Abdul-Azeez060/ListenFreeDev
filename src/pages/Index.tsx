@@ -63,7 +63,7 @@ const Index = () => {
           transition={{ delay: 0.1 }}>
           Welcome Back {user?.name.split(" ")[0]}
         </motion.h1>
-        <InstallPWA />
+        {/* <InstallPWA /> */}
       </div>
       <div className="flex items-center ">
         <h1 className="text-white px-2 md:px-4">Reload for latest Updates</h1>
