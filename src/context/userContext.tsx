@@ -120,15 +120,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       console.log(session, "This is the session");
 
       // Update session to refresh authentication
-      try {
-        session = await account.updateSession("current");
-        console.log("Session updated successfully");
-      } catch (sessionError) {
-        console.warn("Session update failed, possibly expired:", sessionError);
-        setUser(null);
-        setIsLoading(false);
-        return;
-      }
 
       // Get user details after refreshing session
       const userData = await account.get();
