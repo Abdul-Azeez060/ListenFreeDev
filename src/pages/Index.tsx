@@ -107,7 +107,7 @@ const Index = () => {
                       <PlayCircle className="w-12 h-12 text-primary-foreground" />
                     </div>
                   </div>
-                  <div className=" w-[4rem] md:w-[15rem]">
+                  <div className=" w-[9rem] md:w-[15rem]">
                     <h3 className="mt-2 text-sm font-medium text-center w-full truncate text-white overflow-hidden">
                       {he.decode(song?.name)}
                     </h3>
