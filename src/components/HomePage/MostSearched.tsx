@@ -18,7 +18,7 @@ function MostSearched() {
     // console.log("feching most searched songs");
     try {
       setIsLoading(true);
-      let mostSearched = [];
+      let mostSearched;
       let mostSearchedExpiry = 0;
       if (localStorage.getItem("MostSearched")) {
         // console.log("Fetching songs from localstorage");
@@ -31,6 +31,11 @@ function MostSearched() {
       if (!mostSearched || mostSearched.length < 1) {
         // console.log("Trending hits not found fetching from api");
         mostSearched = await fetchSongs("most searched", "playlists");
+        if (!mostSearched.success) {
+          setMostSearchedPlaylist([]);
+          return;
+        }
+        mostSearched = mostSearched.data;
         localStorage.setItem("MostSearched", JSON.stringify(mostSearched));
         localStorage.setItem(
           "MostSearchedExpiry",
@@ -39,6 +44,10 @@ function MostSearched() {
       } else if (mostSearched && mostSearchedExpiry < Date.now()) {
         // console.log("Mostsearched time expired");
         mostSearched = await fetchSongs("most searched", "playlists");
+        if (!mostSearched.success) {
+          return;
+        }
+        mostSearched = mostSearched.data;
         localStorage.setItem("MostSearched", JSON.stringify(mostSearched));
         localStorage.setItem(
           "MostSearchedExpiry",
@@ -69,7 +78,7 @@ function MostSearched() {
         <List />
       </div>
       <div className="overflow-x-auto scrollbar-hide ">
-        <div className="grid grid-flow-col gap-4  auto-cols-max w-screen">
+        <div className="grid grid-flow-col gap-2  auto-cols-max w-screen">
           {mostSearchedPlaylists?.map((playlist: Playlist) => (
             <motion.div
               key={playlist?.id}

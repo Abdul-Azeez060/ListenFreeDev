@@ -46,7 +46,7 @@ const Search = () => {
         return;
       }
       setMessage("");
-      setSearchSongsResult(songs);
+      setSearchSongsResult(songs.data);
       console.log("updated the search result");
     } catch (error) {
       console.log(error);

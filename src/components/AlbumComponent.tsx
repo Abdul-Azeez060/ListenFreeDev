@@ -25,7 +25,7 @@ function AlbumComponent({ isLoading }) {
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
             onClick={() => {
-              console.log("button clicked");
+              // console.log("button clicked");
               setUrl(album?.url);
               navigate(`/album/${album.id}`);
             }}>

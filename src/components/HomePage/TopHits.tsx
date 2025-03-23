@@ -18,7 +18,7 @@ function TopHits() {
     console.log("feching songs");
     try {
       setIsLoading(true);
-      let topHits = [];
+      let topHits;
       let topHitsExpiry = 0;
       if (localStorage.getItem("TopHits")) {
         // console.log("Fetching songs from localstorage");
@@ -29,6 +29,14 @@ function TopHits() {
       if (!topHits || topHits.length <= 0) {
         // console.log("Trending hits not found fetching from api");
         topHits = await fetchSongs("top", "playlists");
+
+        if (!topHits.success) {
+          setTrendingPlaylsits([]);
+          return;
+        }
+
+        topHits = topHits.data;
+
         localStorage.setItem("TopHits", JSON.stringify(topHits));
         localStorage.setItem(
           "TopHitsExpiry",
@@ -37,6 +45,10 @@ function TopHits() {
       } else if (topHits && topHitsExpiry < Date.now()) {
         // console.log("Trending hits time expired");
         topHits = await fetchSongs("top", "playlists");
+        if (!topHits.success) {
+          return;
+        }
+        topHits = topHits.data;
         localStorage.setItem("TopHits", JSON.stringify(topHits));
         localStorage.setItem(
           "TopHitsExpiry",
@@ -67,7 +79,7 @@ function TopHits() {
         <List />
       </div>
       <div className="overflow-x-auto scrollbar-hide ">
-        <div className="grid grid-flow-col gap-4  auto-cols-max w-screen">
+        <div className="grid grid-flow-col gap-2  auto-cols-max w-screen">
           {trendingPlaylists?.map((playlist: Playlist) => (
             <motion.div
               key={playlist?.id}

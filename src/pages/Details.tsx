@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useSearchSongs } from "@/context/searchContext";
+import { DetailSongs, useSearchSongs } from "@/context/searchContext";
 import {
   fetchAlbumSongs,
   fetchArtistSongs,
@@ -19,26 +19,29 @@ import { fetchUserPlaylstSongs } from "@/appwrite/databaseActions";
 import { useCurrentUserData } from "@/context/userContext";
 import LazyImage from "@/components/LazyImage";
 
-interface DetailSongs {
-  songs: Song[];
-  id: string;
-  name?: string;
-  image: object | string;
-  description?: string;
-  topAlbums?: Array<object>;
-}
 function Details() {
   const { albumId, playlistId, artistId } = useParams();
-  const { category, url } = useSearchSongs();
+  const { category, url, detailSongs, setDetailSongs } = useSearchSongs();
   const { playlists } = useCurrentUserData();
   const { addSong, setSongs, songs, setCurrentSongId } = useSongs();
   const navigate = useNavigate();
-  const [detailSongs, setDetailSongs] = useState<DetailSongs>();
+
   const [isLoading, setIsLoading] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
     async function getSongs() {
+      if (detailSongs) {
+        if (
+          detailSongs?.id === playlistId ||
+          detailSongs?.id === albumId ||
+          detailSongs?.id === artistId
+        ) {
+          console.log("Using cached data, skipping API call");
+          return; // Exit if we already have the data
+        }
+      }
+
       setIsLoading(true);
       setImageLoaded(false);
       if (category === "albums") {
@@ -47,6 +50,7 @@ function Details() {
         setDetailSongs(result.data);
       } else if (category === "playlists") {
         const result = await fetchPlaylistSongs(playlistId, url);
+        console.log(result.data, "this is playlist data");
         console.log(result, "this is the result");
         setDetailSongs(result.data);
       } else if (category === "artists") {
@@ -77,7 +81,7 @@ function Details() {
           const image =
             "https://res.cloudinary.com/djanknlys/image/upload/v1742619937/ListenFreeLogo.jpg";
           setDetailSongs((prevSongs: any) => {
-            const newObj: DetailSongs = {
+            const newObj = {
               songs,
               description,
               image,

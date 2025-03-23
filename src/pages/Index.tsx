@@ -132,7 +132,7 @@ const Index = () => {
         </section>
       )}
 
-      <Favorites />
+      {user && <Favorites />}
 
       <TrendingHits />
 

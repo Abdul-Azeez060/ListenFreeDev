@@ -16,8 +16,18 @@ interface SearchSongsProps {
   setCategory: (category: Category) => void;
   url: string;
   setUrl: (url: string) => void;
+  detailSongs: DetailSongs;
+  setDetailSongs: (detailsSongs: any) => void;
 }
 type Category = "songs" | "albums" | "artists" | "playlists" | "userPlaylists";
+export interface DetailSongs {
+  songs: Song[];
+  id: string;
+  name?: string;
+  image: object | string;
+  description?: string;
+  topAlbums?: Array<object>;
+}
 
 const SearchSongsContext = createContext<SearchSongsProps | undefined>(
   undefined
@@ -30,9 +40,8 @@ export const SearchedSongsProvider = ({
   children: React.ReactNode;
 }) => {
   const [searchSongsResult, setSearchSongsResult] = useState([]);
-
   const [songQuery, setSongsQuery] = useState<string>("");
-
+  const [detailSongs, setDetailSongs] = useState<DetailSongs>();
   const [category, setCategory] = useState<Category>("songs");
   const [url, setUrl] = useState<string>("");
 
@@ -47,6 +56,8 @@ export const SearchedSongsProvider = ({
         songQuery,
         category,
         setCategory,
+        detailSongs,
+        setDetailSongs,
       }}>
       {children}
     </SearchSongsContext.Provider>

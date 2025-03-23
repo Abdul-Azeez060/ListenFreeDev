@@ -48,6 +48,9 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   }, [session]);
 
   useEffect(() => {
+    if (!user) {
+      return;
+    }
     if (localStorage.getItem("favoriteSongs")) {
       localStorage.removeItem("favoriteSongs");
     }
@@ -89,6 +92,9 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   }, [user]);
 
   useEffect(() => {
+    if (!user) {
+      return;
+    }
     const playlistSongs = [];
     const playlistSongsExpiry = 0;
     if (!playlistSongs || playlistSongs.length < 1) {
@@ -99,20 +105,40 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const getUser = async () => {
     try {
       setIsLoading(true);
-      console.log("executing the getUser function");
-      const session = await account.getSession("current");
-      // console.log(session, "this is session");
+      console.log("Executing the getUser function");
 
-      if (session) {
-        const userData = await account.get();
-        setUser(userData);
-        // console.log(userData, "this is user");
-      } else {
+      // Get the current session
+      let session = await account.getSession("current");
+
+      if (!session) {
+        console.log("No active session found");
         setUser(null);
+        setIsLoading(false);
+        return;
       }
+
+      console.log(session, "This is the session");
+
+      // Update session to refresh authentication
+      try {
+        session = await account.updateSession("current");
+        console.log("Session updated successfully");
+      } catch (sessionError) {
+        console.warn("Session update failed, possibly expired:", sessionError);
+        setUser(null);
+        setIsLoading(false);
+        return;
+      }
+
+      // Get user details after refreshing session
+      const userData = await account.get();
+      setUser(userData);
+      console.log(userData, "This is the user");
     } catch (error) {
-      console.error("Failed to fetch user:", error);
+      console.log("Failed to fetch user:", error);
       setUser(null);
+    } finally {
+      setIsLoading(false);
     }
   };
 

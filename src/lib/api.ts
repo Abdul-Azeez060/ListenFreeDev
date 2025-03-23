@@ -17,19 +17,25 @@ export const fetchSongs = async (query: string, category: string) => {
         )}`
       );
     }
-    if (response.ok) {
+    if (!response.ok) {
       throw new Error("Failed to fetch songs");
     }
 
     const data = await response.json();
     // The API returns data in a nested structure
     // console.log(data, "this is the response");
-
-    return data.data.results || [];
+    // return data.data.results || [];
+    return {
+      success: true,
+      data: data.data.results || [],
+      message: "Successfull",
+    };
   } catch (error) {
+    console.log(error);
     return {
       success: false,
-      error,
+      data: [],
+      message: error,
     };
   }
 };
