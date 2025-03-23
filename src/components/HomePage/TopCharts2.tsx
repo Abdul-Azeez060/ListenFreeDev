@@ -66,7 +66,7 @@ function TopCharts2() {
         <List />
       </div>
       <div className="overflow-x-auto scrollbar-hide ">
-        <div className="grid grid-flow-col  auto-cols-max w-screen">
+        <div className="grid grid-flow-col gap-4  auto-cols-max w-screen">
           {topCharts?.map((playlist: Playlist) => (
             <motion.div
               key={playlist?.id}

@@ -10,7 +10,7 @@ const LazyImage = ({
   alt: string;
   className: string;
 }) => {
-  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.5 });
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.3 });
   const [isLoaded, setIsLoaded] = useState(false);
 
   return (

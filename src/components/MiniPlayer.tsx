@@ -47,7 +47,7 @@ const MiniPlayer = memo(() => {
             <LazyImage
               src={
                 currentSong?.image?.[2]?.url ||
-                "@/tune-nectar/public/placeholder.svg"
+               ""
               }
               alt={currentSong?.name}
               className="w-11 h-11 rounded-lg object-cover"

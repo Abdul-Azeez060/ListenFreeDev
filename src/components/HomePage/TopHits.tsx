@@ -67,7 +67,7 @@ function TopHits() {
         <List />
       </div>
       <div className="overflow-x-auto scrollbar-hide ">
-        <div className="grid grid-flow-col  auto-cols-max w-screen">
+        <div className="grid grid-flow-col gap-4  auto-cols-max w-screen">
           {trendingPlaylists?.map((playlist: Playlist) => (
             <motion.div
               key={playlist?.id}

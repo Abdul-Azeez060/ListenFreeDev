@@ -53,8 +53,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }
     const fav = JSON.parse(localStorage.getItem("favorites") || "[]") || [];
     const expiryTime = parseInt(JSON.parse(localStorage.getItem("expiryTime")));
-
-    if (!fav) {
+    console.log("Checking hte facvorites methods");
+    if (!fav || fav.length < 1) {
       console.log(fav, "favorites not presnt");
       getUserFavorites();
       console.log(
@@ -95,30 +95,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       getUserPlaylistSongs();
     }
   }, [playlists]);
-
-  useEffect(() => {
-    loadFavoriteSongs();
-  }, [user, favoriteSongIds]);
-
-  async function loadFavoriteSongs() {
-    try {
-      if (user) {
-        setIsLoading(true);
-        if (favoriteSongIds) {
-          const result = await fetchSongsByIds(favoriteSongIds);
-          // console.log(result);
-          setFavoriteSongs(result);
-        } else {
-          setFavoriteSongs([]);
-        }
-      }
-    } catch (error) {
-      console.error("Error loading favorites:", error);
-      toast.error("Failed to load favorite songs");
-    } finally {
-      setIsLoading(false);
-    }
-  }
 
   const getUser = async () => {
     try {

@@ -17,7 +17,7 @@ export const fetchSongs = async (query: string, category: string) => {
         )}`
       );
     }
-    if (!response.ok) {
+    if (response.ok) {
       throw new Error("Failed to fetch songs");
     }
 
@@ -27,8 +27,10 @@ export const fetchSongs = async (query: string, category: string) => {
 
     return data.data.results || [];
   } catch (error) {
-    console.error("Error fetching songs:", error);
-    return [];
+    return {
+      success: false,
+      error,
+    };
   }
 };
 

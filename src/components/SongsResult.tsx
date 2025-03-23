@@ -9,7 +9,6 @@ import he from "he";
 import { useState } from "react";
 import LazyImage from "./LazyImage";
 import LongNames from "./LongNames";
-import SongLoader from "./Loaders/HomeSongLoader";
 import SongsLoader from "./Loaders/SongsLoader";
 function SongsResult({ isLoading }: { isLoading: boolean }) {
   const { searchSongsResult } = useSearchSongs();

@@ -52,9 +52,11 @@ export function AddToPlaylist({ songId }) {
       </DialogTrigger>
       <DialogContent className="max-w-[380px] rounded-md bg-black sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="text-white">Select the playlist</DialogTitle>
+          <DialogTitle className="text-white">
+            Select the playlist based on your mood
+          </DialogTitle>
           <DialogDescription className="text-white">
-            Add your songs based on moods
+            Add songs
           </DialogDescription>
         </DialogHeader>
 
