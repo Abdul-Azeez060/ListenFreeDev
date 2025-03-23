@@ -12,8 +12,22 @@ const Profile = () => {
 
   if (!user) {
     return (
-      <div className="flex justify-center items-center h-screen w-screen">
-        {<LoginButton />}
+      <div className="flex flex-col justify-center items-center h-screen w-screen text-center px-6">
+        <div className="p-4 max-w-md">
+          <h1 className="text-white text-3xl font-semibold">
+            Your Music, Your Favorites, Your Way! 🎶
+          </h1>
+          <p className="text-slate-300 mt-3 text-lg">
+            We only store your{" "}
+            <span className="font-medium text-white">name and email</span> to
+            save your favorites and playlists—nothing more! No tracking, no
+            extra data. Just music. 🎧
+          </p>
+          <p className="text-slate-400 mt-2">
+            Your privacy matters. You can trust us. 🔒
+          </p>
+        </div>
+        <LoginButton />
       </div>
     );
   } else {
