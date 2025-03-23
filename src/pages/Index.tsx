@@ -63,7 +63,7 @@ const Index = () => {
           transition={{ delay: 0.1 }}>
           Welcome Back {user?.name.split(" ")[0]}
         </motion.h1>
-        <InstallPWA />
+        {/* <InstallPWA /> */}
       </div>
       <div className="flex items-center ">
         <h1 className="text-white px-2 md:px-4">Reload for latest Updates</h1>
@@ -107,7 +107,7 @@ const Index = () => {
                       <PlayCircle className="w-12 h-12 text-primary-foreground" />
                     </div>
                   </div>
-                  <div className=" w-[4rem] md:w-[15rem]">
+                  <div className=" w-[9rem] md:w-[15rem]">
                     <h3 className="mt-2 text-sm font-medium text-center w-full truncate text-white overflow-hidden">
                       {he.decode(song?.name)}
                     </h3>

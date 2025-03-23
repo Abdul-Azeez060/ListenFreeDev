@@ -59,7 +59,7 @@ function IsFavoriteHeartComponent() {
       } finally {
         pendingRequestRef.current = false;
       }
-    }, 5000) // 300ms debounce time
+    }, 500) // 300ms debounce time
   ).current;
 
   const handleFavoriteChange = () => {
