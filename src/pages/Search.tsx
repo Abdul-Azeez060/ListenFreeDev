@@ -115,11 +115,8 @@ const Search = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-<<<<<<< HEAD
-          className="space-y-4 overflow-y-auto scrollbar-hide h-[calc(100vh-18rem)] ">
-=======
           className="space-y-4 overflow-hidden ">
->>>>>>> listOptimize
+          z{" "}
           {message ? (
             <div className="w-screen flex justify-center items-center">
               <h1 className="text-3xl font-semibold text-slate-300 px-4">
