@@ -55,7 +55,7 @@ const InstallPWA = () => {
   };
 
   return (
-    true && (
+    showButton && (
       <button
         onClick={handleInstallClick}
         style={{

@@ -74,8 +74,9 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       setFavoriteSongIds(fav);
     }
     // getting user playlist metadata
-    const playlistMetadata =
-      JSON.parse(localStorage.getItem("PlaylistMetadata") || "[]") || [];
+    const playlistMetadata = JSON.parse(
+      localStorage.getItem("PlaylistMetadata") || "[]"
+    );
     const playlistMetadataExpiryTime = parseInt(
       JSON.parse(localStorage.getItem("PlaylistMetadataExpiryTime") || "0")
     );
@@ -118,15 +119,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       }
 
       // Update session to refresh authentication
-      try {
-        session = await account.updateSession("current");
-        console.log("Session updated successfully");
-      } catch (sessionError) {
-        console.warn("Session update failed, possibly expired:", sessionError);
-        setUser(null);
-        setIsLoading(false);
-        return;
-      }
 
       // Get user details after refreshing session
       const userData = await account.get();

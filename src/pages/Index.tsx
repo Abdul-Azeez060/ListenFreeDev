@@ -14,9 +14,9 @@ import TopCharts from "@/components/HomePage/TopCharts";
 import TopCharts2 from "@/components/HomePage/TopCharts2";
 import useSessionReload from "@/components/SessionReload";
 import { Button } from "@/components/ui/button";
+import InstallPWA from "@/components/InstallPwa";
 import LazyImage from "@/components/LazyImage";
 import Favorites from "@/components/HomePage/Favorites";
-import InstallPWA from "@/components/InstallPwa";
 
 const Index = () => {
   // const { data: recentSongs, isLoading } = useQuery({
