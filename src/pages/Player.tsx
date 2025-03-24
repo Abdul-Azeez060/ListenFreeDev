@@ -2,6 +2,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Logo from "../../logo.jpeg";
+import { useSwipeable } from "react-swipeable";
+
 import {
   Play,
   Pause,
@@ -117,6 +119,13 @@ const Player = () => {
     }
   };
 
+  const handlers = useSwipeable({
+    onSwipedLeft: () => handleNextSong(), // Swipe left for next song
+    onSwipedRight: () => handlePreviousSong(), // Swipe right for previous song
+    preventScrollOnSwipe: true,
+    trackMouse: true, // Enable swiping via mouse
+  });
+
   return (
     <div
       className="fixed inset-0"
@@ -149,21 +158,35 @@ const Player = () => {
               <motion.div
                 key={currentSongId}
                 custom={direction}
+                {...handlers}
                 initial={{
-                  x: direction * 300, // Enter from right or left based on direction
+                  x: direction * 350, // Slightly reduced for snappier effect
                   opacity: 0,
+                  scale: 0.88, // Still has a popping effect
+                  rotate: direction * 6, // More subtle rotation
+                  filter: "blur(8px)", // Less blur for sharper effect
                 }}
                 animate={{
                   x: 0,
                   opacity: 1,
+                  scale: 1,
+                  rotate: 0,
+                  filter: "blur(0px)",
+                  boxShadow: "0px 6px 20px rgba(0, 0, 0, 0.4)", // Softer shadow for depth
                 }}
                 exit={{
-                  x: direction * -300, // Exit to opposite direction
+                  x: direction * -350,
                   opacity: 0,
+                  scale: 0.88, // Minor scale change for smoother transition
+                  rotate: direction * -6,
+                  filter: "blur(10px)",
                 }}
                 transition={{
-                  x: { type: "spring", stiffness: 200, damping: 30 },
-                  opacity: { duration: 0.1 },
+                  x: { type: "spring", stiffness: 140, damping: 18 }, // Increased stiffness for speed
+                  opacity: { duration: 0.4, ease: "easeInOut" }, // Faster fade
+                  scale: { duration: 0.35, ease: "easeOut" }, // Slightly quicker scaling
+                  rotate: { duration: 0.4, ease: "easeInOut" }, // Faster rotation
+                  filter: { duration: 0.3, ease: "easeOut" }, // Quicker blur transition
                 }}
                 className="w-80 h-80 md:w-80 md:h-80 rounded-lg overflow-hidden shadow-black shadow-2xl">
                 {/* <img
