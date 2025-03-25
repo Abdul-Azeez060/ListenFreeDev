@@ -38,9 +38,6 @@ export function AddToPlaylist({ songId }) {
       localStorage.setItem(`playlist:${playlistId}`, JSON.stringify(playlist));
     } else {
       console.log(res.error);
-      if (res.error.type == "document_already_exits") {
-        toast("Song already exits");
-      }
       if (res.error) toast(`Could not add song ${res.error.type}`);
     }
     setIsLoading(false);

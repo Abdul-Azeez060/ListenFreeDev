@@ -79,7 +79,10 @@ export async function getUserFavoriteSongs(userId: string) {
     const favorites = await database.listDocuments(
       DATABASE_ID,
       FAVORITE_COLLECTION,
-      [Query.equal("userId", userId)]
+      [
+        Query.equal("userId", userId), // Filter documents where userId matches
+        Query.limit(100), // Limit the number of results to 100
+      ]
     );
 
     if (favorites.total === 0) {

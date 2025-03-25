@@ -31,6 +31,7 @@ interface UserContextProps {
   isLoading: boolean;
   playlists: any[];
   setPlaylists: (playlist: any) => void;
+  setIsLoading: (loading: boolean) => void;
 }
 
 const UserContext = createContext<UserContextProps | undefined>(undefined);
@@ -73,6 +74,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       console.log("fetching songs from localstorage");
       setFavoriteSongIds(fav);
     }
+
     // getting user playlist metadata
     const playlistMetadata =
       JSON.parse(localStorage.getItem("PlaylistMetadata") || "[]") || [];
@@ -90,6 +92,30 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     console.log(playlistMetadata, "this is going in the state");
     setPlaylists(playlistMetadata);
   }, [user]);
+
+  useEffect(() => {
+    loadFavoriteSongs();
+  }, [user, favoriteSongIds]);
+
+  async function loadFavoriteSongs() {
+    try {
+      if (user) {
+        setIsLoading(true);
+        if (favoriteSongIds) {
+          const result = await fetchSongsByIds(favoriteSongIds);
+          // console.log(result);
+          setFavoriteSongs(result.reverse());
+        } else {
+          setFavoriteSongs([]);
+        }
+      }
+    } catch (error) {
+      console.error("Error loading favorites:", error);
+      toast.error("Failed to load favorite songs");
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   useEffect(() => {
     if (!user) {
@@ -220,6 +246,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         isLoading,
         playlists,
         setPlaylists,
+        setIsLoading,
       }}>
       {children}
     </UserContext.Provider>
