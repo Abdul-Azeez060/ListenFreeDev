@@ -104,9 +104,16 @@ export const fetchSongLyrics = async (id: string) => {
 
 export const fetchSongSuggestions = async (songId: string) => {
   try {
-    const response = await fetch(
+    let response = await fetch(
       `${BASE_URL_VERCEL}/songs/${songId}/suggestions?id=${songId}&limit=15`
     );
+
+    console.log(response, "this is form fetchsongs suggestoins");
+    if (!response.ok) {
+      response = await fetch(
+        `${BASE_URL_VERCEL2}/songs/${songId}/suggestions?id=${songId}&limit=15`
+      );
+    }
     return await response.json();
   } catch (error) {
     console.error("Error fetching song lyrics", error);
@@ -117,21 +124,31 @@ export const fetchSongSuggestions = async (songId: string) => {
 export const fetchSongsByIds = async (songIds: string[]) => {
   try {
     // Create an array of fetch promises
-    let fetchPromises = songIds.map((songId) =>
-      fetch(`${BASE_URL_VERCEL2}/songs/${songId}`).then((res) => res.json())
+    let fetchPromises = songIds.map(
+      (songId) =>
+        fetch(`${BASE_URL_VERCEL2}/songs/${songId}`)
+          .then((res) => res.json())
+          .catch(() => null) // Prevents individual failures from stopping all requests
     );
 
-    if (fetchPromises.length < 0) {
+    // Wait for all requests to complete in parallel
+    let results = await Promise.all(fetchPromises);
+
+    // If all requests fail, fallback to second API
+    if (results.every((song) => song === null || !song?.data?.length)) {
       fetchPromises = songIds.map((songId) =>
-        fetch(`${BASE_URL}/songs/${songId}`).then((res) => res.json())
+        fetch(`${BASE_URL}/songs/${songId}`)
+          .then((res) => res.json())
+          .catch(() => null)
       );
+      results = await Promise.all(fetchPromises);
     }
 
-    // console.log(fetchPromises, "this is fetch promises");
+    // Extract song data safely
+    const songs = results
+      .map((song) => (song?.data?.length ? song.data[0] : null))
+      .filter(Boolean); // Remove any null values
 
-    // Wait for all requests to complete in parallel
-    let songs = await Promise.all(fetchPromises);
-    songs = songs.map((song) => song.data[0]);
     return songs;
   } catch (error) {
     console.error("Error fetching songs:", error);
