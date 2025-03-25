@@ -182,11 +182,11 @@ const Player = () => {
                   filter: "blur(10px)",
                 }}
                 transition={{
-                  x: { type: "spring", stiffness: 140, damping: 18 }, // Increased stiffness for speed
-                  opacity: { duration: 0.4, ease: "easeInOut" }, // Faster fade
-                  scale: { duration: 0.35, ease: "easeOut" }, // Slightly quicker scaling
-                  rotate: { duration: 0.4, ease: "easeInOut" }, // Faster rotation
-                  filter: { duration: 0.3, ease: "easeOut" }, // Quicker blur transition
+                  x: { type: "spring", stiffness: 200, damping: 25 }, // Increased stiffness and damping for faster spring
+                  opacity: { duration: 0.2, ease: "easeInOut" }, //fade
+                  scale: { duration: 0.3, ease: "easeOut" }, //scaling
+                  rotate: { duration: 0.2, ease: "easeInOut" }, //rotation
+                  filter: { duration: 0.5, ease: "easeOut" }, // blur transition
                 }}
                 className="w-80 h-80 md:w-80 md:h-80 rounded-lg overflow-hidden shadow-black shadow-2xl">
                 {/* <img
