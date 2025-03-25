@@ -49,16 +49,24 @@ export const fetchArtistSongs = async (id: string) => {
 };
 
 export const fetchPlaylistSongs = async (id: string, link: string) => {
-  const response = await fetch(
+  let response = await fetch(
     `${BASE_URL_VERCEL2}/playlists?id=${id}&link=${link}&limit=50`
   );
+
+  if (!response.ok) {
+    response = await fetch(
+      `${BASE_URL2}/playlists?id=${id}&link=${link}&limit=50`
+    );
+  }
   return response.json();
 };
 
 export const fetchAlbumSongs = async (id: string, link: string) => {
-  const response = await fetch(
-    `${BASE_URL_VERCEL}/albums?id=${id}&link=${link}`
-  );
+  let response = await fetch(`${BASE_URL_VERCEL}/albums?id=${id}&link=${link}`);
+  if (!response.ok) {
+    response = await fetch(`${BASE_URL2}/albums?id=${id}&link=${link}`);
+  }
+
   return response.json();
 };
 
@@ -83,7 +91,10 @@ export const fetchSongDetails = async (id: string) => {
 
 export const fetchSongLyrics = async (id: string) => {
   try {
-    const response = await fetch(`${BASE_URL_VERCEL}/songs/${id}/lyrics`);
+    let response = await fetch(`${BASE_URL_VERCEL}/songs/${id}/lyrics`);
+    if (!response.ok) {
+      response = await fetch(`${BASE_URL2}/songs/${id}/lyrics`);
+    }
     return await response.json();
   } catch (error) {
     console.error("Error fetching song lyrics", error);
@@ -106,9 +117,15 @@ export const fetchSongSuggestions = async (songId: string) => {
 export const fetchSongsByIds = async (songIds: string[]) => {
   try {
     // Create an array of fetch promises
-    const fetchPromises = songIds.map((songId) =>
+    let fetchPromises = songIds.map((songId) =>
       fetch(`${BASE_URL_VERCEL2}/songs/${songId}`).then((res) => res.json())
     );
+
+    if (fetchPromises.length < 0) {
+      fetchPromises = songIds.map((songId) =>
+        fetch(`${BASE_URL}/songs/${songId}`).then((res) => res.json())
+      );
+    }
 
     // console.log(fetchPromises, "this is fetch promises");
 
