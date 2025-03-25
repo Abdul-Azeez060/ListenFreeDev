@@ -9,36 +9,18 @@ import SongLoader from "../Loaders/HomeSongLoader";
 import { useSongs } from "@/context/songsContext";
 import he from "he";
 function Favorites() {
-  const { user, favoriteSongIds, setFavoriteSongs, favoriteSongs } =
-    useCurrentUserData();
+  const {
+    user,
+    favoriteSongIds,
+    isLoading,
+    setIsLoading,
+    setFavoriteSongs,
+    favoriteSongs,
+  } = useCurrentUserData();
   const { setCurrentSongId, setSongs } = useSongs();
-  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    loadFavoriteSongs();
-  }, [user, favoriteSongIds]);
-
-  async function loadFavoriteSongs() {
-    try {
-      if (user) {
-        setIsLoading(true);
-        if (favoriteSongIds) {
-          const result = await fetchSongsByIds(favoriteSongIds);
-          // console.log(result);
-          setFavoriteSongs(result.reverse());
-        } else {
-          setFavoriteSongs([]);
-        }
-      }
-    } catch (error) {
-      console.error("Error loading favorites:", error);
-      toast.error("Failed to load favorite songs");
-    } finally {
-      setIsLoading(false);
-    }
-  }
   return (
-    <div className="my-6    ">
+    <div className="my-6">
       <section className="space-y-2">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-semibold text-white px-4 mb-4">

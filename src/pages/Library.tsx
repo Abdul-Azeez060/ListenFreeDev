@@ -22,6 +22,7 @@ import { useCurrentUserData } from "@/context/userContext";
 import { useNavigate } from "react-router-dom";
 import { useSearchSongs } from "@/context/searchContext";
 import LazyImage from "@/components/LazyImage";
+import { DeletePlaylistDialogue } from "@/components/Library/DeletePlaylistDialogue";
 const Library = () => {
   const { playlists } = useCurrentUserData();
   const { setCategory } = useSearchSongs();
@@ -142,22 +143,19 @@ const Library = () => {
                 onClick={() => handlePlaylistClick(playlist.$id)}
                 key={playlist.$id}
                 className="text-black bg-white border-gray-200 border  p-2 rounded-md flex cursor-pointer ">
-                <div className="flex items-center">
-                  {/* <img
-                    className="w-10 h-10 rounded-md mx-2"
-                    src="https://res.cloudinary.com/djanknlys/image/upload/v1742624503/PlaylistLogo.jpg"
-                    alt="ListenFreeLogo"
-                  /> */}
-                  <LazyImage
-                    className="w-10 h-10 rounded-md mx-2"
-                    src="https://res.cloudinary.com/djanknlys/image/upload/v1742624503/PlaylistLogo.jpg"
-                    alt="ListenFreeLogo"
-                  />
-                  <span> {playlist.name}</span>
+                <div className="flex justify-between">
+                  <div className="flex w-[80%]">
+                    <LazyImage
+                      className="w-10 h-10 rounded-md mx-2"
+                      src="https://res.cloudinary.com/djanknlys/image/upload/v1742624503/PlaylistLogo.jpg"
+                      alt="ListenFreeLogo"
+                    />
+                    <span className="px-2"> {playlist.name}</span>
+                  </div>
+                  <DeletePlaylistDialogue playlistId={playlist.$id} />
                 </div>
               </motion.div>
             ))}
-            <div></div>
           </div>
         </section>
       </div>

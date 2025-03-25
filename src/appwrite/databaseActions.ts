@@ -39,7 +39,7 @@ export async function setIsNotFavorite(
       };
     }
   } catch (error) {
-    console.log(error.message);
+    // console.log(error.message);
     return {
       success: false,
       message: error.message || "An error occurred",
@@ -79,7 +79,10 @@ export async function getUserFavoriteSongs(userId: string) {
     const favorites = await database.listDocuments(
       DATABASE_ID,
       FAVORITE_COLLECTION,
-      [Query.equal("userId", userId)]
+      [
+        Query.equal("userId", userId), // Filter documents where userId matches
+        Query.limit(100), // Limit the number of results to 100
+      ]
     );
 
     if (favorites.total === 0) {
@@ -116,7 +119,7 @@ export async function getUserPlaylistMetadata(userId: string) {
       [Query.equal("userId", userId)]
     );
 
-    console.log(playlists, "these are playlists");
+    // console.log(playlists, "these are playlists");
 
     return {
       success: true,
@@ -134,7 +137,7 @@ export async function getUserPlaylistMetadata(userId: string) {
 }
 
 export async function createPlaylist(playlistName: string, userId: string) {
-  console.log(PLAYLIST_METADATA_COLLECTION, "this is playlist collection");
+  // console.log(PLAYLIST_METADATA_COLLECTION, "this is playlist collection");
   try {
     const playlist = await database.createDocument(
       DATABASE_ID,
@@ -146,14 +149,14 @@ export async function createPlaylist(playlistName: string, userId: string) {
       }
     );
 
-    console.log(playlist, "this isthe new playlist created");
+    // console.log(playlist, "this isthe new playlist created");
     return {
       success: true,
       message: "successfull created playlist",
       playlist,
     };
   } catch (error) {
-    console.log(error, "this is error");
+    // console.log(error, "this is error");
     return {
       sucess: false,
       message: error.message || "An error occured creating a playlist",
@@ -163,7 +166,7 @@ export async function createPlaylist(playlistName: string, userId: string) {
 }
 
 export async function addSongToPlaylist(songId: string, playlistId: string) {
-  console.log(songId, playlistId, "this is song id ");
+  // console.log(songId, playlistId, "this is song id ");
   try {
     const res = await database.createDocument(
       DATABASE_ID,
@@ -189,7 +192,7 @@ export async function addSongToPlaylist(songId: string, playlistId: string) {
 }
 
 export async function fetchUserPlaylstSongs(playlistIds: any[]) {
-  console.log(playlistIds, "these are in fetch ");
+  // console.log(playlistIds, "these are in fetch ");
   playlistIds = playlistIds.map((playlistIds) => playlistIds.$id);
   // Helper function to batch the playlist IDs
   const batchSize = 10; // You can adjust the batch size based on your use case
@@ -215,14 +218,14 @@ export async function fetchUserPlaylstSongs(playlistIds: any[]) {
       batches.push(playlistIds.slice(i, i + batchSize));
     }
 
-    console.log(batches, "these are batches");
+    // console.log(batches, "these are batches");
 
     // Fetch all batches in parallel
     const batchResults = await Promise.all(batches.map(batchFetch));
 
     // Flatten the results from each batch into a single array of songs
     const allSongs = batchResults.flat();
-    console.log(allSongs, "these are all the songs");
+    // console.log(allSongs, "these are all the songs");
     return {
       success: true,
       message: "Successfully fetched the songs",
@@ -233,6 +236,86 @@ export async function fetchUserPlaylstSongs(playlistIds: any[]) {
       success: false,
       message: error.message || "An error occurred fetching playlist songs",
       error,
+    };
+  }
+}
+
+export async function deletePlaylist(playlistId: string) {
+  try {
+    // Step 1: Delete the playlist metadata document
+    await database.deleteDocument(
+      DATABASE_ID,
+      PLAYLIST_METADATA_COLLECTION,
+      playlistId
+    );
+
+    // Step 2: Get all songs associated with the playlistId
+    const result = await database.listDocuments(
+      DATABASE_ID,
+      PLAYLIST_SONGS_COLLECTION,
+      [Query.equal("playlistId", playlistId)]
+    );
+
+    // Step 3: Delete all documents in PLAYLIST_SONGS_COLLECTION that belong to the playlist
+    const deletePromises = result.documents.map((doc) =>
+      database.deleteDocument(DATABASE_ID, PLAYLIST_SONGS_COLLECTION, doc.$id)
+    );
+
+    await Promise.all(deletePromises); // Execute all deletions in parallel
+
+    console.log("Playlist and all associated songs deleted successfully!");
+    return {
+      success: true,
+      message: "Deleted Successfull",
+      data: null,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "couldn't delete",
+      data: error,
+    };
+  }
+}
+
+export async function removeSongFromPlaylist(
+  playlistId: string,
+  songId: string
+) {
+  //remove the songId from playlist
+  try {
+    const response = await database.listDocuments(
+      DATABASE_ID,
+      PLAYLIST_SONGS_COLLECTION,
+      [
+        Query.equal("songId", songId) && Query.equal("playlistId", playlistId), // Replace with actual songId
+      ]
+    );
+
+    console.log(response, "this is the document to be delted");
+
+    // Step 2: Check if the document exists
+    if (response.total > 0) {
+      const documentId = response.documents[0].$id; // Get document ID
+
+      // Step 3: Delete the document
+      const res = await database.deleteDocument(
+        DATABASE_ID,
+        PLAYLIST_SONGS_COLLECTION,
+        documentId
+      );
+      console.log("Document deleted successfully!");
+    }
+    return {
+      success: true,
+      message: "successfully deleted",
+      data: null,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "couldn't delete",
+      data: error,
     };
   }
 }
