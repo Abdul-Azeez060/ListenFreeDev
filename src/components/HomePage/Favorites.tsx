@@ -23,7 +23,7 @@ function Favorites() {
     <div className="my-6">
       <section className="space-y-2">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold text-white px-4 mb-4">
+          <h2 className="text-2xl font-semibold text-[#a7a6ec] px-4 mb-4">
             Favorites
           </h2>
           <Heart className="text-accent mr-2" />

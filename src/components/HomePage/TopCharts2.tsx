@@ -69,7 +69,7 @@ function TopCharts2() {
   return (
     <section className="space-y-2">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-semibold text-white px-2 md:px-4">
+        <h2 className="text-2xl font-semibold text-[#a7a6ec] px-2 md:px-4">
           {topCharts && "Telugu Lovers"}
         </h2>
         <List />

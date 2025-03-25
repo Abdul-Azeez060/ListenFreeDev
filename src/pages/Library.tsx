@@ -140,11 +140,12 @@ const Library = () => {
           <div className="grid gap-4 mt-4">
             {playlists?.map((playlist: any) => (
               <motion.div
-                onClick={() => handlePlaylistClick(playlist.$id)}
                 key={playlist.$id}
                 className="text-black bg-white border-gray-200 border  p-2 rounded-md flex cursor-pointer ">
                 <div className="flex justify-between">
-                  <div className="flex w-[80%]">
+                  <div
+                    className="flex w-[80%]"
+                    onClick={() => handlePlaylistClick(playlist.$id)}>
                     <LazyImage
                       className="w-10 h-10 rounded-md mx-2"
                       src="https://res.cloudinary.com/djanknlys/image/upload/v1742624503/PlaylistLogo.jpg"
