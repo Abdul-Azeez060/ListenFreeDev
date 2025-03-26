@@ -2,6 +2,7 @@ const BASE_URL = "https://jiosaavn-api.abdulazeezmd060.workers.dev/api";
 const BASE_URL_VERCEL = "https://backend-music-blush.vercel.app/api";
 const BASE_URL2 = "https://jiosaavn-api2.abdulazeezmd060.workers.dev/api";
 const BASE_URL_VERCEL2 = "https://backend-music1212.vercel.app/api";
+const BASE_URL_OTHER = "https://jiosavan-api2.vercel.app/";
 
 export const fetchSongs = async (query: string, category: string) => {
   try {
@@ -112,6 +113,12 @@ export const fetchSongSuggestions = async (songId: string) => {
     if (!response.ok) {
       response = await fetch(
         `${BASE_URL_VERCEL2}/songs/${songId}/suggestions?id=${songId}&limit=15`
+      );
+    }
+
+    if (!response.ok) {
+      response = await fetch(
+        `${BASE_URL_OTHER}/songs/${songId}/suggestions?id=${songId}&limit=15`
       );
     }
     return await response.json();
