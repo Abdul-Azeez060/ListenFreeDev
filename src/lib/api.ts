@@ -2,7 +2,7 @@ const BASE_URL = "https://jiosaavn-api.abdulazeezmd060.workers.dev/api";
 const BASE_URL_VERCEL = "https://backend-music-blush.vercel.app/api";
 const BASE_URL2 = "https://jiosaavn-api2.abdulazeezmd060.workers.dev/api";
 const BASE_URL_VERCEL2 = "https://backend-music1212.vercel.app/api";
-const BASE_URL_OTHER = "https://jiosavan-api2.vercel.app/";
+const BASE_URL_OTHER = "https://jiosavan-api2.vercel.app/api";
 
 export const fetchSongs = async (query: string, category: string) => {
   try {
