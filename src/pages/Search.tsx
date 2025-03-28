@@ -76,7 +76,7 @@ const Search = () => {
   const categories = ["songs", "albums", "playlists", "artists"];
 
   return (
-    <div className=" h-screen bg-[#09122c]  scrollbar-hide   py-6 space-y-6">
+    <div className=" h-screen bg-black  scrollbar-hide   py-6 space-y-6">
       <div className="relative px-2 flex items-center">
         <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white ml-2" />
         <input

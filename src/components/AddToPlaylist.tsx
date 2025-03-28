@@ -30,12 +30,13 @@ export function AddToPlaylist({ songId }) {
     // console.log("button clicked");
     const res = await addSongToPlaylist(songId, playlistId);
     if (res.success) {
-      toast("Song added to the playlist ");
       const playlist: any[] = JSON.parse(
-        localStorage.getItem(`playlist:${playlistId}`)
+        localStorage.getItem(`playlist:${playlistId}`) || "[]"
       );
+      console.log(playlist, "this is hte playlist");
       playlist.push(songId);
       localStorage.setItem(`playlist:${playlistId}`, JSON.stringify(playlist));
+      toast("Song added to the playlist ");
     } else {
       console.log(res.error);
       if (res.error) toast(`Could not add song ${res.error.type}`);

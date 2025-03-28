@@ -144,7 +144,7 @@ const Library = () => {
                 className="text-black bg-white border-gray-200 border  p-2 rounded-md flex cursor-pointer ">
                 <div className="flex justify-between">
                   <div
-                    className="flex w-[80%]"
+                    className="flex w-[calc(100vw-8rem)]"
                     onClick={() => handlePlaylistClick(playlist.$id)}>
                     <LazyImage
                       className="w-10 h-10 rounded-md mx-2"

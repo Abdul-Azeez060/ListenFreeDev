@@ -54,7 +54,7 @@ const Index = () => {
   // const songs = recentSongs?.data ? Array.isArray(recentSongs.data) ? recentSongs.data : [] : [];
 
   return (
-    <div className=" py-6 space-y-2 bg-[#12121e] mb-24">
+    <div className=" py-6 space-y-2 bg-black mb-24">
       <div className="flex  justify-between px-2 md:px-4">
         <motion.h1
           className="text-2xl md:text-4xl my-4 font-bold text-[#a7a6ec]"

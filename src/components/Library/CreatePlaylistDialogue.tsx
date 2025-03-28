@@ -33,6 +33,8 @@ export function CreatePlaylistDialogue() {
           name: res.playlist.name,
           userId: res.playlist.userId,
         });
+        console.log(metadata, "this is metdata");
+        localStorage.setItem("PlaylistMetadata", JSON.stringify(metadata));
         setPlaylists(metadata);
         setPlaylistName("");
         toast("Playlist Created Successfully 🔥");

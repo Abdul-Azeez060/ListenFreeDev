@@ -78,7 +78,7 @@ function MostSearched() {
         <List />
       </div>
       <div className="overflow-x-auto scrollbar-hide ">
-        <div className="grid grid-flow-col gap-2  auto-cols-max w-screen">
+        <div className="grid grid-flow-col gap-1  auto-cols-max w-screen">
           {mostSearchedPlaylists?.map((playlist: Playlist) => (
             <motion.div
               key={playlist?.id}
