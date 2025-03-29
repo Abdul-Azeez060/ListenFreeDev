@@ -39,23 +39,25 @@ export function DownloadButton({ currentSong }: { currentSong: Song }) {
       return;
     }
     try {
-      const url = currentSong.downloadUrl[4].url;
-      const response = await fetch(url);
-      const blob = await response.blob();
-      // console.log(blob, "thisis the blob");
-      const blobUrl = URL.createObjectURL(blob);
-      // console.log(blobUrl, "this is the url");
-      const link = document.createElement("a");
-      link.href = blobUrl;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+  const url = currentSong.downloadUrl[4].url;
+  const response = await fetch(url);
+  const blob = await response.blob();
+  const blobUrl = URL.createObjectURL(blob);
 
-      // Cleanup the blob URL
-      URL.revokeObjectURL(blobUrl);
-    } catch (error) {
-      console.log(error);
-    }
+  const link = document.createElement("a");
+  link.href = blobUrl;
+  link.download = `${currentSong.name || "download"}.mp4`; // Set filename with .mp4 extension
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  // Cleanup the blob URL
+  URL.revokeObjectURL(blobUrl);
+} catch (error) {
+  console.log(error);
+}
+
+
   }
 
   return (
