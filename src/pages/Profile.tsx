@@ -4,6 +4,7 @@ import usePreventPullToRefresh from "@/components/PreventReload";
 import { useCurrentUserData } from "@/context/userContext";
 import { motion } from "framer-motion";
 import { Settings, Music, Clock } from "lucide-react";
+import InstallPWA from "@/components/InstallPwa";
 
 const Profile = () => {
   const { user } = useCurrentUserData();
@@ -28,6 +29,7 @@ const Profile = () => {
           </p>
         </div>
         <LoginButton />
+<InstallPWA />
       </div>
     );
   } else {
