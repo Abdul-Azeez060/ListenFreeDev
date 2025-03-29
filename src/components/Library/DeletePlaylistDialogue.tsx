@@ -55,11 +55,11 @@ export function DeletePlaylistDialogue({ playlistId }: { playlistId: string }) {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            Do you want to download this song?
+            Do you want to delete this playlist?
           </AlertDialogTitle>
         </AlertDialogHeader>
         <AlertDescription>
-          this will be downloaded in your local device.
+          this will be deleted permanently.
         </AlertDescription>
         <AlertDialogFooter>
           <AlertDialogAction
