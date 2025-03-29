@@ -46,7 +46,7 @@ export function DownloadButton({ currentSong }: { currentSong: Song }) {
 
   const link = document.createElement("a");
   link.href = blobUrl;
-  link.download = `${currentSong.name || "download"}.mp4`; // Set filename with .mp4 extension
+  link.download = `${currentSong.name || "download"}`; // Set filename with .mp4 extension
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
