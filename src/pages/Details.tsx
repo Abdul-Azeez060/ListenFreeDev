@@ -77,6 +77,7 @@ function Details() {
             }
           });
           const id = playlistId;
+          console.log(playlistMetaData, "this is playlistmetadata");
           const description = playlistMetaData[0].name;
           const image =
             "https://res.cloudinary.com/djanknlys/image/upload/v1742619937/ListenFreeLogo.jpg";
@@ -148,6 +149,10 @@ function Details() {
               <button
                 className="mx-4"
                 onClick={() => {
+                  if (detailSongs?.songs.length < 1) {
+                    toast.error("No songs in this playlist");
+                    return;
+                  }
                   setSongs(detailSongs.songs);
                   console.log("button clicked");
                   setCurrentSongId(detailSongs?.songs[0].id);

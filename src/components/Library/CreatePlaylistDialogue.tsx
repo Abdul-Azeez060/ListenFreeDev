@@ -25,11 +25,12 @@ export function CreatePlaylistDialogue() {
   async function handleCreatePlaylist() {
     setCreating(true);
     const res: any = await createPlaylist(playlistName, user.$id);
+    console.log(res, "this is the new playlist");
     if (res.success) {
       const metadata = JSON.parse(localStorage.getItem("PlaylistMetadata"));
       if (metadata) {
         metadata.push({
-          id: res.playlist.$id,
+          $id: res.playlist.$id,
           name: res.playlist.name,
           userId: res.playlist.userId,
         });

@@ -42,6 +42,13 @@ export function DeletePlaylistDialogue({ playlistId }: { playlistId: string }) {
     const res = await deletePlaylist(playlistId);
     if (res.success) {
       toast("Playlist Deleted Successfully");
+      const metadata = JSON.parse(localStorage.getItem("PlaylistMetadata"));
+      if (metadata) {
+        const newMetadata = metadata.filter(
+          (playlist: any) => playlist.id !== playlistId
+        );
+        localStorage.setItem("PlaylistMetadata", JSON.stringify(newMetadata));
+      }
     } else {
       toast("Couldn't delete playlist");
     }
@@ -58,9 +65,7 @@ export function DeletePlaylistDialogue({ playlistId }: { playlistId: string }) {
             Do you want to delete this playlist?
           </AlertDialogTitle>
         </AlertDialogHeader>
-        <AlertDescription>
-          this will be deleted permanently.
-        </AlertDescription>
+        <AlertDescription>this will be deleted permanently.</AlertDescription>
         <AlertDialogFooter>
           <AlertDialogAction
             onClick={handlePlaylistDelete}
