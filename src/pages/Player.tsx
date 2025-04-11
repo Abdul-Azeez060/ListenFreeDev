@@ -33,31 +33,26 @@ import LazyImage from "@/components/LazyImage";
 import SliderComponent from "@/components/Library/SliderComponent";
 
 const Player = () => {
+  console.log("Player component rendered");
   const { songId } = useParams();
   const navigate = useNavigate();
   const [direction, setDirection] = useState(0); // -1 for previous, 1 for next
 
   const {
     songs,
-    setSongs,
+
     setCurrentSongId,
     volume,
     setVolume,
-    duration,
     isPlaying,
-    isFavorite,
-    setIsFavorite,
-    currentTime,
+
     togglePlay,
     playNextSong,
     playPreviousSong,
-    seekTo,
     togglePause,
     currentSongId,
     isPlayerLoading,
   } = useSongs();
-
-  const [lyrics, setlyrics] = useState("");
 
   // Find the current song
   const currentSongIndex = songs.findIndex(
@@ -81,12 +76,6 @@ const Player = () => {
       );
     }
   }, [songId, currentSongId, setCurrentSongId]);
-
-  const formatTime = (time) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-  };
 
   useEffect(() => {
     const disableReload = (e) => {
@@ -208,19 +197,7 @@ const Player = () => {
             </div>
 
             <div className="w-full max-w-md space-y-4">
-              <div className="space-y-2">
-                <Slider
-                  value={[currentTime ? (currentTime / duration) * 100 : 0]}
-                  onValueChange={(newValue) => seekTo(newValue[0])}
-                  max={100}
-                  step={1}
-                  className="w-full"
-                />
-                <div className="flex justify-between text-sm  text-white">
-                  <span>{formatTime(currentTime)}</span>
-                  <span>{formatTime(duration)}</span>
-                </div>
-              </div>
+              <SliderComponent />
 
               <div className="flex items-center  justify-center space-x-6">
                 <div className="relative left-2">
@@ -264,7 +241,13 @@ const Player = () => {
 
                 <div className="flex items-center space-x-2">
                   <Volume2 className="text-white" size={20} />
-                  <SliderComponent />
+                  <Slider
+                    value={[volume * 100]}
+                    onValueChange={(value) => setVolume(value[0] / 100)}
+                    max={100}
+                    step={1}
+                    className="w-24"
+                  />
                 </div>
               </div>
             </div>
