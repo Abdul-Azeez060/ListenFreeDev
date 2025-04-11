@@ -1,7 +1,7 @@
 const BASE_URL = "https://jiosaavn-api.abdulazeezmd060.workers.dev/api";
-const BASE_URL_VERCEL = "https://backend-music-blush.vercel.app/api";
+const BASE_URL_VERCEL = "https://jiosaavn-api-new-theta.vercel.app/api";
 const BASE_URL2 = "https://jiosaavn-api2.abdulazeezmd060.workers.dev/api";
-const BASE_URL_VERCEL2 = "https://backend-music1212.vercel.app/api";
+const BASE_URL_VERCEL2 = "https://jiosaavn-api-5g8q.vercel.app/api";
 const BASE_URL_OTHER = "https://jiosavan-api2.vercel.app/api";
 
 export const fetchSongs = async (query: string, category: string) => {
@@ -13,7 +13,7 @@ export const fetchSongs = async (query: string, category: string) => {
     );
     if (!response.ok) {
       response = await fetch(
-        `${BASE_URL2}/search/${category}?limit=15&query=${encodeURIComponent(
+        `${BASE_URL_VERCEL2}/search/${category}?limit=15&query=${encodeURIComponent(
           query
         )}`
       );
