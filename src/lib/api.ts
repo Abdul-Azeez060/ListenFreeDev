@@ -7,13 +7,13 @@ const BASE_URL_OTHER = "https://jiosavan-api2.vercel.app/api";
 export const fetchSongs = async (query: string, category: string) => {
   try {
     let response = await fetch(
-      `${BASE_URL}/search/${category}?limit=15&query=${encodeURIComponent(
+      `${BASE_URL_VERCEL2}/search/${category}?limit=15&query=${encodeURIComponent(
         query
       )}`
     );
     if (!response.ok) {
       response = await fetch(
-        `${BASE_URL_VERCEL2}/search/${category}?limit=15&query=${encodeURIComponent(
+        `${BASE_URL}/search/${category}?limit=15&query=${encodeURIComponent(
           query
         )}`
       );
@@ -51,7 +51,7 @@ export const fetchArtistSongs = async (id: string) => {
 
 export const fetchPlaylistSongs = async (id: string, link: string) => {
   let response = await fetch(
-    `${BASE_URL_VERCEL2}/playlists?id=${id}&link=${link}&limit=50`
+    `${BASE_URL}/playlists?id=${id}&link=${link}&limit=50`
   );
 
   if (!response.ok) {
