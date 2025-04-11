@@ -22,19 +22,17 @@ interface SongsContextProps {
   setCurrentSongId: (id: string) => void;
   volume: number;
   setVolume: (volume: number) => void;
-  duration: number;
   isPlaying: boolean;
   isFavorite: boolean;
   setIsFavorite: (isFavorite: boolean) => void;
-  currentTime: number;
   togglePlay: () => void;
   playNextSong: () => void;
   playPreviousSong: () => void;
-  seekTo: (percentage: number) => void;
   addSong: (song: Song) => void;
   togglePause: () => void;
   isPlayerLoading: boolean;
   currentSong: Song;
+  audioRef: React.RefObject<HTMLAudioElement>;
 }
 const SongsContext = createContext<SongsContextProps | undefined>(undefined);
 
@@ -42,10 +40,10 @@ export const SongsProvider = ({ children }) => {
   const [songs, setSongs] = useState<Song[]>([]);
   const [currentSongId, setCurrentSongId] = useState(null);
   const [volume, setVolume] = useState(0.7);
-  const [duration, setDuration] = useState(0);
+
   const [isPlaying, setIsPlaying] = useState(true);
   const [isFavorite, setIsFavorite] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
+
   const [isPlayerLoading, setIsPlayerLoading] = useState(false);
 
   // Audio element reference stored in context
@@ -98,8 +96,16 @@ export const SongsProvider = ({ children }) => {
 
       navigator.mediaSession.setActionHandler("play", togglePlay);
       navigator.mediaSession.setActionHandler("pause", togglePause);
-      navigator.mediaSession.setActionHandler("seekbackward", seekTo);
-      navigator.mediaSession.setActionHandler("seekforward", seekTo);
+      navigator.mediaSession.setActionHandler("seekbackward", (details) => {
+        if (audioRef.current) {
+          audioRef.current.currentTime -= 10;
+        }
+      });
+      navigator.mediaSession.setActionHandler("seekforward", (details) => {
+        if (audioRef.current) {
+          audioRef.current.currentTime += 10;
+        }
+      });
       navigator.mediaSession.setActionHandler(
         "previoustrack",
         playPreviousSong
@@ -139,27 +145,11 @@ export const SongsProvider = ({ children }) => {
     }
   };
 
-  // Update audio source when song changes
-  useEffect(() => {
-    if (audioRef.current && currentSong?.downloadUrl?.[4]?.url) {
-      setTimeout(() => {
-        audioRef.current.src = currentSong.downloadUrl[4].url;
-
-        if (isPlaying) {
-          audioRef.current
-            .play()
-            .catch((err) => console.error("Playback error:", err));
-        }
-      }, 200);
-    }
-  }, [currentSongId, currentSong]);
-
-  // Update audio source when song changes  + onLoad ??
+  // // Update audio source when song changes
   // useEffect(() => {
   //   if (audioRef.current && currentSong?.downloadUrl?.[4]?.url) {
   //     setTimeout(() => {
   //       audioRef.current.src = currentSong.downloadUrl[4].url;
-  //       console.log(audioRef.current.src, "this is the source");
 
   //       if (isPlaying) {
   //         audioRef.current
@@ -168,40 +158,56 @@ export const SongsProvider = ({ children }) => {
   //       }
   //     }, 200);
   //   }
-
-  //   // Handle network disconnection
-  //   const handleStalled = () => {
-  //     console.warn("Audio stalled due to network issue");
-  //     setIsPlaying(true);
-
-  //     setTimeout(() => {
-  //       console.log("Retrying playback...");
-  //       audioRef.current.load(); // Reload the audio source
-  //       audioRef.current
-  //         .play()
-  //         .catch((err) => console.error("Retry playback error:", err));
-  //     }, 2000); // Retry after 2 seconds
-  //   };
-
-  //   const handleOnline = () => {
-  //     console.log("Internet reconnected, resuming playback...");
-  //     setIsPlaying(true);
-  //     console.log("isPlaying", isPlaying);
-
-  //     audioRef.current.load();
-  //     audioRef.current
-  //       .play()
-  //       .catch((err) => console.error("Reconnection playback error:", err));
-  //   };
-
-  //   audioRef.current?.addEventListener("stalled", handleStalled);
-  //   window.addEventListener("online", handleOnline);
-
-  //   return () => {
-  //     audioRef.current?.removeEventListener("stalled", handleStalled);
-  //     window.removeEventListener("online", handleOnline);
-  //   };
   // }, [currentSongId, currentSong]);
+
+  // Update audio source when song changes  + onLoad ??
+  useEffect(() => {
+    if (audioRef.current && currentSong?.downloadUrl?.[4]?.url) {
+      setTimeout(() => {
+        audioRef.current.src = currentSong.downloadUrl[4].url;
+        console.log(audioRef.current.src, "this is the source");
+
+        if (isPlaying) {
+          audioRef.current
+            .play()
+            .catch((err) => console.error("Playback error:", err));
+        }
+      }, 200);
+    }
+
+    // Handle network disconnection
+    const handleStalled = () => {
+      console.warn("Audio stalled due to network issue");
+      setIsPlaying(true);
+
+      setTimeout(() => {
+        console.log("Retrying playback...");
+        audioRef.current.load(); // Reload the audio source
+        audioRef.current
+          .play()
+          .catch((err) => console.error("Retry playback error:", err));
+      }, 2000); // Retry after 2 seconds
+    };
+
+    const handleOnline = () => {
+      console.log("Internet reconnected, resuming playback...");
+      setIsPlaying(true);
+      console.log("isPlaying", isPlaying);
+
+      audioRef.current.load();
+      audioRef.current
+        .play()
+        .catch((err) => console.error("Reconnection playback error:", err));
+    };
+
+    audioRef.current?.addEventListener("stalled", handleStalled);
+    window.addEventListener("online", handleOnline);
+
+    return () => {
+      audioRef.current?.removeEventListener("stalled", handleStalled);
+      window.removeEventListener("online", handleOnline);
+    };
+  }, [currentSongId, currentSong]);
 
   // Update volume when changed
   useEffect(() => {
@@ -270,12 +276,6 @@ export const SongsProvider = ({ children }) => {
     }
   }
 
-  // Handle time updates
-  const handleTimeUpdate = () => {
-    setCurrentTime(audioRef.current.currentTime);
-    setDuration(audioRef.current.duration);
-  };
-
   // Play next/previous
   const playNextSong = () => {
     if (songs.length > 0) {
@@ -291,34 +291,23 @@ export const SongsProvider = ({ children }) => {
     }
   };
 
-  // Seek to position
-  const seekTo = (percentage) => {
-    if (audioRef.current) {
-      const newTime = (percentage / 100) * duration;
-      audioRef.current.currentTime = newTime;
-      setCurrentTime(newTime);
-    }
-  };
-
   return (
     <SongsContext.Provider
       value={{
+        audioRef,
         songs,
         setSongs,
         currentSongId,
         setCurrentSongId,
         volume,
         setVolume,
-        duration,
         isPlaying,
         isFavorite,
         setIsFavorite,
-        currentTime,
         togglePlay,
         togglePause,
         playNextSong,
         playPreviousSong,
-        seekTo,
         addSong,
         isPlayerLoading,
         currentSong,
@@ -329,9 +318,23 @@ export const SongsProvider = ({ children }) => {
         onLoadStart={() => setIsPlayerLoading(true)}
         onCanPlay={() => setIsPlayerLoading(false)}
         onLoad={() => setIsPlayerLoading(true)}
-        onTimeUpdate={handleTimeUpdate}
         onEnded={playNextSong}
-        onDurationChange={() => setDuration(audioRef.current.duration)}
+        // onError={(e) => {
+        //   console.error("Error loading audio:", e);
+        //   setIsPlayerLoading(false);
+        //   setIsPlaying(false);
+        //   setCurrentSongId(null);
+        //   setSongs([]);
+        //   navigate("/"); // Redirect to home page
+        // }}
+        // onAbort={() => {
+        //   console.error("Audio loading aborted");
+        //   setIsPlayerLoading(false);
+        //   setIsPlaying(false);
+        //   setCurrentSongId(null);
+        //   setSongs([]);
+        //   navigate("/"); // Redirect to home page
+        // }}
       />
       {children}
     </SongsContext.Provider>

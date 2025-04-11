@@ -95,7 +95,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   }, [user]);
 
   useEffect(() => {
-    loadFavoriteSongs();
+    // loadFavoriteSongs();
   }, [user, favoriteSongIds]);
 
   async function loadFavoriteSongs() {

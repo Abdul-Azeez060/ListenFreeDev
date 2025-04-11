@@ -30,6 +30,7 @@ import IsFavoriteHeartComponent from "@/components/IsFavoriteHeartComponent";
 import { DownloadButton } from "@/components/DownloadButton";
 import { AddToPlaylist } from "@/components/AddToPlaylist";
 import LazyImage from "@/components/LazyImage";
+import SliderComponent from "@/components/Library/SliderComponent";
 
 const Player = () => {
   const { songId } = useParams();
@@ -263,13 +264,7 @@ const Player = () => {
 
                 <div className="flex items-center space-x-2">
                   <Volume2 className="text-white" size={20} />
-                  <Slider
-                    value={[volume * 100]}
-                    onValueChange={(value) => setVolume(value[0] / 100)}
-                    max={100}
-                    step={1}
-                    className="w-24"
-                  />
+                  <SliderComponent />
                 </div>
               </div>
             </div>

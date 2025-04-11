@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { AlertDescription } from "../ui/alert";
 import { deletePlaylist } from "@/appwrite/databaseActions";
 export function DeletePlaylistDialogue({ playlistId }: { playlistId: string }) {
-  const { user } = useCurrentUserData();
+  const { user, setPlaylists } = useCurrentUserData();
   const navigate = useNavigate();
   async function handlePlaylistDelete() {
     if (!user) {
@@ -44,10 +44,13 @@ export function DeletePlaylistDialogue({ playlistId }: { playlistId: string }) {
       toast("Playlist Deleted Successfully");
       const metadata = JSON.parse(localStorage.getItem("PlaylistMetadata"));
       if (metadata) {
+        console.log(metadata);
         const newMetadata = metadata.filter(
-          (playlist: any) => playlist.id !== playlistId
+          (playlist: any) => playlist.$id !== playlistId
         );
+
         localStorage.setItem("PlaylistMetadata", JSON.stringify(newMetadata));
+        setPlaylists(newMetadata);
       }
     } else {
       toast("Couldn't delete playlist");
