@@ -13,11 +13,15 @@ function LongNames({ song }: { song: Song }) {
       <p className="text-sm text-slate-400">
         {song?.artists?.primary?.map((artist) => artist.name).join(", ")
           .length > 25
-          ? song?.artists?.primary
-              ?.map((artist) => artist.name)
-              .join(", ")
-              .slice(0, 25) + "..."
-          : song?.artists?.primary?.map((artist) => artist.name).join(", ")}
+          ? he.decode(
+              song?.artists?.primary
+                ?.map((artist) => artist.name)
+                .join(", ")
+                .slice(0, 25)
+            ) + "..."
+          : he.decode(
+              song?.artists?.primary?.map((artist) => artist.name).join(", ")
+            )}
       </p>
     </div>
   );

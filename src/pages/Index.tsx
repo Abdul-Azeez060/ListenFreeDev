@@ -77,7 +77,7 @@ const Index = () => {
             <Clock className="text-muted mr-2" />
           </div>
           <div className="overflow-x-auto scrollbar-hide ">
-            <div className="grid grid-flow-col gap-4  auto-cols-max w-screen">
+            <div className="grid grid-flow-col gap-1  auto-cols-max w-screen">
               {recentSongs?.map((song: any) => (
                 <motion.div
                   key={song?.id}
@@ -93,11 +93,6 @@ const Index = () => {
                     setSongs(recentSongs);
                   }}>
                   <div className="relative aspect-square rounded-lg overflow-hidden">
-                    {/* <img
-                      src={song?.image[2].url}
-                      alt={song?.name}
-                      className="object-cover w-full h-full"
-                    /> */}
                     <LazyImage
                       src={song?.image[2].url}
                       alt={song?.name}
@@ -133,8 +128,6 @@ const Index = () => {
           </div>
         </section>
       )}
-
-     
 
       <TrendingHits />
 
