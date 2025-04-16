@@ -127,18 +127,17 @@ const Player = () => {
       <div
         className="absolute inset-0"
         style={{
-          background: `linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgb(0,0,0))`,
+          background: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgb(0,0,0))`,
           backdropFilter: "blur(100px)",
         }}>
+        <div className="flex justify-start">
+          <button
+            onClick={() => navigate(-1)}
+            className="p-2 relative left-2 top-6 text-white hover:bg-secondary rounded-full">
+            <ChevronDown size={24} />
+          </button>
+        </div>
         <div className="container h-full px-4 py-8 flex flex-col justify-between">
-          <div className="flex justify-start">
-            <button
-              onClick={() => navigate("/search")}
-              className="p-2 text-white hover:bg-secondary rounded-full">
-              <ChevronDown size={24} />
-            </button>
-          </div>
-
           <motion.div
             initial={{ opacity: 0, scale: 0.6 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -212,7 +211,7 @@ const Player = () => {
                 </button>
 
                 <button
-                  className="p-4 rounded-full text-white bg-slate-400/90"
+                  className="p-4 rounded-full text-slate-100 bg-slate-700"
                   onClick={isPlaying ? togglePause : togglePlay}>
                   {isPlayerLoading ? (
                     <span>

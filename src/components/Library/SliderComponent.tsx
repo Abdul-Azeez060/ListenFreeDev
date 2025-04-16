@@ -27,11 +27,11 @@ function SliderComponent() {
 
   const handleDurationUpdate = useCallback(
     () => setDuration(audioRef.current.duration),
-    [audioRef.current.duration]
+    [audioRef?.current?.duration]
   );
 
-  audioRef.current.addEventListener("timeupdate", handleTimeUpdate);
-  audioRef.current.addEventListener("ondurationchange", handleDurationUpdate);
+  audioRef?.current?.addEventListener("timeupdate", handleTimeUpdate);
+  audioRef?.current?.addEventListener("ondurationchange", handleDurationUpdate);
 
   return (
     <div className="space-y-2">

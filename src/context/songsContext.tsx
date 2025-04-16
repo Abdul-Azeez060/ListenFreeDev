@@ -35,10 +35,13 @@ interface SongsContextProps {
   audioRef: React.RefObject<HTMLAudioElement>;
 }
 const SongsContext = createContext<SongsContextProps | undefined>(undefined);
+const songs = sessionStorage.getItem("songs") || "[]";
+const initialSongs = JSON.parse(songs) || [];
+const initialCurrentSongId = sessionStorage.getItem("currentSongId") || null;
 
 export const SongsProvider = ({ children }) => {
-  const [songs, setSongs] = useState<Song[]>([]);
-  const [currentSongId, setCurrentSongId] = useState(null);
+  const [songs, setSongs] = useState<Song[]>(initialSongs);
+  const [currentSongId, setCurrentSongId] = useState(initialCurrentSongId);
   const [volume, setVolume] = useState(0.7);
 
   const [isPlaying, setIsPlaying] = useState(true);
@@ -54,6 +57,11 @@ export const SongsProvider = ({ children }) => {
   // Get current song
 
   const currentSongIndex = useMemo(() => {
+    sessionStorage.setItem("currentSongId", currentSongId);
+    sessionStorage.setItem("songs", JSON.stringify(songs));
+    if (currentSongId === null || songs.length === 0) {
+      return -1;
+    }
     return songs?.findIndex((song) => song?.id === currentSongId);
   }, [songs, currentSongId]);
   const currentSong = songs[currentSongIndex] || null;
