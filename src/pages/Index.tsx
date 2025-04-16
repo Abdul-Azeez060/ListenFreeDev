@@ -12,11 +12,12 @@ import TopHits from "@/components/HomePage/TopHits";
 import MostSearched from "@/components/HomePage/MostSearched";
 import TopCharts from "@/components/HomePage/TopCharts";
 import TopCharts2 from "@/components/HomePage/TopCharts2";
-import useSessionReload from "@/components/SessionReload";
 import { Button } from "@/components/ui/button";
 import InstallPWA from "@/components/InstallPwa";
 import LazyImage from "@/components/LazyImage";
 import Favorites from "@/components/HomePage/Favorites";
+import { useRegisterSW } from "virtual:pwa-register/react";
+import { toast } from "sonner";
 
 const Index = () => {
   // const { data: recentSongs, isLoading } = useQuery({
@@ -25,6 +26,34 @@ const Index = () => {
   // });
 
   // useSessionReload();
+  const { needRefresh, updateServiceWorker } = useRegisterSW();
+
+  useEffect(() => {
+    if (needRefresh) {
+      toast("New update available!", {
+        action: {
+          label: "Update",
+          onClick: () => {
+            updateServiceWorker(true);
+          },
+        },
+        description: "Click to update the app.",
+        duration: 5000,
+        dismissible: true,
+        style: {
+          backgroundColor: "#1e1e2f",
+          color: "#fff",
+          border: "1px solid #4b5563",
+          borderRadius: "0.375rem",
+          padding: "0.5rem 1rem",
+          fontSize: "0.875rem",
+          fontWeight: "500",
+          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+          transition: "all 0.2s ease-in-out",
+        },
+      });
+    }
+  }, []);
 
   const [recentSongs, setRecentSongs] = useState([]);
   const { user } = useCurrentUserData();
@@ -66,7 +95,16 @@ const Index = () => {
         {/* <InstallPWA /> */}
       </div>
       <div className="flex items-center ">
-        <h1 className="text-white px-2 md:px-4">Reload for latest Updates</h1>
+        {needRefresh && (
+          <div className="update-toast">
+            <span className=" text-orange-400 pl-4">New update available!</span>
+            <button
+              className="text-white border border-white rounded px-2 py-1 ml-2"
+              onClick={() => updateServiceWorker(true)}>
+              Update
+            </button>
+          </div>
+        )}
       </div>
       {recentSongs.length > 0 && (
         <section className="space-y-4 w-screen">

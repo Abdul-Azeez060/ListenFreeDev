@@ -14,7 +14,13 @@ export default defineConfig(({ mode }) => ({
     react(),
     mode === "development" && componentTagger(),
     VitePWA({
-      registerType: "autoUpdate",
+      registerType: "prompt",
+      devOptions: {
+        enabled: true,
+      },
+      workbox: {
+        cleanupOutdatedCaches: true,
+      },
       manifest: {
         name: "ListenFree - Free Music Streaming and Downloads",
         short_name: "ListenFree",
