@@ -29,7 +29,7 @@ const Index = () => {
   const { needRefresh, updateServiceWorker } = useRegisterSW();
 
   useEffect(() => {
-    if (needRefresh) {
+    if (needRefresh[0]) {
       toast("New update available!", {
         action: {
           label: "Update",
@@ -53,7 +53,7 @@ const Index = () => {
         },
       });
     }
-  }, []);
+  }, [needRefresh, updateServiceWorker]);
 
   const [recentSongs, setRecentSongs] = useState([]);
   const { user } = useCurrentUserData();
@@ -95,7 +95,7 @@ const Index = () => {
         {/* <InstallPWA /> */}
       </div>
       <div className="flex items-center ">
-        {needRefresh && (
+        {needRefresh[0] && (
           <div className="update-toast">
             <span className=" text-orange-400 pl-4">New update available!</span>
             <button
