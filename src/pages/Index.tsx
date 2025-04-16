@@ -92,7 +92,7 @@ const Index = () => {
           transition={{ delay: 0.1 }}>
           Welcome Back{" "}
           <span className="text-orange-600">
-            {user?.name.split(" ")[0] + "!" || "Guest!"}
+            {user ? user?.name.split(" ")[0] + "!" : "Guest!"}
           </span>
         </motion.h1>
         {/* <InstallPWA /> */}
