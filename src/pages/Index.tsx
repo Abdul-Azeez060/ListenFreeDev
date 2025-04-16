@@ -90,7 +90,10 @@ const Index = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}>
-          Welcome Back {user?.name.split(" ")[0]}
+          Welcome Back{" "}
+          <span className="text-orange-600">
+            {user?.name.split(" ")[0] + "!" || "Guest!"}
+          </span>
         </motion.h1>
         {/* <InstallPWA /> */}
       </div>

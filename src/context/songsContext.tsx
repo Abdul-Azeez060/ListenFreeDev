@@ -260,7 +260,7 @@ export const SongsProvider = ({ children }) => {
   // change this for non duplicate songs
   async function getSongSuggestions() {
     console.log("Inside the suggesstions ");
-    if (currentSongId && currentSongIndex > songs.length - 4) {
+    if (currentSongId && currentSongIndex > songs.length - 2) {
       const response = await fetchSongSuggestions(currentSongId);
       console.log(response.data, "this is the response");
 
