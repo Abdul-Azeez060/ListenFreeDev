@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.h-screen {
+  height: 100dvh; /* NEW: dynamic viewport height */
+}
+
 @keyframes marquee {
   0% {
     transform: translateX(0%);

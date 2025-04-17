@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate, useLocation, matchPath } from "react-router-dom";
-import { Home, Search, Library, User, ListMusic } from "lucide-react";
+import { Home, Search, Library, User } from "lucide-react";
 import MiniPlayer from "./MiniPlayer";
-import useCustomBackNavigation from "@/lib/BackNavigation";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
