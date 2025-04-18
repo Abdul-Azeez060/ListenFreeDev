@@ -72,7 +72,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       getUserFavorites();
     } else {
       console.log("fetching songs from localstorage");
-      setFavoriteSongIds(fav);
+      setFavoriteSongIds(fav.reverse());
     }
 
     // getting user playlist metadata

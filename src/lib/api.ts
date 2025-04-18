@@ -128,37 +128,64 @@ export const fetchSongSuggestions = async (songId: string) => {
   }
 };
 
+// fetchSongsByIds.ts
 export const fetchSongsByIds = async (songIds: string[]) => {
-  try {
-    // Create an array of fetch promises
-    let fetchPromises = songIds.map(
-      (songId) =>
-        fetch(`${BASE_URL_VERCEL2}/songs/${songId}`)
-          .then((res) => res.json())
-          .catch(() => null) // Prevents individual failures from stopping all requests
+  const BATCH_SIZE = 10;
+  const songs: any[] = [];
+
+  const fetchBatch = async (ids: string[], baseUrl: string) => {
+    const batchPromises = ids.map((songId) =>
+      fetch(`${baseUrl}/songs/${songId}`)
+        .then((res) => res.json())
+        .catch(() => null)
     );
+    const results = await Promise.all(batchPromises);
+    return results;
+  };
 
-    // Wait for all requests to complete in parallel
-    let results = await Promise.all(fetchPromises);
-
-    // If all requests fail, fallback to second API
+  for (let i = 0; i < songIds.length; i += BATCH_SIZE) {
+    const batchIds = songIds.slice(i, i + BATCH_SIZE);
+    let results = await fetchBatch(batchIds, BASE_URL_VERCEL2);
     if (results.every((song) => song === null || !song?.data?.length)) {
-      fetchPromises = songIds.map((songId) =>
-        fetch(`${BASE_URL}/songs/${songId}`)
-          .then((res) => res.json())
-          .catch(() => null)
-      );
-      results = await Promise.all(fetchPromises);
+      results = await fetchBatch(batchIds, BASE_URL);
     }
 
-    // Extract song data safely
-    const songs = results
+    const validSongs = results
       .map((song) => (song?.data?.length ? song.data[0] : null))
-      .filter(Boolean); // Remove any null values
+      .filter(Boolean);
 
-    return songs;
-  } catch (error) {
-    console.error("Error fetching songs:", error);
-    return []; // Return empty array in case of an error
+    songs.push(...validSongs);
   }
+
+  return songs;
+};
+
+export const fetchSongBatch = async (
+  allSongIds: string[],
+  batchNumber: number,
+  batchSize: number = 10
+) => {
+  const start = batchNumber * batchSize;
+  const end = start + batchSize;
+  const batchIds = allSongIds.slice(start, end);
+
+  const fetchBatch = async (ids: string[], baseUrl: string) => {
+    const batchPromises = ids.map((songId) =>
+      fetch(`${baseUrl}/songs/${songId}`)
+        .then((res) => res.json())
+        .catch(() => null)
+    );
+    return await Promise.all(batchPromises);
+  };
+
+  let results = await fetchBatch(batchIds, BASE_URL_VERCEL2);
+  if (results.every((r) => r === null || !r?.data?.length)) {
+    results = await fetchBatch(batchIds, BASE_URL);
+  }
+
+  const songs = results
+    .map((song) => (song?.data?.length ? song.data[0] : null))
+    .filter(Boolean);
+
+  return songs;
 };

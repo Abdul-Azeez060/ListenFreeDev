@@ -65,20 +65,45 @@ function IsFavoriteHeartComponent() {
   const handleFavoriteChange = () => {
     // Immediately update UI (optimistic update)
     if (!user) {
-      toast(
-        <div className="flex justify-between w-full items-center">
-          <h1 className="text-sm md:text-md font-medium">
-            Sign in to add to favorites
-          </h1>
-          <Button
-            className=" bg-red-500"
-            onClick={() => {
-              navigate("/profile");
-            }}>
-            Sign in
-          </Button>
-        </div>
-      );
+      toast(" Sign in to add to favorites", {
+        action: {
+          label: "Sign in",
+          actionButtonStyle: {
+            backgroundColor: "#ef4444",
+          },
+          onClick: () => {
+            navigate("/profile");
+          },
+        },
+        description: "Click to update the app.",
+        duration: 5000,
+        dismissible: true,
+        style: {
+          backgroundColor: "#1e1e2f",
+          color: "#fff",
+          border: "1px solid #4b5563",
+          borderRadius: "0.375rem",
+          padding: "0.5rem 1rem",
+          fontSize: "0.875rem",
+          fontWeight: "500",
+          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+          transition: "all 0.2s ease-in-out",
+        },
+      });
+      // toast(
+      //   <div className="flex justify-between w-full items-center">
+      //     <h1 className="text-sm md:text-md font-medium">
+      //       Sign in to add to favorites
+      //     </h1>
+      //     <Button
+      //       className=" bg-red-500"
+      //       onClick={() => {
+      //         navigate("/profile");
+      //       }}>
+      //       Sign in
+      //     </Button>
+      //   </div>
+      // );
 
       return;
     }
