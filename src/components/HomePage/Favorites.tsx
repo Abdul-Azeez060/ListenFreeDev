@@ -88,7 +88,7 @@ function Favorites() {
           <Heart className="text-accent mr-2" />
         </div>
         <div className="overflow-x-auto scrollbar-hide ">
-          <div className="grid grid-flow-col gap-1 auto-cols-max w-screen">
+          <div className="grid grid-flow-col gap-3 auto-cols-max w-screen">
             {favoriteSongs?.map((song: any) => (
               <motion.div
                 key={song?.id}
@@ -99,7 +99,7 @@ function Favorites() {
                   setCurrentSongId(song.id);
                   setSongs(favoriteSongs);
                 }}>
-                <div className="aspect-square rounded-lg overflow-x-auto size-36 md:size-60 mx-2">
+                <div className="aspect-square rounded-lg overflow-x-auto size-40 md:size-60">
                   <LazyImage
                     src={song?.image[2].url}
                     alt={song?.name}
